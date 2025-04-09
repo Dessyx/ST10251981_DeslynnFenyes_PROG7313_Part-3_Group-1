@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "com.example.prog7313_groupwork"
     compileSdk = 35
+    viewBinding.enable = true
 
     defaultConfig {
         applicationId = "com.example.prog7313_groupwork"

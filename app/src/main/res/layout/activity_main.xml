@@ -5,15 +5,69 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/WelcomeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/kantumruy_pro"
+                android:includeFontPadding="false"
+                android:text="@string/welcome_to"
+                android:textSize="23sp" />
+
+            <ImageView
+                android:id="@+id/Logo"
+                android:layout_width="190dp"
+                android:layout_height="43dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/logo" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/landing"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            app:srcCompat="@drawable/landingimg" />
+
+        <ImageView
+            android:id="@+id/slogan"
+            android:layout_width="wrap_content"
+            android:layout_height="291dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/slogan" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:fontFamily="@font/kosugi_maru"
+            android:text="@string/let_s_get_started"
+            android:textColor="#040303"
+            app:cornerRadius="0dp"
+            app:strokeColor="#090707"
+            app:strokeWidth="2dp" />
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

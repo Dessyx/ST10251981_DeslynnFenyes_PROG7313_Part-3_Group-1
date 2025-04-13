@@ -10,6 +10,6 @@
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="428dp"
-        android:layout_height="242dp"
+        android:layout_height="294dp"
         app:srcCompat="@drawable/loginimg" />
 </LinearLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_add_to_savings"
+        android:icon="@drawable/savings_icon"
+        android:title="Add to savings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_win_awards"
+        android:title="Win Awards"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_profile"
+        android:title="Profile"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:title="Settings"
+        app:showAsAction="never" />
+
+</menu>

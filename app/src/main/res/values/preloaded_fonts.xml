@@ -3,5 +3,6 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/kantumruy_pro_thin</item>
         <item>@font/kosugi_maru</item>
+        <item>@font/lily_script_one</item>
     </array>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/abhaya_libre_extrabold</item>
         <item>@font/kantumruy_pro_thin</item>
         <item>@font/kosugi_maru</item>
         <item>@font/lily_script_one</item>

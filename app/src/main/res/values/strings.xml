@@ -10,4 +10,5 @@
     <string name="register">Register</string>
     <string name="add_expense">Add Expense</string>
     <string name="add_category">Add Category</string>
+    <string name="add_income">Add Income</string>
 </resources>

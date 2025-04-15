@@ -1,7 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FCFCFD"
     android:padding="16dp">
 
     <LinearLayout
@@ -12,19 +13,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
-            android:paddingVertical="8dp"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal"
+            android:paddingVertical="8dp">
 
             <!-- Back icon on the left -->
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_back"
-                android:contentDescription="Back"
                 android:layout_gravity="start"
-                android:layout_marginEnd="auto" />
+                android:layout_marginEnd="auto"
+                android:contentDescription="Back"
+                android:src="@drawable/ic_back" />
 
             <!-- Spacer -->
             <View
@@ -36,9 +37,9 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_menu"
+                android:layout_gravity="end"
                 android:contentDescription="Menu"
-                android:layout_gravity="end" />
+                android:src="@drawable/ic_menu" />
         </LinearLayout>
 
 
@@ -64,16 +65,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="Category name"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical" />
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/editTextCategoryName"
@@ -81,8 +82,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:background="@drawable/edit_text_border"
-                    android:padding="10dp"
-                    android:hint="Enter category" />
+                    android:hint="Enter category"
+                    android:padding="10dp" />
             </LinearLayout>
 
             <!-- Add Limit Row -->
@@ -95,9 +96,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="Add limit"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical" />
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/editTextCategoryLimit"
@@ -105,9 +106,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:background="@drawable/edit_text_border"
-                    android:padding="10dp"
                     android:hint="Enter limit"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:padding="10dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -131,16 +132,15 @@
             app:layout_constraintTop_toBottomOf="@id/editTextCategoryLimit" />
 
 
-
         <!-- Categories Header -->
         <TextView
             android:id="@+id/categoriesHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:text="Categories"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp" />
+            android:textStyle="bold" />
 
         <!-- Category Item Template -->
         <!-- Repeat this block for each category -->
@@ -148,9 +148,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="16dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="40dp"
@@ -160,9 +160,9 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -188,8 +188,8 @@
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="8dp"
-            android:progress="93"
             android:max="100"
+            android:progress="93"
             android:progressDrawable="@drawable/progress_black" />
 
         <!-- Repeat similar blocks for each category -->

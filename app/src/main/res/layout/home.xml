@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient"
+    android:background="@drawable/homebg"
     android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/bgGradient"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/gradient_bg"
-        app:layout_constraintBottom_toTopOf="@id/historyTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Profile Greeting -->
     <TextView
@@ -24,54 +14,54 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello!\nMr. Xavier Martin"
-        android:textStyle="bold"
-        android:textSize="18sp"
         android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Menu Icon -->
     <ImageView
         android:id="@+id/menuIcon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_menu"
         android:contentDescription="Menu"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:src="@drawable/ic_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Active Balance Label -->
     <TextView
         android:id="@+id/activeBalanceLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Active balance"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/greetingText"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/greetingText" />
 
     <!-- Active Balance Value -->
     <TextView
         android:id="@+id/activeBalanceValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="R 41,570.00"
-        android:textStyle="bold"
-        android:textSize="32sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/activeBalanceLabel"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="32sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activeBalanceLabel" />
 
     <!-- Action Buttons Layout -->
     <LinearLayout
         android:id="@+id/actionButtons"
-        android:layout_width="361dp"
-        android:layout_height="79dp"
+        android:layout_width="370dp"
+        android:layout_height="89dp"
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/white"
@@ -91,19 +81,27 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:contentDescription="Add Expense"
-                android:src="@drawable/ic_expense" />
+            <ImageButton
+                android:id="@+id/btnAddExpense"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/add_expense"
+                android:src="@drawable/ic_expense"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/add_expense"
-                android:textSize="30sp" />
+                android:textColor="#000000"
+                android:textSize="7sp"
+                android:gravity="center" />
         </LinearLayout>
 
-        <!-- 2. Set Budget -->
+        <!-- 2. Add Income -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -111,19 +109,55 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:contentDescription="Set Budget"
-                android:src="@drawable/ic_budget" />
+            <ImageButton
+                android:id="@+id/btnAddIncome"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/add_income"
+                android:src="@drawable/ic_income"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/add_income"
+                android:textColor="#000000"
+                android:textSize="7sp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- 3. Set Budget -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnSetBudget"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Set Budget"
+                android:src="@drawable/ic_budget"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Set Budget"
-                android:textSize="12sp" />
+                android:textColor="#000000"
+                android:textSize="7sp"
+                android:gravity="center" />
         </LinearLayout>
 
-        <!-- 3. Add Category -->
+        <!-- 4. Add Category -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -131,19 +165,27 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+            <ImageButton
+                android:id="@+id/btnAddCategory"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
                 android:contentDescription="Add Category"
-                android:src="@drawable/ic_category" />
+                android:src="@drawable/ic_category"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Add Category"
-                android:textSize="12sp" />
+                android:textColor="#000000"
+                android:textSize="7sp"
+                android:gravity="center" />
         </LinearLayout>
 
-        <!-- 4. Debt Planner -->
+        <!-- 5. Debt Planner -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -151,101 +193,187 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+            <ImageButton
+                android:id="@+id/btnDebtPlanner"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
                 android:contentDescription="Debt Planner"
-                android:src="@drawable/ic_debt" />
+                android:src="@drawable/ic_debt"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Debt Planner"
-                android:textSize="12sp" />
+                android:textColor="#000000"
+                android:textSize="7sp"
+                android:gravity="center" />
         </LinearLayout>
+
+
 
     </LinearLayout>
 
 
     <!-- History Title -->
-    <TextView
-        android:id="@+id/historyTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="History"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/actionButtons"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- RecyclerView for Transactions -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/transactionHistory"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        app:layout_constraintTop_toBottomOf="@id/historyTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Budget Goal Box -->
-    <LinearLayout
-        android:id="@+id/budgetGoalBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_rounded_white"
-        android:padding="12dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/transactionHistory"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Monthly budget goal: "
-            android:textColor="@android:color/black"/>
-        <TextView
-            android:text="R40 000"
-            android:textColor="#6FCF97"
-            android:textStyle="bold"/>
-        <Button
-            android:text="See dashboard"
-            android:textSize="12sp"/>
-    </LinearLayout>
 
     <!-- Saving Progress Box -->
-    <LinearLayout
-        android:id="@+id/savingProgress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/bg_rounded_white"
-        android:padding="12dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/budgetGoalBox"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:text="This month's saving progress"
-            android:textStyle="bold"
-            android:textSize="14sp"/>
-        <TextView
-            android:text="Categories flagged overspent: "
-            android:layout_marginTop="4dp"/>
-        <TextView
-            android:text="Food, Entertainment"
-            android:textColor="@android:color/holo_red_dark"
-            android:textSize="12sp" />
-        <ProgressBar
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="42dp"
+        android:text="History"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actionButtons" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="368dp"
+        android:layout_height="201dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progress="82"
-            android:progressTint="@android:color/black"
-            android:layout_marginTop="8dp"/>
+            android:orientation="vertical" />
+    </ScrollView>
+
+
+    <LinearLayout
+        android:layout_width="366dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/card_border"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2">
+
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Monthly budget goal"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="R40 000"
+            android:textColor="#6FCF97"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="37sp"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="@android:color/black"
+            android:text="See dashboard"
+            android:textColor="@android:color/white"
+            android:textSize="13sp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/savingProgress"
+        android:layout_width="365dp"
+        android:layout_height="106dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/card_border"
+        android:orientation="vertical"
+        android:padding="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="This months saving progress"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categories flagged overspent: "
+                android:textColor="@android:color/black"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food, Entertainment"
+                android:textColor="#E53935"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:text="Progress"
+                android:textColor="@android:color/black"
+                android:textSize="13sp" />
+
+            <ProgressBar
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="0dp"
+                android:layout_height="18dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/white"
+                android:progress="82"
+                android:progressDrawable="@drawable/rounded_progress_bar"
+                android:progressTint="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="82%"
+                android:textColor="@android:color/black"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

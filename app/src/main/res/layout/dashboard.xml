@@ -8,38 +8,49 @@
     android:background="#FFFFFF">
 
     <!-- Top icons row -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="59dp"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
 
+        <!-- Back button with icon on the left -->
         <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/ic_back"
-            android:backgroundTint="@null"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:src="@drawable/ic_back"
+            android:scaleType="centerInside"/>
+           <!-- app:tint="@android:color/black"-->
 
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Menu button with icon on the right -->
         <ImageButton
-            android:id="@+id/menuButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/ic_menu"
-            android:backgroundTint="@null"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Menu"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:src="@drawable/ic_menu"
+            android:scaleType="centerInside"/>
+            <!--app:tint="@android:color/black"-->
+    </LinearLayout>
+
 
     <!-- Dashboard Header -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="77dp"
         android:padding="16dp">
 
         <TextView
@@ -47,24 +58,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Dashboard"
+            android:textColor="#000000"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/userProfileIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_user_profile"
             android:contentDescription="User Profile"
             android:padding="8dp"
             android:scaleType="centerInside"
+            android:src="@drawable/ic_user_profile"
+            app:layout_constraintBottom_toBottomOf="@id/pageTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/pageTitle"
-            app:layout_constraintBottom_toBottomOf="@id/pageTitle" />
+            app:layout_constraintTop_toTopOf="@id/pageTitle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Savings and Spending Cards -->
@@ -125,34 +136,78 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-    <!-- Filters -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total spent per category"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        android:gravity="space-between">
+        android:layout_height="91dp"
+        android:orientation="vertical"
+        android:padding="1dp">
 
-        <Spinner
-            android:layout_width="0dp"
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/spinner_bg" />
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Total spent per category"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <Spinner
-            android:layout_width="0dp"
+        <!-- Filters Row -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/spinner_bg" />
+            android:orientation="horizontal"
+            android:padding="1dp"
+            android:background="@drawable/card_border">
+
+            <!-- Category Spinner -->
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="76dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_category" />
+
+            <Spinner
+                android:id="@+id/categorySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/categories_array"
+                android:prompt="@string/category_prompt"
+
+                android:spinnerMode="dropdown" />
+
+            <!-- Month Spinner -->
+            <Space
+                android:layout_width="34dp"
+                android:layout_height="24dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="83dp"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_category" />
+
+            <Spinner
+                android:id="@+id/monthSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="0dp"
+                android:entries="@array/months_array"
+                android:prompt="@string/month_prompt"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
     </LinearLayout>
+
 
     <!-- Placeholder for bar chart -->
     <TextView
@@ -176,7 +231,7 @@
     <!-- Placeholder for line chart -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="105dp"
+        android:layout_height="89dp"
         android:layout_marginTop="8dp"
         android:background="#EEEEEE"
         android:gravity="center"
@@ -232,10 +287,10 @@
             <ImageView
                 android:id="@+id/giftCardImage"
                 android:layout_width="60dp"
-                android:layout_height="90dp"
-                android:src="@drawable/ic_giftcard"
+                android:layout_height="70dp"
                 android:contentDescription="Gift Card"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_giftcard" />
         </LinearLayout>
 
         <!-- Progress Section (more space) -->

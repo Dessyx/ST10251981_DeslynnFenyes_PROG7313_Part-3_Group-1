@@ -7,12 +7,26 @@
     android:background="@drawable/homebg"
     android:padding="16dp">
 
+    <!-- Back button with icon on the left -->
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="start"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back"
+        android:src="@drawable/ic_back"
+        android:scaleType="centerInside"/>
+    <!-- app:tint="@android:color/black"-->
 
     <!-- Profile Greeting -->
+
+    <!-- Menu Icon -->
     <TextView
         android:id="@+id/greetingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:text="Hello!\nMr. Xavier Martin"
         android:textColor="@android:color/black"
         android:textSize="18sp"
@@ -20,17 +34,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Menu Icon -->
-    <ImageView
-        android:id="@+id/menuIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:contentDescription="Menu"
-        android:src="@drawable/ic_menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Menu button with icon on the right -->
 
     <!-- Active Balance Label -->
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Menu"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_menu"
+        tools:layout_editor_absoluteX="340dp"
+        tools:layout_editor_absoluteY="-2dp" />
+
     <TextView
         android:id="@+id/activeBalanceLabel"
         android:layout_width="wrap_content"

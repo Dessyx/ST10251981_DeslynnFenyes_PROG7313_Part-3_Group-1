@@ -1,49 +1,54 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FCFCFD"
-    android:padding="16dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FCFCFD"
+        android:padding="16dp"
+        android:orientation="vertical">
 
+    <!-- Top icons row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="8dp">
+        <!-- Back button with icon on the left -->
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_back"
+            android:scaleType="centerInside"/>
+        <!-- app:tint="@android:color/black"-->
 
-            <!-- Back icon on the left -->
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="start"
-                android:layout_marginEnd="auto"
-                android:contentDescription="Back"
-                android:src="@drawable/ic_back" />
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-            <!-- Spacer -->
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <!-- Menu icon on the right -->
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:contentDescription="Menu"
-                android:src="@drawable/ic_menu" />
-        </LinearLayout>
+        <!-- Menu button with icon on the right -->
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Menu"
+            android:src="@drawable/ic_menu"
+            android:scaleType="centerInside"/>
+        <!--app:tint="@android:color/black"-->
+    </LinearLayout>
 
 
-        <!-- Title -->
+
+
+    <!-- Title -->
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -178,10 +183,10 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <ImageView
+           <!-- <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_alert" />
+                android:src="@drawable/ic_alert" />-->
         </LinearLayout>
 
         <ProgressBar
@@ -190,9 +195,9 @@
             android:layout_height="8dp"
             android:max="100"
             android:progress="93"
-            android:progressDrawable="@drawable/progress_black" />
+            android:progressDrawable="@drawable/rounded_progress_bar" />
 
         <!-- Repeat similar blocks for each category -->
 
     </LinearLayout>
-</ScrollView>
+

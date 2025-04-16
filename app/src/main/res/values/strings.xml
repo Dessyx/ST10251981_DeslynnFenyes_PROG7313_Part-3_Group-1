@@ -12,4 +12,34 @@
     <string name="add_category">Add Category</string>
     <string name="add_income">Add Income</string>
     <string name="total_savings">Total Savings</string>
+
+
+    <string name="category_prompt">Select Category</string>
+    <string name="month_prompt">Select Month</string>
+
+    <string-array name="categories_array">
+        <item>Food</item>
+        <item>Transport</item>
+        <item>Housing</item>
+        <item>Healthcare</item>
+        <item>Entertainment</item>
+        <item>Utilities</item>
+    </string-array>
+
+    <string-array name="months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+
 </resources>

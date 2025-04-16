@@ -179,7 +179,6 @@
                 android:layout_height="wrap_content"
                 android:entries="@array/categories_array"
                 android:prompt="@string/category_prompt"
-
                 android:spinnerMode="dropdown" />
 
             <!-- Month Spinner -->

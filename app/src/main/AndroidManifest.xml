@@ -13,6 +13,27 @@
         android:theme="@style/Theme.PROG7313_Groupwork"
         tools:targetApi="31">
         <activity
+            android:name=".AddIncome"
+            android:exported="false" />
+        <activity
+            android:name=".DebtPlanner"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseList"
+            android:exported="false" />
+        <activity
+            android:name=".SetBudgetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddExpenseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity_register"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -21,6 +42,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

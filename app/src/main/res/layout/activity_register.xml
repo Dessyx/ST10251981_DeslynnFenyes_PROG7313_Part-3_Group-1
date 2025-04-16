@@ -11,10 +11,11 @@
 
     <?xml version="1.0" encoding="utf-8"?>
     <ScrollView
-        android:layout_width="442dp"
-        android:layout_height="762dp"
+        android:layout_width="440dp"
+        android:layout_height="846dp"
         android:background="@drawable/new_background"
-        android:padding="24dp">
+        android:padding="24dp"
+        tools:layout_editor_absoluteX="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,7 +24,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="197dp" />
+                android:layout_height="260dp" />
 
 
             <TextView
@@ -68,58 +69,79 @@
                 android:textSize="16sp" />
 
             <EditText
-            android:layout_width="306dp"
-            android:layout_height="48sp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/text_background"
-            android:hint="Enter your email"
-            android:inputType="textEmailAddress"
-            android:padding="12dp"
-            android:textSize="15sp" />
+                android:layout_width="306dp"
+                android:layout_height="48sp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/text_background"
+                android:hint="Enter your email"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:fontFamily="@font/kosugi_maru"
                 android:layout_marginBottom="4dp"
+                android:fontFamily="@font/kosugi_maru"
                 android:text="Phone Number"
                 android:textSize="16sp" />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="306dp"
+                android:layout_height="48sp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="32dp"
                 android:layout_marginBottom="16dp"
+                android:background="@drawable/text_background"
                 android:hint="Enter your phone number"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:padding="12dp"
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:fontFamily="@font/kosugi_maru"
                 android:layout_marginBottom="4dp"
+                android:fontFamily="@font/kosugi_maru"
                 android:text="Password"
                 android:textSize="16sp" />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_width="306dp"
+                android:layout_height="48sp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/text_background"
                 android:hint="Enter your password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:textSize="15sp" />
 
-            <Button
-                android:layout_width="270sp"
-                android:layout_height="40sp"
-                android:layout_gravity="center"
-                android:background="@drawable/button1"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/registerButton"
+                android:layout_width="304dp"
+                android:layout_height="58dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:backgroundTint="#E7D0D9"
+                android:fontFamily="@font/kosugi_maru"
                 android:text="Register"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textColor="#000000"
+                android:textSize="17sp"
+                app:cornerRadius="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
 
         </LinearLayout>
     </ScrollView>

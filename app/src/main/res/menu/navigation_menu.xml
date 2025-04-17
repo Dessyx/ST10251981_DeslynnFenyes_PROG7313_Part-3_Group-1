@@ -10,11 +10,13 @@
 
     <item
         android:id="@+id/menu_win_awards"
+        android:icon="@drawable/awards_icon"
         android:title="Win Awards"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_profile"
+        android:icon="@drawable/profile_icon"
         android:title="Profile"
         app:showAsAction="never" />
 

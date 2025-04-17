@@ -65,17 +65,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/userProfileIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="User Profile"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_user_profile"
-            app:layout_constraintBottom_toBottomOf="@id/pageTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/pageTitle" />
+            android:background="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_user_profile"
+        app:layout_constraintBottom_toBottomOf="@id/pageTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/pageTitle" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Savings and Spending Cards -->

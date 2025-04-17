@@ -5,6 +5,148 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
     tools:context=".ExpenseList">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+
+        <!-- Back button with icon on the left -->
+
+        <!-- Spacer -->
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="42dp"
+            android:layout_gravity="start"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:paddingTop="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Menu button with icon on the right -->
+        <ImageButton
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Menu"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_menu"
+            tools:ignore="TouchTargetSizeCheck" />
+    </LinearLayout>
+
+    <!-- Title -->
+
+    <!-- Filter Section -->
+    <LinearLayout
+        android:id="@+id/filterSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/titleText">
+
+    </LinearLayout>
+
+    <!-- Period Section -->
+
+    <!-- Expenses List -->
+
+    <TextView
+        android:id="@+id/periodText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        android:fontFamily="@font/kosugi_maru"
+        android:text="Jan-March"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filterSection" />
+
+    <TextView
+        android:id="@+id/listLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/kosugi_maru"
+        android:text="List of Expenses"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/periodText" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/expensesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/listLabel"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:layout_editor_absoluteX="42dp"
+        tools:layout_editor_absoluteY="227dp" />
+    <LinearLayout
+        android:id="@+id/addCategoryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/abhaya_libre_extrabold"
+        android:text="Expense List"
+        android:textColor="@android:color/black"
+        android:textSize="32sp"
+        tools:layout_editor_absoluteX="122dp"
+        tools:layout_editor_absoluteY="82dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/kosugi_maru"
+        android:text="Filter Expenses"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="233dp"
+        tools:layout_editor_absoluteY="170dp" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="21dp"
+        android:src="@drawable/ic_filter"
+        tools:layout_editor_absoluteX="370dp"
+        tools:layout_editor_absoluteY="167dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

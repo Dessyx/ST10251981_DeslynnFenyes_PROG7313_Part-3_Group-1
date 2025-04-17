@@ -1,19 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF">
+
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="24dp"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            tools:ignore="MissingConstraints">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="8dp">
+
+                <!-- Back button with icon on the left -->
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Back"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_back"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <!-- Spacer -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <!-- Menu button with icon on the right -->
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Menu"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_menu"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
 
             <!-- Back and Menu Icons -->
 
@@ -77,20 +115,21 @@
 
                 <EditText
                     android:id="@+id/etSaveAmount"
-                    android:layout_width="200dp"
-                    android:layout_height="40dp"
-                    android:background="@android:drawable/edit_text"
+                    android:layout_width="39dp"
+                    android:layout_height="15dp"
+                    android:background="@drawable/edittext_border"
                     android:hint="Amount saved"
                     android:inputType="number" />
 
                 <Button
                     android:id="@+id/btnAddSavings"
-                    android:layout_width="wrap_content"
+                    android:layout_width="64dp"
                     android:layout_height="40dp"
-                    android:text="Add"
                     android:layout_marginStart="8dp"
                     android:background="#000000"
-                    android:textColor="#FFFFFF" />
+                    android:text="Add"
+                    android:textColor="#FFFFFF"
+                    android:textSize="5sp" />
             </LinearLayout>
 
             <!-- Progress Section -->
@@ -138,6 +177,6 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
-    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

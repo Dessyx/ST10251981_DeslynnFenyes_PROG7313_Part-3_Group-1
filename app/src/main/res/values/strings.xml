@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">PROG7313_Groupwork</string>
+    <string name="confirm_password">Confirm password</string>
+
+    <string-array name="currency_options">
+        <item>R (ZAR)</item>
+        <item>$ (USD)</item>
+        <item>€ (EUR)</item>
+        <item>£ (GBP)</item>
+    </string-array>
 </resources>

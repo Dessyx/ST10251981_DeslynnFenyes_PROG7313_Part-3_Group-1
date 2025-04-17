@@ -65,7 +65,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp"
             android:fontFamily="@font/abhaya_libre_extrabold"
-            android:paddingBottom="33dp"
+            android:paddingBottom="130dp"
             android:text="Debt Planner"
             android:textColor="@android:color/black"
             android:textSize="42sp" />

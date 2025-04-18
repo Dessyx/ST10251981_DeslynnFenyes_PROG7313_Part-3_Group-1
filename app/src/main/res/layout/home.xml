@@ -46,8 +46,8 @@
         android:contentDescription="Menu"
         android:scaleType="centerInside"
         android:src="@drawable/ic_menu"
-        tools:layout_editor_absoluteX="340dp"
-        tools:layout_editor_absoluteY="-2dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/activeBalanceLabel"

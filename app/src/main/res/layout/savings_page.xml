@@ -67,17 +67,18 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginEnd="8dp"
-                    android:contentDescription="Savings Icon"
+                    android:contentDescription="@string/savings_icon"
                     android:src="@drawable/ic_piggy" />
 
                 <TextView
-                    android:text="Savings"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"/>
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/abhaya_libre"
+                    android:text="@string/savings"
+                    android:textColor="#000000"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -87,56 +88,58 @@
                 android:layout_height="150dp"
                 android:src="@drawable/envelope"
                 android:layout_marginTop="24dp"
-                android:contentDescription="Envelope with Savings" />
+                android:contentDescription="@string/envelope_with_savings" />
 
             <TextView
                 android:id="@+id/tvTotalSavings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="R 5 000.00"
+                android:text="@string/r_5_000_00"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="12dp" />
 
             <!-- Input and Add button -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="347dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="32dp">
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:text="Save money:"
-                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="8dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"/>
+                    android:text="@string/save_money"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/etSaveAmount"
-                    android:layout_width="39dp"
-                    android:layout_height="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@drawable/edittext_border"
-                    android:hint="Amount saved"
-                    android:inputType="number" />
+                    android:hint="@string/amount_saved"
+                    android:inputType="number"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <Button
                     android:id="@+id/btnAddSavings"
-                    android:layout_width="64dp"
+                    android:layout_width="98dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="8dp"
                     android:background="#000000"
-                    android:text="Add"
+                    android:text="@string/add"
                     android:textColor="#FFFFFF"
-                    android:textSize="5sp" />
+                    android:textSize="18sp"
+                    tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
             <!-- Progress Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Progress"
+                android:text="@string/progress"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginTop="32dp" />
@@ -144,7 +147,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="This month’s saving progress:"
+                android:text="@string/this_month_s_saving_progress"
                 android:layout_marginTop="8dp" />
 
             <ProgressBar
@@ -162,7 +165,7 @@
                 android:id="@+id/tvProgressPercent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="80%"
+                android:text="@string/_80"
                 android:layout_marginTop="4dp" />
 
             <!-- Motivation Text -->
@@ -171,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:gravity="center"
-                android:text="A penny saved is a\npenny earned!"
+                android:text="@string/a_penny_saved_is_a_npenny_earned"
                 android:textAlignment="center"
                 android:textColor="#EEC5D9"
                 android:textSize="24sp"

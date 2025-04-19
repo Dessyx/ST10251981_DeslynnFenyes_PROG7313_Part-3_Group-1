@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background = "@drawable/awards_NEW_b">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF">
-
-
-
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp"
-            android:gravity="center_horizontal">
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
 
+            <!-- Top Bar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,9 +33,10 @@
                     android:layout_gravity="start"
                     android:layout_marginEnd="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Back"
+                    android:contentDescription="@string/back"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_back" />
+                    android:src="@drawable/ic_back"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <!-- Spacer -->
                 <View
@@ -50,81 +50,86 @@
                     android:layout_height="40dp"
                     android:layout_gravity="end"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Menu"
+                    android:contentDescription="@string/menu"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_menu" />
+                    android:src="@drawable/ic_menu"
+                    tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
-
-
-
 
             <!-- Title -->
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Win awards"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/abhaya_libre"
+                android:text="@string/win_awards"
+                android:textColor="#222222"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
             <!-- Goal Input -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Goal"
-                android:textSize="16sp"
-                android:layout_marginTop="32dp" />
+                android:layout_marginTop="32dp"
+                android:text="@string/set_your_goal"
+                android:textColor="#444444"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etGoal"
-                android:layout_width="236dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edittext_background"
-                android:gravity="center"
-                android:inputType="number" />
+                android:layout_width="237dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/enter_amount"
+                android:inputType="number"
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:background="@drawable/edittext_border"/>
 
-            <!-- Trophy Icon and Goal Achieved -->
+            <!-- Trophy + Goal Achieved -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="28dp">
 
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_trophy"
-                    android:contentDescription="Trophy" />
+                    android:contentDescription="@string/trophy" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="  Goal achieved !!"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000" />
+                    android:layout_width="185dp"
+                    android:layout_height="32dp"
+                    android:text="@string/goal_achieved"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Gift Card -->
             <ImageView
                 android:id="@+id/ivGiftCard"
-                android:layout_width="150dp"
-                android:layout_height="200dp"
+                android:layout_width="180dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="32dp"
                 android:src="@drawable/giftcard"
-                android:layout_marginTop="24dp"
-                android:contentDescription="Gift card" />
+                android:elevation="4dp"
+                android:contentDescription="@string/gift_card" />
 
-            <!-- Badge Image -->
+            <!-- Badge -->
             <ImageView
                 android:id="@+id/ivBadge"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/badge"
                 android:layout_marginTop="24dp"
-                android:contentDescription="Badge" />
-
+                android:src="@drawable/trophy2"
+                android:contentDescription="@string/badge" />
         </LinearLayout>
     </ScrollView>
 

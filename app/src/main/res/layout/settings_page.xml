@@ -32,7 +32,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Back"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_back" />
+                android:src="@drawable/ic_back"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <!-- Spacer -->
             <View
@@ -48,7 +49,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Menu"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_menu" />
+                android:src="@drawable/ic_menu"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
 
 
@@ -56,9 +58,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Settings"
+            android:fontFamily="@font/abhaya_libre"
+            android:text="@string/settings"
             android:textColor="#000000"
-            android:textSize="24sp"
+            android:textSize="34sp"
             android:textStyle="bold" />
 
 
@@ -68,13 +71,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="RtlHardcoded">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Language"
+                android:text="@string/language"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -88,13 +92,13 @@
                     android:id="@+id/rbEnglish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="English" />
+                    android:text="@string/english" />
 
                 <RadioButton
                     android:id="@+id/rbAfrikaans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Afrikaans" />
+                    android:text="@string/afrikaans" />
             </RadioGroup>
         </LinearLayout>
 
@@ -121,7 +125,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
-                android:text="System Settings" />
+                android:text="@string/system_settings" />
         </LinearLayout>
 
         <LinearLayout
@@ -141,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
-                android:text="Currency" />
+                android:text="@string/currency" />
 
             <Spinner
                 android:id="@+id/spinnerCurrency"
@@ -161,7 +165,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:background="@drawable/edittext_border"
-            android:hint="Change email"
+            android:hint="@string/change_email"
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
             tools:ignore="VisualLintTextFieldSize" />
@@ -172,7 +176,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@drawable/edittext_border"
-            android:hint="Confirm email"
+            android:hint="@string/confirm_email"
             android:inputType="textEmailAddress"
             android:minHeight="48dp" />
 
@@ -183,7 +187,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:background="@drawable/edittext_border"
-            android:hint="Change password"
+            android:hint="@string/change_password"
             android:inputType="textPassword"
             android:minHeight="48dp" />
 
@@ -204,7 +208,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:backgroundTint="#F8C9D5"
-            android:text="Log out"
+            android:text="@string/log_out"
             android:textColor="#FFFFFF"
             tools:ignore="VisualLintButtonSize" />
     </LinearLayout>

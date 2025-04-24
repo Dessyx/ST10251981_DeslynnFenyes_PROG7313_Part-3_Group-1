@@ -8,14 +8,17 @@ import androidx.room.RoomDatabase
 //import com.example.prog7313_groupwork.entities.CategoryDAO
 import com.example.prog7313_groupwork.entities.Expense
 import com.example.prog7313_groupwork.entities.ExpenseDAO
+import com.example.prog7313_groupwork.entities.Income
+import com.example.prog7313_groupwork.entities.IncomeDAO
 import com.example.prog7313_groupwork.entities.User
 import com.example.prog7313_groupwork.entities.UserDAO
 
-@Database(entities = [User::class, Expense::class], version = 1)
+@Database(entities = [User::class, Expense::class, Income::class], version = 2)
 abstract class AstraDatabase : RoomDatabase() {
 
     abstract fun userDAO(): UserDAO
     abstract fun expenseDAO(): ExpenseDAO
+    abstract fun incomeDAO(): IncomeDAO
     //abstract fun CategoryDAO(): CategoryDAO
 
     companion object {
@@ -28,7 +31,8 @@ abstract class AstraDatabase : RoomDatabase() {
                     context.applicationContext,
                     AstraDatabase::class.java,
                     "astra-Database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 instance
             }

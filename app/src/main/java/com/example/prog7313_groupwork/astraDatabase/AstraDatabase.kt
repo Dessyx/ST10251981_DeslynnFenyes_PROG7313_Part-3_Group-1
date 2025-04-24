@@ -14,15 +14,20 @@ import com.example.prog7313_groupwork.entities.User
 import com.example.prog7313_groupwork.entities.UserDAO
 import com.example.prog7313_groupwork.entities.DebtPlan
 import com.example.prog7313_groupwork.entities.DebtPlanDAO
+import com.example.prog7313_groupwork.entities.Budget
+import com.example.prog7313_groupwork.entities.BudgetCategory
+import com.example.prog7313_groupwork.entities.BudgetDAO
 
 @Database(
     entities = [
         User::class,
         Expense::class,
         Income::class,
-        DebtPlan::class
+        DebtPlan::class,
+        Budget::class,
+        BudgetCategory::class
     ],
-    version = 3
+    version = 4
 )
 abstract class AstraDatabase : RoomDatabase() {
 
@@ -30,6 +35,7 @@ abstract class AstraDatabase : RoomDatabase() {
     abstract fun expenseDAO(): ExpenseDAO
     abstract fun incomeDAO(): IncomeDAO
     abstract fun debtPlanDAO(): DebtPlanDAO
+    abstract fun budgetDAO(): BudgetDAO
     //abstract fun CategoryDAO(): CategoryDAO
 
     companion object {

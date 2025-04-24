@@ -8,17 +8,18 @@
 
     <!-- Header -->
     <LinearLayout
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingVertical="8dp">
+        android:paddingVertical="8dp"
+        app:layout_constraintTop_toTopOf="parent">
 
         <!-- Back button with icon on the left -->
-
-        <!-- Spacer -->
         <ImageButton
+            android:id="@+id/backButton"
             android:layout_width="40dp"
             android:layout_height="42dp"
             android:layout_gravity="start"
@@ -30,6 +31,7 @@
             android:src="@drawable/ic_back"
             tools:ignore="TouchTargetSizeCheck" />
 
+        <!-- Spacer -->
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -37,6 +39,7 @@
 
         <!-- Menu button with icon on the right -->
         <ImageButton
+            android:id="@+id/menuButton"
             android:layout_width="53dp"
             android:layout_height="53dp"
             android:layout_gravity="end"
@@ -47,7 +50,6 @@
             tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
-
     <!-- Main Content -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,19 +59,17 @@
         app:layout_constraintTop_toBottomOf="@id/headerLayout"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Amount of Debt Section -->
-
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="106dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="32dp"
             android:fontFamily="@font/abhaya_libre_extrabold"
-            android:paddingBottom="130dp"
+            android:paddingBottom="5dp"
             android:text="Debt Planner"
             android:textColor="@android:color/black"
             android:textSize="42sp" />
 
+        <!-- Amount of Debt Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,17 +78,17 @@
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
-        <EditText
-            android:id="@+id/debtAmountInput"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/totalDebtInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/text_background"
-            android:padding="16dp"
-            android:text="R20 000"
-            android:textColor="#FF0000"
-            android:textSize="24sp"
             android:fontFamily="@font/kosugi_maru"
-            android:layout_marginBottom="24dp"/>
+            android:hint="Enter debt amount"
+            android:inputType="numberDecimal"
+            android:textColor="#FF0000"
+            android:textSize="24sp" />
 
         <!-- Salary Total Section -->
         <TextView
@@ -99,55 +99,69 @@
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
-        <EditText
-            android:id="@+id/salaryInput"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/monthlySalaryInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/text_background"
-            android:padding="16dp"
-            android:text="R45 000"
-            android:textColor="#4CAF50"
-            android:textSize="24sp"
             android:fontFamily="@font/kosugi_maru"
-            android:layout_marginBottom="24dp"/>
+            android:hint="Enter monthly salary"
+            android:inputType="numberDecimal"
+            android:textColor="#4CAF50"
+            android:textSize="24sp" />
 
         <!-- Period Selection -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Period To Pay off Debt"
+            android:text="Payment Period (months)"
             android:textSize="16sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/kosugi_maru"
             android:layout_marginBottom="8dp"/>
 
-        <Spinner
-            android:id="@+id/periodSpinner"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/paymentPeriodInput"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/text_background"
-            android:layout_marginBottom="48dp"/>
+            android:fontFamily="@font/kosugi_maru"
+            android:hint="Enter number of months"
+            android:inputType="number"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/calculateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/ButtonPink"
+            android:text="Calculate Monthly Payment"
+            android:textSize="14sp" />
 
         <!-- Save Section -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_height="215dp"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <TextView
+                <Button
+                    android:id="@+id/saveButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/ButtonPink"
                     android:fontFamily="@font/kosugi_maru"
                     android:text="SAVE"
-                    android:textColor="@android:color/black"
-                    android:textSize="29sp" />
+                    android:textSize="24sp" />
 
                 <ImageView
                     android:layout_width="42dp"
@@ -159,12 +173,11 @@
             <TextView
                 android:id="@+id/monthlyPaymentText"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/text_background"
                 android:fontFamily="@font/kosugi_maru"
-                android:padding="12dp"
-                android:text="R2500"
+                android:text="R0.00"
                 android:textColor="@android:color/black"
                 android:textSize="42sp" />
 

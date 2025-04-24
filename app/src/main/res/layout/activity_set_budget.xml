@@ -266,12 +266,12 @@
                         android:src="@drawable/ic_entertainment" />
 
                     <TextView
-                        android:layout_width="104dp"
+                        android:layout_width="95dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/kosugi_maru"
                         android:text="Entertainment"
                         android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:textSize="14sp" />
 
                     <com.google.android.material.slider.Slider
                         android:id="@+id/entertainmentSlider"

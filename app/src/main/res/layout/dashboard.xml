@@ -194,15 +194,17 @@
             <!-- Category Spinner -->
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="76dp"
-                android:layout_height="27dp"
+                android:layout_width="59dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ic_category" />
+                app:srcCompat="@drawable/filter_category" />
 
             <Spinner
                 android:id="@+id/categorySpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:entries="@array/categories_array"
                 android:prompt="@string/category_prompt"
                 android:spinnerMode="dropdown" />
@@ -215,16 +217,17 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="83dp"
+                android:layout_width="62dp"
                 android:layout_height="25dp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ic_category" />
+                app:srcCompat="@drawable/filter_date" />
 
             <Spinner
                 android:id="@+id/monthSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="center|end"
                 android:layout_marginTop="0dp"
                 android:entries="@array/months_array"
                 android:prompt="@string/month_prompt"

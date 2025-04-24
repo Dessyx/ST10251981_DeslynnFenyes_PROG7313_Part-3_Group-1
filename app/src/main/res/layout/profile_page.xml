@@ -112,7 +112,8 @@
                 android:layout_marginTop="24dp"
                 android:background="@drawable/edittext_border"
                 android:hint="@string/name"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:inputType="textPersonName" />
 
             <EditText
                 android:id="@+id/etSurname"
@@ -121,7 +122,8 @@
                 android:layout_marginTop="12dp"
                 android:background="@drawable/edittext_border"
                 android:hint="@string/surname"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:inputType="textPersonName" />
 
             <EditText
                 android:id="@+id/etEmail"

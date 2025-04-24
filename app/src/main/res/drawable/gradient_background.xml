@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="135"
+        android:endColor="#E6E6FA"  <!-- Light purple -->
+        android:centerColor="#FFC0CB"  <!-- Pink -->
+        android:startColor="#FFE4E1"  <!-- Light pink -->
+        android:type="linear" />
+</shape> 

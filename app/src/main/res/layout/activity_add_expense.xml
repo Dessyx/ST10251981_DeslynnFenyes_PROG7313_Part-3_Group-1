@@ -21,6 +21,7 @@
 
         <!-- Spacer -->
         <ImageButton
+            android:id="@+id/backButton"
             android:layout_width="40dp"
             android:layout_height="42dp"
             android:layout_gravity="start"

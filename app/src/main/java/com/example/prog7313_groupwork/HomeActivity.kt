@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import android.content.Intent
+import android.widget.ImageButton
+import android.widget.Button
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var budgetGoalText: TextView
@@ -26,6 +29,26 @@ class HomeActivity : AppCompatActivity() {
         overspentCategoriesText = findViewById(R.id.overspentCategories)
         savingProgressBar = findViewById(R.id.savingProgressBar)
         progressPercentageText = findViewById(R.id.progressPercentage)
+
+//----------------------------------------------------------------------------------
+//                              Page navigation section 
+
+        // Setup Add Category button click
+        val addCategoryButton = findViewById<ImageButton>(R.id.btnAddCategory)
+        addCategoryButton.setOnClickListener {
+            val intent = Intent(this, CategoryActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Setup Dashboard button click
+        val dashboardButton = findViewById<Button>(R.id.dashboardbtn)
+        dashboardButton.setOnClickListener {
+            val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
+        }
+
+// ----------------------------------------------------------------------------------
+
 
         // Get DAOs
         val db = AstraDatabase.getDatabase(this)

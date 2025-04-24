@@ -1,8 +1,10 @@
 package com.example.prog7313_groupwork
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -60,6 +62,18 @@ class CategoryActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please fill in both fields", Toast.LENGTH_SHORT).show()
             }
         }
+
+        //----------------------------------------------------------------------------------
+        //                              Page navigation section 
+
+        val backButton = findViewById<ImageButton>(R.id.back_button)
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP 
+            startActivity(intent)
+            finish()
+        }
+        //----------------------------------------------------------------------------------
     }
 
     private fun loadCategories() {

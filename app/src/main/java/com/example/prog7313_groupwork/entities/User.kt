@@ -11,5 +11,8 @@ data class User(
     val surname: String,
     val userEmail: String,
     val passwordHash: String = "",
-    val created: Long = System.currentTimeMillis()
+    val created: Long = System.currentTimeMillis(),
+    val language: String = "en",
+    val currency: String = "USD",
+    val themeColor: String = "light"
 )

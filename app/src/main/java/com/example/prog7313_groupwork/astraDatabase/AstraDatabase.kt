@@ -12,13 +12,24 @@ import com.example.prog7313_groupwork.entities.Income
 import com.example.prog7313_groupwork.entities.IncomeDAO
 import com.example.prog7313_groupwork.entities.User
 import com.example.prog7313_groupwork.entities.UserDAO
+import com.example.prog7313_groupwork.entities.DebtPlan
+import com.example.prog7313_groupwork.entities.DebtPlanDAO
 
-@Database(entities = [User::class, Expense::class, Income::class], version = 2)
+@Database(
+    entities = [
+        User::class,
+        Expense::class,
+        Income::class,
+        DebtPlan::class
+    ],
+    version = 3
+)
 abstract class AstraDatabase : RoomDatabase() {
 
     abstract fun userDAO(): UserDAO
     abstract fun expenseDAO(): ExpenseDAO
     abstract fun incomeDAO(): IncomeDAO
+    abstract fun debtPlanDAO(): DebtPlanDAO
     //abstract fun CategoryDAO(): CategoryDAO
 
     companion object {

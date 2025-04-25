@@ -14,6 +14,7 @@ import com.example.prog7313_groupwork.entities.Budget
 import com.example.prog7313_groupwork.entities.BudgetCategory
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -85,11 +86,33 @@ class SetBudgetActivity : AppCompatActivity() {
         }
 
         saveBudgetButton.setOnClickListener {
-            saveBudget()
+            if (validateInput()) {
+                saveBudget()
+            }
         }
 
         backButton.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun validateInput(): Boolean {
+        if (totalBudgetSlider.value <= 0) {
+            showError("Total budget must be greater than 0")
+            return false
+        }
+
+        if (categorySliders.isEmpty()) {
+            showError("Please add at least one category")
+            return false
+        }
+
+        return true
+    }
+
+    private fun showError(message: String) {
+        runOnUiThread {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -102,6 +125,8 @@ class SetBudgetActivity : AppCompatActivity() {
                 val categoryName = dialogView.findViewById<TextView>(R.id.categoryNameInput).text.toString()
                 if (categoryName.isNotBlank()) {
                     addNewCategory(categoryName)
+                } else {
+                    showError("Category name cannot be empty")
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -110,6 +135,11 @@ class SetBudgetActivity : AppCompatActivity() {
     }
 
     private fun addNewCategory(categoryName: String) {
+        if (categorySliders.containsKey(categoryName)) {
+            showError("Category already exists")
+            return
+        }
+
         val categoryLayout = LayoutInflater.from(this)
             .inflate(R.layout.item_budget_category, categoryContainer, false)
 
@@ -128,7 +158,6 @@ class SetBudgetActivity : AppCompatActivity() {
     }
 
     private fun updateSliderLabel(slider: Slider, value: Float) {
-        // Update any additional UI elements if needed
         slider.contentDescription = currencyFormat.format(value)
     }
 
@@ -142,17 +171,18 @@ class SetBudgetActivity : AppCompatActivity() {
                 latestBudget?.let { budget ->
                     totalBudgetSlider.value = budget.totalAmount.toFloat()
                     
-                    // Collect the Flow in a coroutine
-                    database.budgetDAO().getBudgetCategories(budget.id).collect { categories ->
-                        categories.forEach { category ->
-                            categorySliders[category.name]?.value = category.limit.toFloat()
+                    database.budgetDAO().getBudgetCategories(budget.id)
+                        .catch { e ->
+                            showError("Error loading categories: ${e.message}")
                         }
-                    }
+                        .collect { categories ->
+                            categories.forEach { category ->
+                                categorySliders[category.name]?.value = category.limit.toFloat()
+                            }
+                        }
                 }
             } catch (e: Exception) {
-                runOnUiThread {
-                    Toast.makeText(this@SetBudgetActivity, "Error loading budget: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+                showError("Error loading budget: ${e.message}")
             }
         }
     }
@@ -162,11 +192,15 @@ class SetBudgetActivity : AppCompatActivity() {
             try {
                 // TODO: Replace with actual user ID
                 val userId = 1
+                val calendar = Calendar.getInstance()
                 
                 val budget = Budget(
                     userId = userId,
                     totalAmount = totalBudgetSlider.value.toDouble(),
-                    createdDate = System.currentTimeMillis()
+                    createdDate = System.currentTimeMillis(),
+                    monthlyGoal = totalBudgetSlider.value.toDouble(), // Setting monthly goal same as total amount
+                    month = calendar.get(Calendar.MONTH),
+                    year = calendar.get(Calendar.YEAR)
                 )
 
                 val categories = categorySliders.map { (name, slider) ->
@@ -180,15 +214,17 @@ class SetBudgetActivity : AppCompatActivity() {
                 }
 
                 database.budgetDAO().saveBudgetWithCategories(budget, categories)
-                runOnUiThread {
-                    Toast.makeText(this@SetBudgetActivity, "Budget saved successfully!", Toast.LENGTH_SHORT).show()
-                }
+                showSuccess("Budget saved successfully!")
                 finish()
             } catch (e: Exception) {
-                runOnUiThread {
-                    Toast.makeText(this@SetBudgetActivity, "Error saving budget: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+                showError("Error saving budget: ${e.message}")
             }
+        }
+    }
+
+    private fun showSuccess(message: String) {
+        runOnUiThread {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 

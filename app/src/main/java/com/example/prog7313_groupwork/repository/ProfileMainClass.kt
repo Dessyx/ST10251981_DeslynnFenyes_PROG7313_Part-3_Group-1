@@ -52,8 +52,9 @@ class ProfileMainClass : AppCompatActivity() {
                 existingUser?.let { user ->
                     currentUserId = user.id
                     runOnUiThread {
-                        etName.setText(user.name)
-                        etSurname.setText(user.surname)
+                        val nameParts = user.NameSurname.split(" ", limit = 2)
+                        etName.setText(nameParts.getOrNull(0) ?: "")
+                        etSurname.setText(nameParts.getOrNull(1) ?: "")
                         etEmail.setText(user.userEmail)
                     }
                 }
@@ -96,9 +97,10 @@ class ProfileMainClass : AppCompatActivity() {
             try {
                 val user = User(
                     id = if (currentUserId != -1L) currentUserId else 0,
-                    name = name,
-                    surname = surname,
-                    userEmail = email
+                    NameSurname = "$name $surname",
+                    PhoneNumber = 0, // Default value, you might want to add a phone field in your UI
+                    userEmail = email,
+                    passwordHash = "" // This should be handled in a different screen/flow
                 )
 
                 db.userDAO().insertUser(user)

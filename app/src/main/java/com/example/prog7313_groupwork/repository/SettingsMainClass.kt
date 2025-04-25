@@ -109,7 +109,17 @@ class SettingsMainClass : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     user?.let { loadedUser ->
                         etChangeEmail.setText(loadedUser.userEmail)
-                        // Load other settings as needed
+                        when (loadedUser.language) {
+                            "en" -> rbEnglish.isChecked = true
+                            "af" -> rbAfrikaans.isChecked = true
+                        }
+                        val currencyAdapter = spinnerCurrency.adapter as ArrayAdapter<*>
+                        val position = (0 until currencyAdapter.count).firstOrNull { 
+                            currencyAdapter.getItem(it).toString() == loadedUser.currency 
+                        } ?: 0
+                        spinnerCurrency.setSelection(position)
+                        selectedColor = loadedUser.themeColor.toInt()
+                        window.decorView.setBackgroundColor(selectedColor)
                     }
                 }
             } catch (e: Exception) {

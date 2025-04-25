@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "expenses",
+    tableName = "awards",
     foreignKeys = [
         ForeignKey(
             entity = User::class,
@@ -15,15 +15,12 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class Expense(
+data class Award(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val userId: Long,
-    val date: Long = System.currentTimeMillis(),
-    val category: String,
-    val amount: Double,
-    val description: String,
-    val imagePath: String? = null,
-    val isActive: Boolean = true,
-    val created: Long = System.currentTimeMillis()
-) 
+    val goalAmount: Int,
+    var achieved: Boolean = false,
+    var dateAchieved: Long? = null,
+    val awardType: String // "BADGE" or "GIFT_CARD"
+)

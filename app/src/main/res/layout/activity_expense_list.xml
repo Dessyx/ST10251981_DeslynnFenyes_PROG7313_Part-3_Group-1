@@ -82,10 +82,11 @@
 
         <ImageButton
             android:id="@+id/filterButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="46dp"
+            android:layout_height="55dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Filter"
+            android:padding="20dp"
             android:src="@drawable/ic_filter" />
     </LinearLayout>
 

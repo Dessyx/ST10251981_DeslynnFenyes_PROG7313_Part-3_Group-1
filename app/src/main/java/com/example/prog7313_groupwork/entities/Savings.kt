@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "expenses",
+    tableName = "savings",
     foreignKeys = [
         ForeignKey(
             entity = User::class,
@@ -15,15 +15,13 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class Expense(
+data class Savings(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val userId: Long,
-    val date: Long = System.currentTimeMillis(),
-    val category: String,
     val amount: Double,
-    val description: String,
-    val imagePath: String? = null,
+    val date: Long = System.currentTimeMillis(),
     val isActive: Boolean = true,
-    val created: Long = System.currentTimeMillis()
-) 
+    val description: String = "",
+    val category: String = "General"
+)

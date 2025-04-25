@@ -22,5 +22,7 @@ data class BudgetCategory(
     val userId: Int,
     val name: String,
     val icon: String,
-    val limit: Double
+    val limit: Double,
+    val spent: Double = 0.0,
+    val isActive: Boolean = true
 ) 

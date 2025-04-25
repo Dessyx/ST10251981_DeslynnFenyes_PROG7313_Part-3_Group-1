@@ -107,6 +107,13 @@ class SetBudgetActivity : AppCompatActivity() {
             return false
         }
 
+        // Validate that category limits don't exceed total budget
+        val totalCategoryLimits = categorySliders.values.sumOf { it.value.toDouble() }
+        if (totalCategoryLimits > totalBudgetSlider.value) {
+            showError("Total category limits cannot exceed total budget")
+            return false
+        }
+
         return true
     }
 
@@ -166,20 +173,26 @@ class SetBudgetActivity : AppCompatActivity() {
             try {
                 // TODO: Replace with actual user ID
                 val userId = 1
-                val latestBudget = database.budgetDAO().getLatestBudget(userId)
+                val calendar = Calendar.getInstance()
                 
-                latestBudget?.let { budget ->
-                    totalBudgetSlider.value = budget.totalAmount.toFloat()
-                    
-                    database.budgetDAO().getBudgetCategories(budget.id)
-                        .catch { e ->
-                            showError("Error loading categories: ${e.message}")
-                        }
-                        .collect { categories ->
-                            categories.forEach { category ->
-                                categorySliders[category.name]?.value = category.limit.toFloat()
+                // Try to get current month's budget first
+                database.budgetDAO().getCurrentBudget(
+                    month = calendar.get(Calendar.MONTH),
+                    year = calendar.get(Calendar.YEAR)
+                ).collect { currentBudget ->
+                    currentBudget?.let { budget ->
+                        totalBudgetSlider.value = budget.totalAmount.toFloat()
+                        
+                        database.budgetDAO().getBudgetCategories(budget.id)
+                            .catch { e ->
+                                showError("Error loading categories: ${e.message}")
                             }
-                        }
+                            .collect { categories ->
+                                categories.forEach { category ->
+                                    categorySliders[category.name]?.value = category.limit.toFloat()
+                                }
+                            }
+                    }
                 }
             } catch (e: Exception) {
                 showError("Error loading budget: ${e.message}")

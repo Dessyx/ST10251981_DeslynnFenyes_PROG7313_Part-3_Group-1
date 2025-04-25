@@ -110,6 +110,7 @@
             android:layout_height="20dp" />
 
         <LinearLayout
+            android:id="@+id/layoutSystemSettings"
             android:layout_width="344dp"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -203,7 +204,7 @@
 
         <!-- Log out Button -->
         <Button
-            android:id="@+id/btnSaveChanges"
+            android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"

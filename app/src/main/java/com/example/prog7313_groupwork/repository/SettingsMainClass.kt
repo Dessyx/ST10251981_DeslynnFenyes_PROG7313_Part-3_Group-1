@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import android.graphics.Color
-import android.content.Context
 import android.content.res.Configuration
 import java.util.Locale
 
@@ -55,7 +54,7 @@ class SettingsMainClass : AppCompatActivity() {
         etConfirmEmail = findViewById(R.id.etConfirmEmail)
         etChangePassword = findViewById(R.id.etChangePassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
-        btnSaveChanges = findViewById(R.id.btnSaveChanges)
+        btnSaveChanges = findViewById(R.id.btnLogout)
         btnLogout = findViewById(R.id.btnLogout)
 
         // Setup currency spinner

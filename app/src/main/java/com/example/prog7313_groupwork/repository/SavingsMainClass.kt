@@ -22,7 +22,7 @@ class SavingsMainClass : AppCompatActivity() {
     private lateinit var progressBarSavings: ProgressBar
     private lateinit var tvProgressPercent: TextView
     
-    private val savingsGoal = 6000  // Monthly goal
+    private val savingsGoal = 6000.0  // Monthly goal as Double
     private var currentUserId: Long = 1 // Should be set from login session
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +59,7 @@ class SavingsMainClass : AppCompatActivity() {
             return
         }
 
-        val amount = input.toIntOrNull()
+        val amount = input.toDoubleOrNull()
         if (amount == null || amount <= 0) {
             Toast.makeText(this, "Enter a valid amount", Toast.LENGTH_SHORT).show()
             return
@@ -68,7 +68,7 @@ class SavingsMainClass : AppCompatActivity() {
         addSavings(amount)
     }
 
-    private fun addSavings(amount: Int) {
+    private fun addSavings(amount: Double) {
         lifecycleScope.launch {
             try {
                 // Create savings entry
@@ -97,11 +97,11 @@ class SavingsMainClass : AppCompatActivity() {
     private fun updateSavingsDisplay() {
         lifecycleScope.launch {
             try {
-                val total = db.savingsDAO().getTotalSavings(currentUserId) ?: 0
-                val percent = ((total.toFloat() / savingsGoal) * 100).coerceAtMost(100f).toInt()
+                val total = db.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+                val percent = ((total / savingsGoal) * 100).coerceAtMost(100.0).toInt()
 
                 runOnUiThread {
-                    tvTotalSavings.text = "R $total.00"
+                    tvTotalSavings.text = String.format("R %.2f", total)
                     progressBarSavings.progress = percent
                     tvProgressPercent.text = "$percent%"
                 }

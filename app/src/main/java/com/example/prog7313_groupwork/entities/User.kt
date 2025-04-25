@@ -10,5 +10,8 @@ data class User (
     var PhoneNumber: Int,
     var userEmail: String,
     var passwordHash: String,
-    var created: Long = System.currentTimeMillis()
+    var created: Long = System.currentTimeMillis(),
+    var language: String = "en", // Default language
+    var currency: String = "USD", // Default currency
+    var themeColor: Int = 0 // Default theme color
 )

@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
+import com.example.prog7313_groupwork.LoginActivity
 import android.graphics.Color
 import android.content.res.Configuration
 import java.util.Locale
@@ -54,7 +55,6 @@ class SettingsMainClass : AppCompatActivity() {
         etConfirmEmail = findViewById(R.id.etConfirmEmail)
         etChangePassword = findViewById(R.id.etChangePassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
-        btnSaveChanges = findViewById(R.id.btnLogout)
         btnLogout = findViewById(R.id.btnLogout)
 
         // Setup currency spinner
@@ -118,7 +118,7 @@ class SettingsMainClass : AppCompatActivity() {
                             currencyAdapter.getItem(it).toString() == loadedUser.currency 
                         } ?: 0
                         spinnerCurrency.setSelection(position)
-                        selectedColor = loadedUser.themeColor.toInt()
+                        selectedColor = loadedUser.themeColor
                         window.decorView.setBackgroundColor(selectedColor)
                     }
                 }
@@ -139,11 +139,7 @@ class SettingsMainClass : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@SettingsMainClass,
-                        "Failed to update language",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast("Failed to update language")
                 }
             }
         }
@@ -227,19 +223,11 @@ class SettingsMainClass : AppCompatActivity() {
             try {
                 db.userDAO().updateUserThemeColor(currentUserId, color)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@SettingsMainClass,
-                        "Theme color saved",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast("Theme color saved")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@SettingsMainClass,
-                        "Failed to save theme color",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast("Failed to save theme color")
                 }
             }
         }

@@ -4,19 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-//import com.example.prog7313_groupwork.entities.Category
-//import com.example.prog7313_groupwork.entities.CategoryDAO
-import com.example.prog7313_groupwork.entities.Expense
-import com.example.prog7313_groupwork.entities.ExpenseDAO
-import com.example.prog7313_groupwork.entities.Income
-import com.example.prog7313_groupwork.entities.IncomeDAO
-import com.example.prog7313_groupwork.entities.User
-import com.example.prog7313_groupwork.entities.UserDAO
-import com.example.prog7313_groupwork.entities.DebtPlan
-import com.example.prog7313_groupwork.entities.DebtPlanDAO
-import com.example.prog7313_groupwork.entities.Budget
-import com.example.prog7313_groupwork.entities.BudgetCategory
-import com.example.prog7313_groupwork.entities.BudgetDAO
+import com.example.prog7313_groupwork.entities.*
 
 @Database(
     entities = [
@@ -25,9 +13,12 @@ import com.example.prog7313_groupwork.entities.BudgetDAO
         Income::class,
         DebtPlan::class,
         Budget::class,
-        BudgetCategory::class
+        BudgetCategory::class,
+        Award::class,
+        Savings::class
     ],
-    version = 4
+    version = 6,
+    exportSchema = false
 )
 abstract class AstraDatabase : RoomDatabase() {
 
@@ -36,6 +27,8 @@ abstract class AstraDatabase : RoomDatabase() {
     abstract fun incomeDAO(): IncomeDAO
     abstract fun debtPlanDAO(): DebtPlanDAO
     abstract fun budgetDAO(): BudgetDAO
+    abstract fun awardDAO(): AwardDAO
+    abstract fun savingsDAO(): SavingsDAO
     //abstract fun CategoryDAO(): CategoryDAO
 
     companion object {
@@ -47,7 +40,7 @@ abstract class AstraDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AstraDatabase::class.java,
-                    "astra-Database"
+                    "astra-database"
                 ).fallbackToDestructiveMigration()
                 .build()
                 INSTANCE = instance

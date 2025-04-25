@@ -25,4 +25,7 @@ interface IncomeDAO {
 
     @Query("SELECT * FROM income WHERE userId = :userId AND category = :category")
     fun getIncomeByCategory(userId: Int, category: String): Flow<List<Income>>
+
+    @Query("SELECT * FROM income")
+    suspend fun getAllActiveIncome(): List<Income>
 } 

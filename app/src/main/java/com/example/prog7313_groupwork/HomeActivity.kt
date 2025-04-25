@@ -13,12 +13,17 @@ import java.util.Calendar
 import android.content.Intent
 import android.widget.ImageButton
 import android.widget.Button
+import android.widget.Toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var budgetGoalText: TextView
     private lateinit var overspentCategoriesText: TextView
     private lateinit var savingProgressBar: ProgressBar
     private lateinit var progressPercentageText: TextView
+    private lateinit var activeBalanceValue: TextView
+    private lateinit var database: AstraDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +34,11 @@ class HomeActivity : AppCompatActivity() {
         overspentCategoriesText = findViewById(R.id.overspentCategories)
         savingProgressBar = findViewById(R.id.savingProgressBar)
         progressPercentageText = findViewById(R.id.progressPercentage)
+        activeBalanceValue = findViewById(R.id.activeBalanceValue)
+        database = AstraDatabase.getDatabase(this)
+
+        // Calculate and update active balance
+        updateActiveBalance()
 
 //----------------------------------------------------------------------------------
 //                              Page navigation section 
@@ -95,5 +105,37 @@ class HomeActivity : AppCompatActivity() {
                 progressPercentageText.text = "$progress%"
             }
         }
+    }
+
+    private fun updateActiveBalance() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Get all active expenses
+                val expenses = database.expenseDAO().getAllActiveExpenses()
+                val totalExpenses = expenses.sumOf { it.amount }
+
+                // Get all active income
+                val incomes = database.incomeDAO().getAllActiveIncome()
+                val totalIncome = incomes.sumOf { it.amount }
+
+                // Calculate active balance (income - expenses)
+                val activeBalance = totalIncome - totalExpenses
+
+                // Update UI on main thread
+                withContext(Dispatchers.Main) {
+                    activeBalanceValue.text = "R %.2f".format(activeBalance)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@HomeActivity, "Error calculating balance: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Update active balance whenever the activity resumes
+        updateActiveBalance()
     }
 }

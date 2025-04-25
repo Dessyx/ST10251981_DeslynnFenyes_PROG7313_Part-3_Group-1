@@ -48,4 +48,7 @@ interface ExpenseDAO {
 
     @Query("SELECT DISTINCT category FROM expenses WHERE userId = :userId AND isActive = 1")
     fun getExpenseCategories(userId: Long): Flow<List<String>>
+
+    @Query("SELECT * FROM expenses WHERE isActive = 1")
+    suspend fun getAllActiveExpenses(): List<Expense>
 } 

@@ -42,8 +42,8 @@
 
     <ImageButton
         android:id="@+id/userProfileIcon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="@null"
         android:contentDescription="User Profile"
         android:scaleType="centerCrop"
@@ -194,7 +194,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="Add Category"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_category" />
+                android:src="@drawable/ic_home_category" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -249,6 +249,7 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="20dp"
         android:text="History"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -286,7 +287,7 @@
             android:layout_weight="1"
             android:text="Monthly budget goal"
             android:textColor="@android:color/black"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -302,8 +303,8 @@
         <Button
             android:id="@+id/dashboardbtn"
             android:layout_width="wrap_content"
-            android:layout_height="37sp"
-            android:layout_marginStart="16dp"
+            android:layout_height="48sp"
+            android:layout_marginStart="10dp"
             android:backgroundTint="@android:color/black"
             android:text="See dashboard"
             android:textColor="@android:color/white"
@@ -500,7 +501,7 @@
             <ImageButton
                 android:id="@+id/btnSettings"
                 android:layout_width="48dp"
-                android:layout_height="38dp"
+                android:layout_height="48dp"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
                 android:contentDescription="Add Category"

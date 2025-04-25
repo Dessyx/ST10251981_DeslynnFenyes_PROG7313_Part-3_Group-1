@@ -46,6 +46,8 @@
 
     <string name="category_prompt">Select Category</string>
     <string name="month_prompt">Select Month</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="add_income">Add Income</string>
 
     <string-array name="currency_options">
         <item>R (ZAR)</item>

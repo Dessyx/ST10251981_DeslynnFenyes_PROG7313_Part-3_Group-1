@@ -4,11 +4,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
-data class User (
-    @PrimaryKey(autoGenerate = true) val id: Long=0,
-    var NameSurname: String,
-    var PhoneNumber: Int,
-    var userEmail: String,
-    var passwordHash: String,
-    var created: Long = System.currentTimeMillis()
+data class User(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val name: String,
+    val surname: String,
+    val userEmail: String,
+    val passwordHash: String = "",
+    val created: Long = System.currentTimeMillis(),
+    val language: String = "en",
+    val currency: String = "USD",
+    val themeColor: String = "light"
 )

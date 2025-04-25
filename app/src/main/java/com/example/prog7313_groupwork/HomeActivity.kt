@@ -53,7 +53,7 @@ class HomeActivity : AppCompatActivity() {
         // Get DAOs
         val db = AstraDatabase.getDatabase(this)
         val budgetDAO = db.budgetDAO()
-        val categoryDAO = db.CategoryDAO()
+        val categoryDAO = db.categoryDAO()
 
         // Observe current budget and categories
         lifecycleScope.launch {

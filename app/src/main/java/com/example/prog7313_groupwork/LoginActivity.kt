@@ -30,13 +30,14 @@ class LoginActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.passwordEditText)
         loginButton = findViewById(R.id.loginButton)
         registerButton = findViewById(R.id.registerButton)
+        backButton = findViewById(R.id.back_button)
 
         val userDao = AstraDatabase.getDatabase(this).userDAO()
 
-    /*    registerButton.setOnClickListener {
+        registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
-        }*/
+        }
 
         backButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -44,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()

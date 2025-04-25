@@ -4,13 +4,26 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.prog7313_groupwork.entities.*
+import com.example.prog7313_groupwork.entities.User
+import com.example.prog7313_groupwork.entities.Award
+import com.example.prog7313_groupwork.entities.Savings
+import com.example.prog7313_groupwork.entities.UserDAO
+import com.example.prog7313_groupwork.entities.AwardDAO
+import com.example.prog7313_groupwork.entities.SavingsDAO
 
-@Database(entities = [User::class, Category::class, Budget::class], version = 1)
+@Database(
+    entities = [
+        User::class,
+        Award::class,
+        Savings::class
+    ],
+    version = 1,
+    exportSchema = false
+)
 abstract class AstraDatabase : RoomDatabase() {
     abstract fun userDAO(): UserDAO
-    abstract fun CategoryDAO(): CategoryDAO
-    abstract fun budgetDAO(): BudgetDAO
+    abstract fun awardDAO(): AwardDAO
+    abstract fun savingsDAO(): SavingsDAO
 
     companion object {
         @Volatile
@@ -21,7 +34,7 @@ abstract class AstraDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AstraDatabase::class.java,
-                    "astra-Database"
+                    "astra-database"
                 ).build()
                 INSTANCE = instance
                 instance

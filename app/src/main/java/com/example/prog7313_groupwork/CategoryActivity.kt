@@ -26,7 +26,7 @@ class CategoryActivity : AppCompatActivity() {
         setContentView(R.layout.category)
 
         val db = AstraDatabase.getDatabase(this)
-        categoryDAO = db.CategoryDAO()
+        categoryDAO = db.categoryDAO()
 
         // Setup RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.categoriesRecyclerView)

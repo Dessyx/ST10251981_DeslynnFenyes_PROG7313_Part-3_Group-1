@@ -53,8 +53,8 @@
 
         <ImageButton
             android:id="@+id/userProfileIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="User Profile"
             android:scaleType="centerCrop"
@@ -192,6 +192,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:entries="@array/categories_array"
+                android:minHeight="48dp"
                 android:prompt="@string/category_prompt"
                 android:spinnerMode="dropdown" />
 
@@ -216,6 +217,7 @@
                 android:layout_gravity="center|end"
                 android:layout_marginTop="0dp"
                 android:entries="@array/months_array"
+                android:minHeight="48dp"
                 android:prompt="@string/month_prompt"
                 android:spinnerMode="dropdown" />
         </LinearLayout>

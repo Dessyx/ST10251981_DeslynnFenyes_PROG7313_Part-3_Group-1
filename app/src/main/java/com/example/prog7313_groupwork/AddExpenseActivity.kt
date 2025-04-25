@@ -2,8 +2,10 @@ package com.example.prog7313_groupwork
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
@@ -12,6 +14,8 @@ import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,6 +30,18 @@ class AddExpenseActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var database: AstraDatabase
     private var selectedDate: Calendar = Calendar.getInstance()
+    private var selectedImageUri: Uri? = null
+    private var selectedImagePath: String? = null
+
+    private val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imagePath = result.data?.getStringExtra("image_path")
+            imagePath?.let {
+                selectedImagePath = it
+                attachImageInput.setText("Image attached")
+            }
+        }
+    }
 
     // Sample categories - you can replace these with categories from your database
     private val categories = arrayOf(
@@ -64,6 +80,9 @@ class AddExpenseActivity : AppCompatActivity() {
         // Set up date picker
         setupDatePicker()
 
+        // Set up image attachment
+        setupImageAttachment()
+
         // Set click listeners
         addExpenseButton.setOnClickListener {
             addExpense()
@@ -76,6 +95,36 @@ class AddExpenseActivity : AppCompatActivity() {
 
         backButton.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun setupImageAttachment() {
+        attachImageInput.setOnClickListener {
+            val intent = Intent(this, CameraActivity::class.java)
+            getContent.launch(intent)
+        }
+    }
+
+    private fun copyImageToPrivateStorage(uri: Uri) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val inputStream = contentResolver.openInputStream(uri)
+                val fileName = "expense_image_${System.currentTimeMillis()}.jpg"
+                val file = File(filesDir, fileName)
+                
+                FileOutputStream(file).use { outputStream ->
+                    inputStream?.copyTo(outputStream)
+                }
+                
+                selectedImagePath = file.absolutePath
+                withContext(Dispatchers.Main) {
+                    attachImageInput.setText(fileName)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AddExpenseActivity, "Failed to save image: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -124,7 +173,7 @@ class AddExpenseActivity : AppCompatActivity() {
                 category = category,
                 amount = expenseAmount,
                 description = description,
-                imagePath = null, // TODO: Implement image attachment
+                imagePath = selectedImagePath,
                 userId = 1 // TODO: Get actual user ID from shared preferences or login session
             )
 
@@ -153,5 +202,8 @@ class AddExpenseActivity : AppCompatActivity() {
         categorySpinner.setSelection(0)
         selectedDate = Calendar.getInstance()
         updateDateDisplay()
+        selectedImageUri = null
+        selectedImagePath = null
+        attachImageInput.text.clear()
     }
 }

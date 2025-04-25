@@ -42,6 +42,8 @@ android {
     }
 }
 
+val camerax_version = "1.4.2"
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -60,4 +62,23 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.camera.camera2)
+    // Simplifies the management of the camera's lifecycle (properly opened,
+    // closed, and released based on the lifecycle of the associated LifecycleOwner (such as an Activity)
+    implementation(libs.androidx.camera.lifecycle)
+    // Provides a set of UI components that can be used to create camera-related UI's to the
+    // app. Such as PreviewView
+    implementation(libs.androidx.camera.view)
+
+    implementation(libs.androidx.room.runtime.v261)
+    annotationProcessor(libs.androidx.room.compiler.v261)
+    implementation(libs.androidx.room.ktx.v261) // for kotlin support
+
+    implementation(libs.guava)
+    implementation(libs.gson)
+
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 }

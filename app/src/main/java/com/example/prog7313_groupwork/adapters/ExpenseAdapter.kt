@@ -1,8 +1,12 @@
 package com.example.prog7313_groupwork.adapters
 
+import android.app.Dialog
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -10,6 +14,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.entities.Expense
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,16 +33,27 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
     class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
         private val categoryName: TextView = itemView.findViewById(R.id.categoryName)
-        private val expenseDescription: TextView = itemView.findViewById(R.id.expenseDescription)
+        private val expenseName: TextView = itemView.findViewById(R.id.expenseName)
         private val expenseDate: TextView = itemView.findViewById(R.id.expenseDate)
         private val expenseAmount: TextView = itemView.findViewById(R.id.expenseAmount)
+        private val imageButton: ImageButton = itemView.findViewById(R.id.attachImageInput)
         private val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
         fun bind(expense: Expense) {
             categoryName.text = expense.category
-            expenseDescription.text = expense.description
+            expenseName.text = expense.description
             expenseDate.text = dateFormatter.format(Date(expense.date))
             expenseAmount.text = "-R%.2f".format(expense.amount)
+
+            // Handle image button visibility and click
+            if (expense.imagePath != null) {
+                imageButton.visibility = View.VISIBLE
+                imageButton.setOnClickListener {
+                    showImageDialog(expense.imagePath)
+                }
+            } else {
+                imageButton.visibility = View.GONE
+            }
 
             // Set category icon based on category
             val iconResource = when (expense.category.toLowerCase(Locale.ROOT)) {
@@ -50,6 +66,30 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
                 else -> R.drawable.ic_category
             }
             categoryIcon.setImageResource(iconResource)
+        }
+
+        private fun showImageDialog(imagePath: String) {
+            val dialog = Dialog(itemView.context)
+            dialog.setContentView(R.layout.dialog_image)
+            
+            val imageView = dialog.findViewById<ImageView>(R.id.fullscreen_image)
+            val closeButton = dialog.findViewById<ImageButton>(R.id.close_button)
+            
+            try {
+                val file = File(imagePath)
+                if (file.exists()) {
+                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                    imageView.setImageBitmap(bitmap)
+                }
+            } catch (e: Exception) {
+                Log.e("ExpenseAdapter", "Error loading image: ${e.message}")
+            }
+            
+            closeButton.setOnClickListener {
+                dialog.dismiss()
+            }
+            
+            dialog.show()
         }
     }
 

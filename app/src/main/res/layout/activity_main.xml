@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
+    android:foregroundTint="#0B0A0A"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -63,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="#00FFFFFF"
+            android:drawableTint="#000000"
             android:fontFamily="@font/kosugi_maru"
             android:text="@string/let_s_get_started"
             android:textColor="#040303"

@@ -54,7 +54,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>
             "luxuries" -> R.drawable.ic_luxuries
             "entertainment" -> R.drawable.ic_entertainment
             "utilities" -> R.drawable.ic_utilities
-            else -> R.drawable.ic_category
+            else -> R.drawable.ic_home_category
         }
         holder.categoryIcon.setImageResource(iconResId)
     }

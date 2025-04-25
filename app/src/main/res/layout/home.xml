@@ -7,50 +7,38 @@
     android:background="@drawable/homebg"
     android:padding="16dp">
 
-    <!-- Back button with icon on the left -->
+
     <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="start"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Back"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_back"
+        android:id="@+id/userProfileIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="348dp"
+        android:background="@null"
+        android:contentDescription="User Profile"
+
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_user_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <!-- app:tint="@android:color/black"-->
 
-    <!-- Profile Greeting -->
-
-    <!-- Menu Icon -->
     <TextView
         android:id="@+id/greetingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:text="Hello!\nMr. Xavier Martin"
+        android:layout_marginStart="8dp"
+        android:text="@string/hello_xavier_Martin"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/userProfileIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Menu button with icon on the right -->
 
     <!-- Active Balance Label -->
 
-    <ImageButton
-        android:id="@+id/userProfileIcon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@null"
-        android:contentDescription="User Profile"
-        android:scaleType="centerCrop"
-
-        android:src="@drawable/ic_user_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/activeBalanceLabel"
@@ -194,7 +182,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="Add Category"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_home_category" />
+                android:src="@drawable/ic_category" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -419,7 +407,7 @@
                 android:layout_height="48dp"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
-                android:contentDescription="Add Category"
+                android:contentDescription="Add savings"
                 android:scaleType="fitCenter"
                 android:src="@drawable/savings_icon" />
 <!--
@@ -448,7 +436,7 @@
                 android:layout_height="48dp"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
-                android:contentDescription="Add Category"
+                android:contentDescription="Win awards"
                 android:scaleType="fitCenter"
                 android:src="@drawable/awards_icon" />
 <!--
@@ -477,9 +465,9 @@
                 android:layout_height="48dp"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
-                android:contentDescription="Add Category"
+                android:contentDescription="Profile"
                 android:scaleType="fitCenter"
-                android:src="@drawable/profile_icon" />
+                android:src="@drawable/ic_user_profile" />
 
           <!--  <TextView
                 android:layout_width="wrap_content"
@@ -504,7 +492,7 @@
                 android:layout_height="48dp"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
-                android:contentDescription="Add Category"
+                android:contentDescription="Settings"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_settings" />
 

@@ -14,6 +14,10 @@ import android.content.Intent
 import android.widget.ImageButton
 import android.widget.Button
 import android.widget.Toast
+import com.example.prog7313_groupwork.repository.AwardsMainClass
+import com.example.prog7313_groupwork.repository.ProfileMainClass
+import com.example.prog7313_groupwork.repository.SavingsMainClass
+import com.example.prog7313_groupwork.repository.SettingsMainClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -23,7 +27,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var savingProgressBar: ProgressBar
     private lateinit var progressPercentageText: TextView
     private lateinit var activeBalanceValue: TextView
+    private lateinit var greetingText: TextView
     private lateinit var database: AstraDatabase
+    private var currentUserId: Long = 1 // Should be set from login session
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +41,45 @@ class HomeActivity : AppCompatActivity() {
         savingProgressBar = findViewById(R.id.savingProgressBar)
         progressPercentageText = findViewById(R.id.progressPercentage)
         activeBalanceValue = findViewById(R.id.activeBalanceValue)
+        greetingText = findViewById(R.id.greetingText)
         database = AstraDatabase.getDatabase(this)
+
+        // Update user greeting
+        updateUserGreeting()
 
         // Calculate and update active balance
         updateActiveBalance()
 
 //----------------------------------------------------------------------------------
 //                              Page navigation section 
+
+        // Setup Add Expense button click
+        val addExpenseButton = findViewById<ImageButton>(R.id.btnAddExpense)
+        addExpenseButton.setOnClickListener {
+            val intent = Intent(this, AddExpenseActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Setup Add Income button click
+        val addIncomeButton = findViewById<ImageButton>(R.id.btnAddIncome)
+        addIncomeButton.setOnClickListener {
+            val intent = Intent(this, AddIncome::class.java)
+            startActivity(intent)
+        }
+
+        // Setup Set Budget button click
+        val setBudgetButton = findViewById<ImageButton>(R.id.btnSetBudget)
+        setBudgetButton.setOnClickListener {
+            val intent = Intent(this, SetBudgetActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Setup Debt Planner button click
+        val debtPlannerButton = findViewById<ImageButton>(R.id.btnDebtPlanner)
+        debtPlannerButton.setOnClickListener {
+            val intent = Intent(this, DebtPlanner::class.java)
+            startActivity(intent)
+        }
 
         // Setup Add Category button click
         val addCategoryButton = findViewById<ImageButton>(R.id.btnAddCategory)
@@ -54,6 +92,34 @@ class HomeActivity : AppCompatActivity() {
         val dashboardButton = findViewById<Button>(R.id.dashboardbtn)
         dashboardButton.setOnClickListener {
             val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Setup Savings button click
+        val savingsButton = findViewById<ImageButton>(R.id.btnSavings)
+        savingsButton.setOnClickListener {
+            val intent = Intent(this, SavingsMainClass::class.java)
+            startActivity(intent)
+        }
+
+        // Setup Awards button click
+        val awardsButton = findViewById<ImageButton>(R.id.btnAwards)
+        awardsButton.setOnClickListener {
+            val intent = Intent(this, AwardsMainClass::class.java)
+            startActivity(intent)
+        }
+
+        // Setup Profile button click
+        val profileButton = findViewById<ImageButton>(R.id.btnProfile)
+        profileButton.setOnClickListener {
+            val intent = Intent(this, ProfileMainClass::class.java)
+            startActivity(intent)
+        }
+
+        // Setup Settings button click
+        val settingsButton = findViewById<ImageButton>(R.id.btnSettings)
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsMainClass::class.java)
             startActivity(intent)
         }
 
@@ -107,6 +173,24 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateUserGreeting() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Get user from database
+                val user = database.userDAO().getUserById(currentUserId)
+                
+                // Update UI on main thread
+                withContext(Dispatchers.Main) {
+                    greetingText.text = "Hello ${user?.NameSurname ?: "User"}"
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    greetingText.text = "Hello User"
+                }
+            }
+        }
+    }
+
     private fun updateActiveBalance() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -135,7 +219,8 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Update active balance whenever the activity resumes
+        // Update displays whenever the activity resumes
         updateActiveBalance()
+        updateUserGreeting()
     }
 }

@@ -29,8 +29,8 @@
                 <!-- Back button with icon on the left -->
                 <ImageButton
                     android:id="@+id/btnBack"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="start"
                     android:layout_marginEnd="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -38,22 +38,7 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_back" />
 
-                <!-- Spacer -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
 
-                <!-- Menu button with icon on the right -->
-                <ImageButton
-                    android:id="@+id/btnMenu"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="end"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/menu"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_menu" />
             </LinearLayout>
 
             <!-- Title -->

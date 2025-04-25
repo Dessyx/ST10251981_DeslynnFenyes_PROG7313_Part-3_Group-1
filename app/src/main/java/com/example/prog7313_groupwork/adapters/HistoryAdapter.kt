@@ -59,7 +59,7 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
             "entertainment" -> R.drawable.ic_entertainment
             "utilities" -> R.drawable.ic_utilities
             "income" -> R.drawable.ic_income
-            else -> R.drawable.ic_category
+            else -> R.drawable.ic_home_category
         }
         holder.icon.setImageResource(iconResId)
     }

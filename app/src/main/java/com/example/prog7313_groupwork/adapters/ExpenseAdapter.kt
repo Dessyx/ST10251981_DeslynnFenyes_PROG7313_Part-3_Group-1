@@ -63,7 +63,7 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
                 "utilities", "electricity", "water & rates" -> R.drawable.ic_utilities
                 "pet" -> R.drawable.ic_pet
                 "luxuries" -> R.drawable.ic_luxuries
-                else -> R.drawable.ic_category
+                else -> R.drawable.ic_home_category
             }
             categoryIcon.setImageResource(iconResource)
         }

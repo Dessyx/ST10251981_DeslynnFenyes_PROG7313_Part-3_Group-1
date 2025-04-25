@@ -30,21 +30,7 @@
             android:src="@drawable/ic_back"
             tools:ignore="TouchTargetSizeCheck" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/menuButton"
-            android:layout_width="53dp"
-            android:layout_height="53dp"
-            android:layout_gravity="end"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Menu"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_menu"
-            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
     <TextView
@@ -82,7 +68,7 @@
 
         <ImageButton
             android:id="@+id/filterButton"
-            android:layout_width="46dp"
+            android:layout_width="47dp"
             android:layout_height="55dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Filter"

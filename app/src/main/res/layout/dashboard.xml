@@ -88,9 +88,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/total_savings"
+                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/dash_savings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="R 5 000.00"
@@ -113,9 +115,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total Spent"
+                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/totalSpent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="R3730.00"
@@ -133,11 +137,13 @@
 
         <!-- Title -->
         <TextView
+            android:id="@+id/spentTotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="Total spent per category"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -155,7 +161,8 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/barlow_medium"
                 android:gravity="center"
-                android:text="Category" />
+                android:text="Category"
+                android:textColor="@color/black" />
 
             <Space
                 android:layout_width="69dp"
@@ -167,7 +174,8 @@
                 android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Filter by Date" />
+                android:text="Filter by Date"
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -242,9 +250,10 @@
         android:id="@+id/spendingTrendsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Spending trends for March"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
     <!-- Placeholder for line chart -->
     <TextView

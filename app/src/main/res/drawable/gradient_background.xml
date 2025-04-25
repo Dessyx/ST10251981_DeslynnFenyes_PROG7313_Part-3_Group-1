@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="135"
-        android:endColor="#E6E6FA"  <!-- Light purple -->
-        android:centerColor="#FFC0CB"  <!-- Pink -->
-        android:startColor="#FFE4E1"  <!-- Light pink -->
+        android:endColor="#E6E6FA"
+        android:centerColor="#FFC0CB"
+        android:startColor="#FFE4E1"
         android:type="linear" />
 </shape> 

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
+    tools:context=".AddExpenseActivity">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+
+        <!-- Back button with icon on the left -->
+
+        <!-- Spacer -->
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="42dp"
+            android:layout_gravity="start"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:paddingTop="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Menu button with icon on the right -->
+        <ImageButton
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Menu"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_menu"
+            tools:ignore="TouchTargetSizeCheck" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="32dp"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="42dp"
+            android:fontFamily="@font/abhaya_libre_extrabold"
+            android:text="Add Expense"
+            android:textColor="@android:color/black"
+            android:textSize="42sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="15dp"
+            android:text="Date"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/kosugi_maru"/>
+
+        <EditText
+            android:id="@+id/dateInput"
+            android:layout_width="387dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/text_background"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:focusable="false"
+            android:hint="Select date"
+            android:inputType="none"
+            android:padding="12dp" />
+
+
+        <TextView
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="15dp"
+            android:text="Category"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/kosugi_maru"/>
+
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="387dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/text_background"
+            android:padding="12dp" />
+
+        <TextView
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="15dp"
+            android:text="Amount"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/kosugi_maru"/>
+
+        <EditText
+            android:id="@+id/amountInput"
+            android:layout_width="387dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/text_background"
+            android:hint="Enter amount"
+            android:inputType="numberDecimal"
+            android:padding="12dp" />
+
+        <TextView
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="15dp"
+            android:text="Description"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/kosugi_maru"/>
+
+        <EditText
+            android:id="@+id/descriptionInput"
+            android:layout_width="387dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/text_background"
+            android:hint="Enter description"
+            android:padding="12dp" />
+
+        <TextView
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="15dp"
+            android:text="Attach Image"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/kosugi_maru"/>
+
+        <EditText
+            android:id="@+id/attachImageInput"
+            android:layout_width="387dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/text_background"
+            android:drawableEnd="@drawable/ic_attach"
+            android:focusable="false"
+            android:hint="Choose image"
+            android:padding="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addExpenseButton"
+            android:layout_width="304dp"
+            android:layout_height="58dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:backgroundTint="#000000"
+            android:fontFamily="@font/kosugi_maru"
+            android:text="Add Expense"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            app:cornerRadius="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/viewExpenseButton"
+            android:layout_width="304dp"
+            android:layout_height="58dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:backgroundTint="#000000"
+            android:fontFamily="@font/kosugi_maru"
+            android:text="View Expense List"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            app:cornerRadius="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

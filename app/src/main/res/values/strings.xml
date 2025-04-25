@@ -28,7 +28,7 @@
     <string name="amount_saved">Amount saved</string>
     <string name="add">Add</string>
     <string name="progress">Progress</string>
-    <string name="this_month_s_saving_progress">This month's saving progress:</string>
+    <string name="this_month_s_saving_progress">This months saving progress:</string>
     <string name="_80">80%</string>
     <string name="a_penny_saved_is_a_npenny_earned">A penny saved is a\npenny earned!</string>
     <string name="r_29_862">R 29 862</string>
@@ -39,6 +39,8 @@
     <string name="change_theme">Change Theme Color</string>
     <string name="account_settings">Account Settings</string>
     <string name="save_changes">Save Changes</string>
+    <string name="welcome_to">welcome_to</string>
+    <string name="let_s_get_started">let_s_get_started</string>
 
     <string-array name="currency_options">
         <item>R (ZAR)</item>

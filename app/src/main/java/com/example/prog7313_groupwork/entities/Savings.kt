@@ -19,6 +19,9 @@ data class Savings(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val userId: Long,
-    val amount: Int,
-    val date: Long = System.currentTimeMillis()
+    val amount: Double,
+    val date: Long = System.currentTimeMillis(),
+    val isActive: Boolean = true,
+    val description: String = "",
+    val category: String = "General"
 )

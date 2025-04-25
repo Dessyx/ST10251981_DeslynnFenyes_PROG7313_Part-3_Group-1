@@ -1,4 +1,4 @@
-/*
+package com.example.prog7313_groupwork.repository/*
 import com.example.prog7313_groupwork.entities.UserDAO
 
 class AuthRepository(

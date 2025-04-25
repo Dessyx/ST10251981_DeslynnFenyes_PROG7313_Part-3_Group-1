@@ -31,11 +31,12 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
         private val expenseDescription: TextView = itemView.findViewById(R.id.expenseDescription)
         private val expenseDate: TextView = itemView.findViewById(R.id.expenseDate)
         private val expenseAmount: TextView = itemView.findViewById(R.id.expenseAmount)
+        private val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
         fun bind(expense: Expense) {
             categoryName.text = expense.category
             expenseDescription.text = expense.description
-            expenseDate.text = expense.date
+            expenseDate.text = dateFormatter.format(Date(expense.date))
             expenseAmount.text = "-R%.2f".format(expense.amount)
 
             // Set category icon based on category
@@ -46,7 +47,7 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
                 "utilities", "electricity", "water & rates" -> R.drawable.ic_utilities
                 "pet" -> R.drawable.ic_pet
                 "luxuries" -> R.drawable.ic_luxuries
-                else -> R.drawable.ic_misc
+                else -> R.drawable.ic_category
             }
             categoryIcon.setImageResource(iconResource)
         }

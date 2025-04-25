@@ -39,8 +39,8 @@
     <string name="change_theme">Change Theme Color</string>
     <string name="account_settings">Account Settings</string>
     <string name="save_changes">Save Changes</string>
-    <string name="welcome_to">welcome_to</string>
-    <string name="let_s_get_started">let_s_get_started</string>
+    <string name="welcome_to">welcome to</string>
+    <string name="let_s_get_started">lets get started</string>
 
     <string-array name="currency_options">
         <item>R (ZAR)</item>

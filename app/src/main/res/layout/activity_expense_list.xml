@@ -125,6 +125,7 @@
         android:clipToPadding="false"
         android:paddingHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/listLabel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

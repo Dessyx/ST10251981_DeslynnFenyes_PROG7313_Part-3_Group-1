@@ -43,7 +43,7 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
 
         // Format amount with proper sign and color
         val amountText = if (item.isExpense) {
-            holder.amount.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.red))
+            holder.amount.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_red_dark))
             "-R%.2f".format(item.amount)
         } else {
             holder.amount.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_green_dark))

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.entities.Category
@@ -38,11 +39,11 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>
 
         // Set text color to red if overspent
         if (spent > limit) {
-            holder.categoryName.setTextColor(holder.itemView.context.getColor(R.color.red))
-            holder.categoryProgress.setTextColor(holder.itemView.context.getColor(R.color.red))
+            holder.categoryName.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_red_dark))
+            holder.categoryProgress.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_red_dark))
         } else {
-            holder.categoryName.setTextColor(holder.itemView.context.getColor(android.R.color.black))
-            holder.categoryProgress.setTextColor(holder.itemView.context.getColor(android.R.color.black))
+            holder.categoryName.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.black))
+            holder.categoryProgress.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.black))
         }
 
         // Set appropriate icon based on category name

@@ -151,16 +151,17 @@ class ExpenseList : AppCompatActivity() {
     }
     
     private fun loadExpenses() {
-        // TODO: Replace with actual user ID from session
-        val userId = 1
-        
         lifecycleScope.launch {
             try {
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                val startDateStr = dateFormat.format(startDate.time)
-                val endDateStr = dateFormat.format(endDate.time)
+                // Get the latest user from the database
+                val currentUser = database.userDAO().getLatestUser()
+                val userId = currentUser?.id ?: return@launch
                 
-                database.expenseDAO().getExpensesByDateRange(userId, startDateStr, endDateStr)
+                // Convert Calendar dates to Long timestamps
+                val startDateLong = startDate.timeInMillis
+                val endDateLong = endDate.timeInMillis
+                
+                database.expenseDAO().getExpensesByDateRange(userId, startDateLong, endDateLong)
                     .collect { expenses ->
                         expenseAdapter.submitList(expenses.sortedByDescending { it.date })
                     }

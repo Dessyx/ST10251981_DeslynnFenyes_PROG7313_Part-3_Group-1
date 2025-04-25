@@ -144,7 +144,7 @@
             android:fontFamily="@font/kosugi_maru"/>
 
         <EditText
-            android:id="@+id/descriptionInput"
+            android:id="@+id/expenseDescription"
             android:layout_width="387dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"

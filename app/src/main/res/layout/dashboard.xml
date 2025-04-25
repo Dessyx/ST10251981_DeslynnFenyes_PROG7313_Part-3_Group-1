@@ -180,7 +180,7 @@
             <!-- Category Spinner -->
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="59dp"
+                android:layout_width="50dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"

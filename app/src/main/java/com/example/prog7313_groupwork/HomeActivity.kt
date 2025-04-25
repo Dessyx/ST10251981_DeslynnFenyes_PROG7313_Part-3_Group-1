@@ -76,7 +76,7 @@ class HomeActivity : AppCompatActivity() {
                 if (overspentCategories.isNotEmpty()) {
                     val overspentText = overspentCategories.joinToString(", ") { it.categoryName }
                     overspentCategoriesText.text = overspentText
-                    overspentCategoriesText.setTextColor(getColor(R.color.red))
+                    overspentCategoriesText.setTextColor(getColor(android.R.color.holo_red_dark))
                 } else {
                     overspentCategoriesText.text = "None"
                     overspentCategoriesText.setTextColor(getColor(android.R.color.black))

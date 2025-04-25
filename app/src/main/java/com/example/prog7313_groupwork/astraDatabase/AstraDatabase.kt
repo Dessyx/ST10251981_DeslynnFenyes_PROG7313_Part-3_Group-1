@@ -15,7 +15,8 @@ import com.example.prog7313_groupwork.entities.*
         Budget::class,
         BudgetCategory::class,
         Award::class,
-        Savings::class
+        Savings::class,
+        Category::class
     ],
     version = 6,
     exportSchema = false
@@ -29,7 +30,7 @@ abstract class AstraDatabase : RoomDatabase() {
     abstract fun budgetDAO(): BudgetDAO
     abstract fun awardDAO(): AwardDAO
     abstract fun savingsDAO(): SavingsDAO
-    //abstract fun CategoryDAO(): CategoryDAO
+    abstract fun categoryDAO(): CategoryDAO
 
     companion object {
         @Volatile

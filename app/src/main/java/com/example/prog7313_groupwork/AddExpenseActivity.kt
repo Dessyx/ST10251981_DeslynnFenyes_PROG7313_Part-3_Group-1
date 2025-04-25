@@ -50,7 +50,7 @@ class AddExpenseActivity : AppCompatActivity() {
         dateInput = findViewById(R.id.dateInput)
         categorySpinner = findViewById(R.id.categorySpinner)
         amountInput = findViewById(R.id.amountInput)
-        descriptionInput = findViewById(R.id.descriptionInput)
+        descriptionInput = findViewById(R.id.expenseDescription)
         attachImageInput = findViewById(R.id.attachImageInput)
         addExpenseButton = findViewById(R.id.addExpenseButton)
         viewExpenseButton = findViewById(R.id.viewExpenseButton)

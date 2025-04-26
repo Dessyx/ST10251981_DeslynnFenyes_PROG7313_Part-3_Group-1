@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -54,7 +54,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     testImplementation(libs.junit)
@@ -63,13 +63,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.room.runtime.v261)
-    annotationProcessor(libs.androidx.room.compiler.v261)
-    implementation(libs.androidx.room.ktx.v261) // for kotlin support
+    implementation(libs.androidx.room.ktx.v261)
     implementation(libs.guava)
     implementation(libs.gson)
     implementation("androidx.camera:camera-camera2:${camerax_version}")
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
     implementation(libs.androidx.camera.core)
-
+    implementation(libs.bcrypt)
 }

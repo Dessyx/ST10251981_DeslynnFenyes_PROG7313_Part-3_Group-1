@@ -1,11 +1,13 @@
 package com.example.prog7313_groupwork.repository
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.R
+import com.example.prog7313_groupwork.HomeActivity
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Award
 import kotlinx.coroutines.launch
@@ -45,6 +47,15 @@ class AwardsMainClass : AppCompatActivity() {
 
         // Load existing awards
         loadUserAwards()
+        
+        // Setup back button
+        val backButton = findViewById<ImageButton>(R.id.btnBack)
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun checkAndSaveGoal() {

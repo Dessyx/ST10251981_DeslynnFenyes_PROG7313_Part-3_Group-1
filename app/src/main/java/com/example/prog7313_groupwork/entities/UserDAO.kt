@@ -17,8 +17,6 @@ interface UserDAO {
     @Query("SELECT * FROM users WHERE userEmail = :email LIMIT 1")
     suspend fun getUserByEmail(email: String): User?
 
-    @Delete
-    suspend fun clearUsers()
 
     @Query("SELECT * FROM users WHERE id = :userId")
     suspend fun getUserById(userId: Long): User?
@@ -37,4 +35,7 @@ interface UserDAO {
 
     @Query("UPDATE users SET themeColor = :color WHERE id = :userId")
     suspend fun updateUserThemeColor(userId: Long, color: Int)
+
+    @Query("DELETE FROM users WHERE id = :userId")
+    suspend fun deleteUserById(userId: Long)
 }

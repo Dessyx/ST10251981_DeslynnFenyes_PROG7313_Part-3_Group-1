@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Expense
@@ -96,6 +98,8 @@ class AddExpenseActivity : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
         }
+
+
     }
 
     private fun setupImageAttachment() {

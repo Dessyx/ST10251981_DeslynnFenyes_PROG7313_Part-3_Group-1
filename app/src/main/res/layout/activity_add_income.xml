@@ -77,7 +77,8 @@
             android:focusable="false"
             android:hint="Select date"
             android:inputType="none"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:textSize="12sp" />
 
 
         <TextView

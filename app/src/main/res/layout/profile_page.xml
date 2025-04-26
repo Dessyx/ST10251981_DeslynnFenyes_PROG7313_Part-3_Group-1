@@ -7,144 +7,140 @@
     android:background = "@drawable/sett_background">
 
 
+    <LinearLayout
+        android:layout_width="413dp"
+        android:layout_height="727dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-2dp">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp"
-            android:gravity="center_horizontal"
-            tools:ignore="MissingConstraints">
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingVertical="8dp">
+            <!-- Back button with icon on the left -->
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="start"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Back"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_back"
+                tools:ignore="TouchTargetSizeCheck" />
 
-                <!-- Back button with icon on the left -->
-                <ImageButton
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="start"
-                    android:layout_marginEnd="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Back"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_back"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-                <!-- Spacer -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <!-- Menu button with icon on the right -->
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="end"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Menu"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_menu"
-                    tools:ignore="TouchTargetSizeCheck" />
-            </LinearLayout>
-
-
-            <!-- Title -->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/abhaya_libre"
-                android:text="Profile"
-                android:textColor="#000000"
-                android:textSize="34sp"
-                android:textStyle="bold" />
-
-            <!-- Profile Image -->
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="25dp" />
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/ic_profile_placeholder"
-                android:contentDescription="Profile Image" />
-
-            <!-- Savings Display -->
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="23dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Saved"
-                android:layout_marginTop="16dp"
-                android:textSize="14sp"
-                android:textColor="#888888" />
-
-            <TextView
-                android:id="@+id/tvTotalSaved"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/r_29_862"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:background="@drawable/savings_background"
-                android:padding="16dp"
-                android:textColor="#000000"
-                android:layout_marginTop="4dp" />
-
-            <!-- Input Fields -->
-            <EditText
-                android:id="@+id/etName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/edittext_border"
-                android:hint="@string/name"
-                android:minHeight="48dp"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/etSurname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/edittext_border"
-                android:hint="@string/surname"
-                android:minHeight="48dp"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/etEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/edittext_border"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:minHeight="48dp" />
-
-            <!-- Save Button -->
-            <Button
-                android:id="@+id/btnSaveProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="@color/black"
-                android:text="@string/save"
-                android:textColor="#FFFFFF" />
 
         </LinearLayout>
+
+
+        <!-- Title -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/abhaya_libre"
+            android:text="Profile"
+            android:textColor="#000000"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <!-- Profile Image -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="Profile Image"
+            android:src="@drawable/ic_profile_placeholder" />
+
+        <!-- Savings Display -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="23dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Saved"
+            android:textColor="#888888"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvTotalSaved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/savings_background"
+            android:padding="16dp"
+            android:text="@string/r_29_862"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Input Fields -->
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/edittext_border"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/etSurname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/edittext_border"
+            android:hint="@string/surname"
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/edittext_border"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp" />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btnSaveProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/black"
+            android:text="@string/save"
+            android:textColor="#FFFFFF" />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btnDeleteProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/black"
+            android:text="@string/delete_profile"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,18 +60,17 @@ class LoginActivity : AppCompatActivity() {
                     userDao.getUserByEmail(email)
                 }
 
-                val result = if (user != null) {
-                    BCrypt.verifyer().verify(password.toCharArray(), user.passwordHash)
-                } else {
-                    null
-                }
+                if (user != null) {
+                    val result = BCrypt.verifyer().verify(password.toCharArray(), user.passwordHash)
+                    if (result.verified) {
+                        Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 
-                if (user != null && result?.verified == true) {
-                    Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this@LoginActivity, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(this@LoginActivity, "Invalid email or password", Toast.LENGTH_SHORT).show()
                 }

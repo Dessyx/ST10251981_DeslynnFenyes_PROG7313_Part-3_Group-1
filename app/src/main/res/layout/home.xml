@@ -235,7 +235,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:text="History"
         android:textColor="@color/black"
         android:textSize="16sp"
@@ -391,6 +391,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/savingProgress"
         tools:layout_editor_absoluteX="16dp">
 
 
@@ -410,7 +411,7 @@
                 android:contentDescription="Add savings"
                 android:scaleType="fitCenter"
                 android:src="@drawable/savings_icon" />
-<!--
+            <!--
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -420,7 +421,6 @@
                 android:textColor="#000000"
                 android:textSize="7sp" />-->
         </LinearLayout>
-
 
 
         <LinearLayout
@@ -439,7 +439,7 @@
                 android:contentDescription="Win awards"
                 android:scaleType="fitCenter"
                 android:src="@drawable/awards_icon" />
-<!--
+            <!--
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -449,7 +449,6 @@
                 android:textColor="#000000"
                 android:textSize="7sp" />-->
         </LinearLayout>
-
 
 
         <LinearLayout
@@ -469,7 +468,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_user_profile" />
 
-          <!--  <TextView
+            <!--  <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"

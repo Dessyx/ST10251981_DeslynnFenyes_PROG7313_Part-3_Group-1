@@ -1,9 +1,11 @@
-package com.example.prog7313_groupwork
+package com.example.prog7313_groupwork.repository
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.prog7313_groupwork.LoginActivity
+import com.example.prog7313_groupwork.R
 
 class MainActivity : AppCompatActivity() {
 

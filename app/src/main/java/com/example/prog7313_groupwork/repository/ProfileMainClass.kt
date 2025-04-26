@@ -1,11 +1,16 @@
 package com.example.prog7313_groupwork.repository
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.prog7313_groupwork.HomeActivity
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.User
@@ -15,6 +20,7 @@ class ProfileMainClass : AppCompatActivity() {
 
     private lateinit var db: AstraDatabase
     private lateinit var btnSaveProfile: Button
+    private lateinit var btnDeleteProfile: Button
     private lateinit var etName: EditText
     private lateinit var etSurname: EditText
     private lateinit var etEmail: EditText
@@ -36,10 +42,23 @@ class ProfileMainClass : AppCompatActivity() {
         btnSaveProfile.setOnClickListener {
             validateAndSaveProfile()
         }
+        
+        btnDeleteProfile.setOnClickListener {
+            showDeleteConfirmationDialog()
+        }
+
+        val backButton = findViewById<ImageButton>(R.id.back_button)
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun initializeViews() {
         btnSaveProfile = findViewById(R.id.btnSaveProfile)
+        btnDeleteProfile = findViewById(R.id.btnDeleteProfile)
         etName = findViewById(R.id.etName)
         etSurname = findViewById(R.id.etSurname)
         etEmail = findViewById(R.id.etEmail)
@@ -117,6 +136,53 @@ class ProfileMainClass : AppCompatActivity() {
                     Toast.makeText(
                         this@ProfileMainClass,
                         "Failed to save profile",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+    
+    private fun showDeleteConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Profile")
+            .setMessage("Are you sure you want to delete your profile? This action cannot be undone.")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteUserProfile()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+    
+    private fun deleteUserProfile() {
+        if (currentUserId == -1L) {
+            Toast.makeText(this, "No profile to delete", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        lifecycleScope.launch {
+            try {
+                // Delete the specific user instead of clearing all users
+                db.userDAO().deleteUserById(currentUserId)
+                
+                runOnUiThread {
+                    Toast.makeText(
+                        this@ProfileMainClass,
+                        "Profile deleted successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    
+                    // Navigate back to home screen
+                    val intent = Intent(this@ProfileMainClass, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
+                    finish()
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@ProfileMainClass,
+                        "Failed to delete profile: ${e.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

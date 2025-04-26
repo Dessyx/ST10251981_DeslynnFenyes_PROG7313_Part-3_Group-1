@@ -1,9 +1,11 @@
 package com.example.prog7313_groupwork
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +39,14 @@ class AddIncome : AppCompatActivity() {
         setupDatePicker()
         setupCategorySpinner()
         setupAddIncomeButton()
+        
+        val backButton = findViewById<ImageButton>(R.id.back_button)
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun initializeViews() {
@@ -63,16 +73,17 @@ class AddIncome : AppCompatActivity() {
     }
 
     private fun setupCategorySpinner() {
-        val categories = arrayOf(
-            "Salary",
-            "Freelance",
-            "Investments",
-            "Gifts",
-            "Other"
-        )
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categorySpinner.adapter = adapter
+        lifecycleScope.launch {
+            try {
+                val categories = database.categoryDAO().getAllCategories()
+                val categoryNames = categories.map { it.categoryName }
+                val adapter = ArrayAdapter(this@AddIncome, android.R.layout.simple_spinner_item, categoryNames)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                categorySpinner.adapter = adapter
+            } catch (e: Exception) {
+                Toast.makeText(this@AddIncome, "Error loading categories: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupAddIncomeButton() {

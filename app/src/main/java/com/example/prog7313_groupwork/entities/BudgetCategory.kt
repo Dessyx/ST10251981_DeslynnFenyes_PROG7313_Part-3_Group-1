@@ -2,6 +2,7 @@ package com.example.prog7313_groupwork.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -13,7 +14,8 @@ import androidx.room.PrimaryKey
             childColumns = ["budgetId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("budgetId")]
 )
 data class BudgetCategory(
     @PrimaryKey(autoGenerate = true)

@@ -48,6 +48,7 @@
     <string name="add_expense">Add Expense</string>
     <string name="add_income">Add Income</string>
     <string name="hello_xavier_Martin">Hello!Xavier Martin</string>
+    <string name="delete_profile">Delete Profile</string>
 
     <string-array name="currency_options">
         <item>R (ZAR)</item>

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
+import com.example.prog7313_groupwork.repository.MainActivity
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         backButton.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
             finish()
@@ -63,9 +64,15 @@ class LoginActivity : AppCompatActivity() {
                 if (user != null) {
                     val result = BCrypt.verifyer().verify(password.toCharArray(), user.passwordHash)
                     if (result.verified) {
+                        getSharedPreferences("user_prefs", MODE_PRIVATE)
+                            .edit()
+                            .putLong("current_user_id", user.id)
+                            .apply()
+
                         Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 
                         val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         finish()
                     } else {

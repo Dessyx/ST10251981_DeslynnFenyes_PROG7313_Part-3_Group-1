@@ -6,10 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient"
-    tools:context=".AddExpenseActivity">
+    tools:context=".AddIncome">
 
     <!-- Header -->
     <LinearLayout
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -18,10 +19,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Back button with icon on the left -->
-
-        <!-- Spacer -->
         <ImageButton
+            android:id="@+id/back_button"
             android:layout_width="40dp"
             android:layout_height="42dp"
             android:layout_gravity="start"
@@ -32,17 +31,14 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_back"
             tools:ignore="TouchTargetSizeCheck" />
-
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="32dp"
-        tools:ignore="MissingConstraints">
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout">
 
         <TextView
             android:id="@+id/titleText"
@@ -79,7 +75,6 @@
             android:inputType="none"
             android:padding="12dp"
             android:textSize="12sp" />
-
 
         <TextView
             android:layout_width="186dp"
@@ -179,7 +174,6 @@
             app:cornerRadius="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
 
     </LinearLayout>
 

@@ -9,12 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.User
-import com.example.prog7313_groupwork.repository.MainActivity
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.security.MessageDigest
+import at.favre.lib.crypto.bcrypt.BCrypt
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var nameInput: EditText
@@ -46,7 +45,9 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         backButton.setOnClickListener {
-            finish() // Go back to previous activity
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -75,8 +76,8 @@ class RegisterActivity : AppCompatActivity() {
         try {
             val phone = phoneStr.toInt()
             
-            // Hash the password
-            val hashedPassword = hashPassword(password)
+            // Hash the password using BCrypt
+            val hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray())
 
             // Create user object
             val user = User(
@@ -103,8 +104,9 @@ class RegisterActivity : AppCompatActivity() {
 
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@RegisterActivity, "Registration successful!", Toast.LENGTH_SHORT).show()
-                        // Navigate to login or main activity
-                        startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
+                        // Navigate to login activity
+                        val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                        startActivity(intent)
                         finish()
                     }
                 } catch (e: Exception) {
@@ -120,12 +122,5 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun hashPassword(password: String): String {
-        val bytes = password.toByteArray()
-        val md = MessageDigest.getInstance("SHA-256")
-        val digest = md.digest(bytes)
-        return digest.fold("") { str, it -> str + "%02x".format(it) }
     }
 }

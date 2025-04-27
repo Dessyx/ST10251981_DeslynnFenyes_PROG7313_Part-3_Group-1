@@ -20,6 +20,12 @@ import com.example.prog7313_groupwork.repository.SavingsMainClass
 import com.example.prog7313_groupwork.repository.SettingsMainClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.prog7313_groupwork.adapters.HistoryAdapter
+import com.example.prog7313_groupwork.adapters.HistoryItem
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var budgetGoalText: TextView
@@ -29,6 +35,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var activeBalanceValue: TextView
     private lateinit var greetingText: TextView
     private lateinit var database: AstraDatabase
+    private lateinit var historyRecyclerView: RecyclerView
+    private lateinit var historyAdapter: HistoryAdapter
     private var currentUserId: Long = 1 // Should be set from login session
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +52,22 @@ class HomeActivity : AppCompatActivity() {
         greetingText = findViewById(R.id.greetingText)
         database = AstraDatabase.getDatabase(this)
 
+        // Setup history RecyclerView
+        historyRecyclerView = findViewById(R.id.historyRecyclerView)
+        historyAdapter = HistoryAdapter()
+        historyRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@HomeActivity)
+            adapter = historyAdapter
+        }
+
         // Update user greeting
         updateUserGreeting()
 
         // Calculate and update active balance
         updateActiveBalance()
+
+        // Load transaction history
+        loadTransactionHistory()
 
 //----------------------------------------------------------------------------------
 //                              Page navigation section 
@@ -217,10 +236,61 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadTransactionHistory() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Get all expenses and incomes
+                val expenses = database.expenseDAO().getAllExpensesForUser(currentUserId).first()
+                val incomes = database.incomeDAO().getAllIncomeForUser(currentUserId.toInt()).first()
+
+                // Convert to HistoryItems
+                val historyItems = mutableListOf<HistoryItem>()
+                val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+
+                // Add expenses
+                expenses.forEach { expense ->
+                    historyItems.add(HistoryItem(
+                        title = expense.description,
+                        category = expense.category,
+                        amount = expense.amount,
+                        date = dateFormatter.format(Date(expense.date)),
+                        isExpense = true
+                    ))
+                }
+
+                // Add incomes
+                incomes.forEach { income ->
+                    historyItems.add(HistoryItem(
+                        title = income.description,
+                        category = income.category,
+                        amount = income.amount,
+                        date = dateFormatter.format(Date(income.date)),
+                        isExpense = false
+                    ))
+                }
+
+                // Sort by date (most recent first)
+                val sortedItems = historyItems.sortedByDescending { 
+                    SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).parse(it.date)?.time ?: 0L 
+                }
+
+                // Update the adapter on the main thread
+                withContext(Dispatchers.Main) {
+                    historyAdapter.updateHistory(sortedItems)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@HomeActivity, "Error loading history: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         // Update displays whenever the activity resumes
         updateActiveBalance()
         updateUserGreeting()
+        loadTransactionHistory() // Reload history when returning to the activity
     }
 }

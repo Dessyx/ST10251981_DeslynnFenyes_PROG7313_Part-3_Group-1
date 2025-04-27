@@ -126,6 +126,11 @@ class AddIncome : AppCompatActivity() {
                 try {
                     database.incomeDAO().insertIncome(income)
                     Toast.makeText(this@AddIncome, "Income added successfully!", Toast.LENGTH_SHORT).show()
+                    
+                    // Return to home activity and refresh it
+                    val intent = Intent(this@AddIncome, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
                     finish()
                 } catch (e: Exception) {
                     Toast.makeText(this@AddIncome, "Error saving income: ${e.message}", Toast.LENGTH_SHORT).show()

@@ -35,10 +35,10 @@ class AwardsMainClass : AppCompatActivity() {
         goalStatusText = findViewById(R.id.tvTitle) // Using existing TextView from layout
         trophyLayout = findViewById(R.id.trophyLayout) // Updated ID
 
-        // Hide reward visuals initially
+       /* // Hide reward visuals initially
         trophyLayout.visibility = View.GONE
         giftCardImage.visibility = View.GONE
-        badgeImage.visibility = View.GONE
+        badgeImage.visibility = View.GONE*/
 
         etGoal.setOnEditorActionListener { _, _, _ ->
             checkAndSaveGoal()

@@ -64,7 +64,7 @@
 
         <EditText
             android:id="@+id/dateInput"
-            android:layout_width="387dp"
+            android:layout_width="375dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
@@ -88,7 +88,7 @@
 
         <Spinner
             android:id="@+id/categorySpinner"
-            android:layout_width="387dp"
+            android:layout_width="374dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
@@ -107,7 +107,7 @@
 
         <EditText
             android:id="@+id/amountInput"
-            android:layout_width="387dp"
+            android:layout_width="372dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
@@ -128,7 +128,7 @@
 
         <EditText
             android:id="@+id/expenseDescription"
-            android:layout_width="387dp"
+            android:layout_width="381dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
@@ -148,7 +148,7 @@
 
         <EditText
             android:id="@+id/attachImageInput"
-            android:layout_width="387dp"
+            android:layout_width="375dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"

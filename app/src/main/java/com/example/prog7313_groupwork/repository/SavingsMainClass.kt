@@ -1,13 +1,16 @@
 package com.example.prog7313_groupwork.repository
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.prog7313_groupwork.HomeActivity
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Savings
@@ -42,6 +45,19 @@ class SavingsMainClass : AppCompatActivity() {
         btnAddSavings.setOnClickListener {
             validateAndAddSavings()
         }
+
+        //----------------------------------------------------------------------------------
+        //                              Page navigation section
+
+        val backButton = findViewById<ImageButton>(R.id.back_button)
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
+        //----------------------------------------------------------------------------------
+
     }
 
     private fun initializeViews() {

@@ -37,7 +37,7 @@ class AddIncome : AppCompatActivity() {
         // Initialize views
         initializeViews()
         setupDatePicker()
-        setupCategorySpinner()
+        /*setupCategorySpinner()*/
         setupAddIncomeButton()
         
         val backButton = findViewById<ImageButton>(R.id.back_button)
@@ -51,7 +51,7 @@ class AddIncome : AppCompatActivity() {
 
     private fun initializeViews() {
         dateInput = findViewById(R.id.dateInput)
-        categorySpinner = findViewById(R.id.categorySpinner)
+        /*categorySpinner = findViewById(R.id.categorySpinner)*/
         amountInput = findViewById(R.id.amountInput)
         descriptionInput = findViewById(R.id.expenseDescription)
         addIncomeButton = findViewById(R.id.addExpenseButton)
@@ -72,7 +72,7 @@ class AddIncome : AppCompatActivity() {
         }
     }
 
-    private fun setupCategorySpinner() {
+   /* private fun setupCategorySpinner() {
         lifecycleScope.launch {
             try {
                 val categories = database.categoryDAO().getAllCategories()
@@ -84,7 +84,7 @@ class AddIncome : AppCompatActivity() {
                 Toast.makeText(this@AddIncome, "Error loading categories: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
-    }
+    }*/
 
     private fun setupAddIncomeButton() {
         addIncomeButton.setOnClickListener {

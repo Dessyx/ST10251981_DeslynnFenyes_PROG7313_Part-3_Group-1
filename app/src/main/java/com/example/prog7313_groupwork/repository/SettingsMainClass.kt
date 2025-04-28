@@ -15,6 +15,7 @@ import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.LoginActivity
 import android.graphics.Color
 import android.content.res.Configuration
+import com.example.prog7313_groupwork.HomeActivity
 import java.util.Locale
 
 class SettingsMainClass : AppCompatActivity() {
@@ -43,6 +44,14 @@ class SettingsMainClass : AppCompatActivity() {
         setupDatabase()
         setupListeners()
         loadUserSettings()
+
+        val backButton = findViewById<ImageButton>(R.id.back_button)
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun initializeViews() {
@@ -56,6 +65,7 @@ class SettingsMainClass : AppCompatActivity() {
         etChangePassword = findViewById(R.id.etChangePassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
         btnLogout = findViewById(R.id.btnLogout)
+        btnSaveChanges = findViewById(R.id.btnSaveChanges)
 
         // Setup currency spinner
         ArrayAdapter.createFromResource(

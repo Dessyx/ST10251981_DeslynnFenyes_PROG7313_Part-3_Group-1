@@ -44,7 +44,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="0dp"
             android:fontFamily="@font/abhaya_libre"
             android:text="@string/settings"
             android:textColor="#000000"
@@ -191,13 +191,21 @@
 
         <!-- Log out Button -->
         <Button
+            android:id="@+id/btnSaveChanges"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
+            android:text="@string/save_settings"
+            android:textColor="#00BCD4" />
+
+        <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="3dp"
             android:backgroundTint="@color/black"
             android:text="@string/log_out"
-            android:textColor="#FFFFFF"
+            android:textColor="#FF0077"
             tools:ignore="VisualLintButtonSize" />
     </LinearLayout>
 

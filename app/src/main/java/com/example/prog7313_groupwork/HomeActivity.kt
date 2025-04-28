@@ -131,14 +131,14 @@ class HomeActivity : AppCompatActivity() {
         // Setup Profile button click
         val profileButton = findViewById<ImageButton>(R.id.btnProfile)
         profileButton.setOnClickListener {
-            val intent = Intent(this, com.example.prog7313_groupwork.repository.ProfileMainClass::class.java)
+            val intent = Intent(this, ProfileMainClass::class.java)
             startActivity(intent)
         }
 
         // Setup Settings button click
         val settingsButton = findViewById<ImageButton>(R.id.btnSettings)
         settingsButton.setOnClickListener {
-            val intent = Intent(this, com.example.prog7313_groupwork.repository.SettingsMainClass::class.java)
+            val intent = Intent(this, SettingsMainClass::class.java)
             startActivity(intent)
         }
 

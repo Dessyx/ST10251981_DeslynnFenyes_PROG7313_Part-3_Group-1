@@ -50,6 +50,7 @@
     <string name="hello_xavier_Martin">Hello!Xavier Martin</string>
     <string name="delete_profile">Delete Profile</string>
     <string name="feature_comming_soon">Feature comming soon!</string>
+    <string name="save_settings">Save</string>
 
     <string-array name="currency_options">
         <item>R (ZAR)</item>

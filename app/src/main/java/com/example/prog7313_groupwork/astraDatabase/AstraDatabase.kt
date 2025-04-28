@@ -18,7 +18,7 @@ import com.example.prog7313_groupwork.entities.*
         Savings::class,
         Category::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class AstraDatabase : RoomDatabase() {
@@ -42,7 +42,9 @@ abstract class AstraDatabase : RoomDatabase() {
                     context.applicationContext,
                     AstraDatabase::class.java,
                     "astra-database"
-                ).fallbackToDestructiveMigration()
+                )
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries() // Only for development, remove in production
                 .build()
                 INSTANCE = instance
                 instance

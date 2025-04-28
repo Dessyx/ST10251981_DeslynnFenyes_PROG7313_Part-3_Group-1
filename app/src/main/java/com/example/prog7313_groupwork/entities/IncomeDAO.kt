@@ -15,16 +15,16 @@ interface IncomeDAO {
     suspend fun deleteIncome(income: Income)
 
     @Query("SELECT * FROM income WHERE userId = :userId")
-    fun getAllIncomeForUser(userId: Int): Flow<List<Income>>
+    fun getAllIncomeForUser(userId: Long): Flow<List<Income>>
 
     @Query("SELECT * FROM income WHERE id = :id")
-    suspend fun getIncomeById(id: Int): Income?
+    suspend fun getIncomeById(id: Long): Income?
 
     @Query("SELECT SUM(amount) FROM income WHERE userId = :userId")
-    suspend fun getTotalIncomeForUser(userId: Int): Double?
+    suspend fun getTotalIncomeForUser(userId: Long): Double?
 
     @Query("SELECT * FROM income WHERE userId = :userId AND category = :category")
-    fun getIncomeByCategory(userId: Int, category: String): Flow<List<Income>>
+    fun getIncomeByCategory(userId: Long, category: String): Flow<List<Income>>
 
     @Query("SELECT * FROM income")
     suspend fun getAllActiveIncome(): List<Income>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -153,9 +154,14 @@ class ExpenseList : AppCompatActivity() {
     private fun loadExpenses() {
         lifecycleScope.launch {
             try {
-                // Get the latest user from the database
-                val currentUser = database.userDAO().getLatestUser()
-                val userId = currentUser?.id ?: return@launch
+                // Get user ID from shared preferences
+                val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getLong("current_user_id", -1L)
+
+                if (userId == -1L) {
+                    Toast.makeText(this@ExpenseList, "Please log in to view expenses", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
                 
                 // Convert Calendar dates to Long timestamps
                 val startDateLong = startDate.timeInMillis
@@ -163,11 +169,19 @@ class ExpenseList : AppCompatActivity() {
                 
                 database.expenseDAO().getExpensesByDateRange(userId, startDateLong, endDateLong)
                     .collect { expenses ->
+                        if (expenses.isEmpty()) {
+                            Toast.makeText(this@ExpenseList, "No expenses found for this period", Toast.LENGTH_SHORT).show()
+                        }
                         expenseAdapter.submitList(expenses.sortedByDescending { it.date })
                     }
             } catch (e: Exception) {
-                // Handle error
+                Toast.makeText(this@ExpenseList, "Error loading expenses: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadExpenses()
     }
 }

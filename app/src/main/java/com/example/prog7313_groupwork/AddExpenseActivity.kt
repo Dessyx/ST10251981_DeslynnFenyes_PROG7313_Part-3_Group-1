@@ -93,8 +93,13 @@ class AddExpenseActivity : AppCompatActivity() {
         }
 
         viewExpenseButton.setOnClickListener {
-            // Navigate to expense list activity
-            startActivity(Intent(this, ExpenseList::class.java))
+            try {
+                val intent = Intent(this, ExpenseList::class.java)
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Error opening expense list: ${e.message}", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
         }
 
         backButton.setOnClickListener {
@@ -198,6 +203,15 @@ class AddExpenseActivity : AppCompatActivity() {
                 return
             }
 
+            // Get user ID from shared preferences
+            val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getLong("current_user_id", -1L)
+
+            if (userId == -1L) {
+                Toast.makeText(this, "Please log in to add expenses", Toast.LENGTH_SHORT).show()
+                return
+            }
+
             // Create expense object
             val expense = Expense(
                 date = selectedDate.timeInMillis,
@@ -205,7 +219,7 @@ class AddExpenseActivity : AppCompatActivity() {
                 amount = expenseAmount,
                 description = description,
                 imagePath = selectedImagePath,
-                userId = 1 // TODO: Get actual user ID from shared preferences or login session
+                userId = userId
             )
 
             // Save expense to database

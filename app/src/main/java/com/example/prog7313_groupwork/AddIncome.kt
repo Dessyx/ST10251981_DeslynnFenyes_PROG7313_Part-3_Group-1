@@ -3,10 +3,8 @@ package com.example.prog7313_groupwork
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -19,13 +17,12 @@ import java.util.*
 
 class AddIncome : AppCompatActivity() {
     private lateinit var dateInput: EditText
-    private lateinit var categorySpinner: Spinner
     private lateinit var amountInput: EditText
     private lateinit var descriptionInput: EditText
     private lateinit var addIncomeButton: MaterialButton
     private lateinit var database: AstraDatabase
-    private val calendar = Calendar.getInstance()
-    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private var selectedDate: Calendar = Calendar.getInstance()
+    private val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +34,6 @@ class AddIncome : AppCompatActivity() {
         // Initialize views
         initializeViews()
         setupDatePicker()
-        /*setupCategorySpinner()*/
         setupAddIncomeButton()
         
         val backButton = findViewById<ImageButton>(R.id.back_button)
@@ -51,7 +47,6 @@ class AddIncome : AppCompatActivity() {
 
     private fun initializeViews() {
         dateInput = findViewById(R.id.dateInput)
-        categorySpinner = findViewById(R.id.categorySpinner)
         amountInput = findViewById(R.id.amountInput)
         descriptionInput = findViewById(R.id.expenseDescription)
         addIncomeButton = findViewById(R.id.addExpenseButton)
@@ -59,32 +54,23 @@ class AddIncome : AppCompatActivity() {
 
     private fun setupDatePicker() {
         dateInput.setOnClickListener {
-            DatePickerDialog(
-                this,
-                { _, year, month, day ->
-                    calendar.set(year, month, day)
-                    dateInput.setText(dateFormatter.format(calendar.time))
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            val year = selectedDate.get(Calendar.YEAR)
+            val month = selectedDate.get(Calendar.MONTH)
+            val day = selectedDate.get(Calendar.DAY_OF_MONTH)
+
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                selectedDate.set(selectedYear, selectedMonth, selectedDay)
+                updateDateDisplay()
+            }, year, month, day).show()
         }
+
+        // Set initial date display
+        updateDateDisplay()
     }
 
-   /* private fun setupCategorySpinner() {
-        lifecycleScope.launch {
-            try {
-                val categories = database.categoryDAO().getAllCategories()
-                val categoryNames = categories.map { it.categoryName }
-                val adapter = ArrayAdapter(this@AddIncome, android.R.layout.simple_spinner_item, categoryNames)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                categorySpinner.adapter = adapter
-            } catch (e: Exception) {
-                Toast.makeText(this@AddIncome, "Error loading categories: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }*/
+    private fun updateDateDisplay() {
+        dateInput.setText(dateFormatter.format(selectedDate.time))
+    }
 
     private fun setupAddIncomeButton() {
         addIncomeButton.setOnClickListener {
@@ -95,11 +81,9 @@ class AddIncome : AppCompatActivity() {
     private fun saveIncome() {
         val amount = amountInput.text.toString()
         val description = descriptionInput.text.toString()
-        val date = dateInput.text.toString()
-        val category = categorySpinner.selectedItem.toString()
 
         // Validation
-        if (amount.isEmpty() || description.isEmpty() || date.isEmpty()) {
+        if (amount.isEmpty() || description.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
@@ -111,15 +95,21 @@ class AddIncome : AppCompatActivity() {
                 return
             }
 
-            // TODO: Replace with actual user ID from session
-            val userId = 1 // Temporary user ID
+            // Get user ID from shared preferences
+            val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getLong("current_user_id", -1L)
+
+            if (userId == -1L) {
+                Toast.makeText(this, "Please log in to add income", Toast.LENGTH_SHORT).show()
+                return
+            }
 
             val income = Income(
                 userId = userId,
                 amount = amountValue,
                 description = description,
-                date = date,
-                category = category
+                date = selectedDate.timeInMillis,
+                category = "General" // Default category
             )
 
             lifecycleScope.launch {

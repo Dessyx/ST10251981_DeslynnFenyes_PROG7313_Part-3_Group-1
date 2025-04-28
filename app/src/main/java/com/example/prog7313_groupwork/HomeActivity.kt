@@ -38,11 +38,22 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var database: AstraDatabase
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
-    private var currentUserId: Long = 1 // Should be set from login session
+    private var currentUserId: Long = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
+
+        // Get user ID from shared preferences
+        currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            .getLong("current_user_id", -1L)
+
+        if (currentUserId == -1L) {
+            // If not logged in, redirect to login
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
 
         // Initialize views
         budgetGoalText = findViewById(R.id.textView3)
@@ -220,7 +231,7 @@ class HomeActivity : AppCompatActivity() {
                 val totalExpenses = expenses.sumOf { it.amount }
 
                 // Get all active income for the current user
-                val incomes = database.incomeDAO().getAllIncomeForUser(currentUserId.toInt()).first()
+                val incomes = database.incomeDAO().getAllIncomeForUser(currentUserId).first()
                 val totalIncome = incomes.sumOf { it.amount }
 
                 // Calculate active balance (income - expenses)
@@ -243,7 +254,7 @@ class HomeActivity : AppCompatActivity() {
             try {
                 // Get all expenses and incomes
                 val expenses = database.expenseDAO().getAllExpensesForUser(currentUserId).first()
-                val incomes = database.incomeDAO().getAllIncomeForUser(currentUserId.toInt()).first()
+                val incomes = database.incomeDAO().getAllIncomeForUser(currentUserId).first()
 
                 // Convert to HistoryItems
                 val historyItems = mutableListOf<HistoryItem>()

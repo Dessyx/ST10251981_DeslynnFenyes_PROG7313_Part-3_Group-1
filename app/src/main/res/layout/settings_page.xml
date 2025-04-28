@@ -26,6 +26,7 @@
 
             <!-- Back button with icon on the left -->
             <ImageButton
+                android:id="@+id/back_button"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="start"

@@ -19,16 +19,15 @@
 
         <ImageButton
             android:id="@+id/backButton"
-            android:layout_width="40dp"
-            android:layout_height="42dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="start"
             android:layout_marginEnd="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
             android:paddingTop="2dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_back"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:src="@drawable/ic_back" />
 
     </LinearLayout>
 
@@ -65,13 +64,15 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/filterButton"
-            android:layout_width="30dp"
-            android:layout_height="35dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="Filter"
-            android:src="@drawable/ic_filter" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_filter"
+            android:scaleType="centerInside"/>
     </LinearLayout>
 
     <TextView

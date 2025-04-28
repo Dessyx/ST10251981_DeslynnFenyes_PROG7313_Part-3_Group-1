@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,17 +15,20 @@ import com.example.prog7313_groupwork.HomeActivity
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileMainClass : AppCompatActivity() {
 
-    private lateinit var db: AstraDatabase
+    private lateinit var database: AstraDatabase
     private lateinit var btnSaveProfile: Button
     private lateinit var btnDeleteProfile: Button
     private lateinit var etName: EditText
     private lateinit var etSurname: EditText
     private lateinit var etEmail: EditText
     private var currentUserId: Long = -1
+    private lateinit var savings: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +38,11 @@ class ProfileMainClass : AppCompatActivity() {
         initializeViews()
 
         // Initialize AstraDatabase
-        db = AstraDatabase.getDatabase(this)
+        database = AstraDatabase.getDatabase(this)
 
         // Load existing profile if any
         loadExistingProfile()
+        updateSavingsDisplay()
 
         btnSaveProfile.setOnClickListener {
             validateAndSaveProfile()
@@ -62,12 +67,13 @@ class ProfileMainClass : AppCompatActivity() {
         etName = findViewById(R.id.etName)
         etSurname = findViewById(R.id.etSurname)
         etEmail = findViewById(R.id.etEmail)
+        savings = findViewById(R.id.tvTotalSaved)
     }
 
     private fun loadExistingProfile() {
         lifecycleScope.launch {
             try {
-                val existingUser = db.userDAO().getLatestUser()
+                val existingUser = database.userDAO().getLatestUser()
                 existingUser?.let { user ->
                     currentUserId = user.id
                     runOnUiThread {
@@ -122,7 +128,7 @@ class ProfileMainClass : AppCompatActivity() {
                     passwordHash = "" // This should be handled in a different screen/flow
                 )
 
-                db.userDAO().insertUser(user)
+                database.userDAO().insertUser(user)
 
                 runOnUiThread {
                     Toast.makeText(
@@ -163,7 +169,7 @@ class ProfileMainClass : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 // Delete the specific user instead of clearing all users
-                db.userDAO().deleteUserById(currentUserId)
+                database.userDAO().deleteUserById(currentUserId)
                 
                 runOnUiThread {
                     Toast.makeText(
@@ -186,6 +192,23 @@ class ProfileMainClass : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+            }
+        }
+    }
+
+
+    private fun updateSavingsDisplay() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Get total savings from database
+                val totalSavings = database.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+
+                // Update UI on main thread
+                withContext(Dispatchers.Main) {
+                    savings.text = String.format("R %.2f", totalSavings)
+                }
+            } catch (e: Exception) {
+                // Handle error if needed
             }
         }
     }

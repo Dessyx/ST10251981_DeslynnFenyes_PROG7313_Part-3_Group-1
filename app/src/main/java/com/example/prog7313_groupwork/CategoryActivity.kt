@@ -2,6 +2,7 @@ package com.example.prog7313_groupwork
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -15,6 +16,8 @@ import com.example.prog7313_groupwork.entities.Category
 import com.example.prog7313_groupwork.entities.CategoryDAO
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class CategoryActivity : AppCompatActivity() {
 
@@ -48,11 +51,24 @@ class CategoryActivity : AppCompatActivity() {
             val limit = limitEditText.text.toString().trim()
 
             if (name.isNotEmpty() && limit.isNotEmpty()) {
-                val category = Category(categoryName = name, categoryLimit = limit)
+                // Create category with explicit spent value
+                val category = Category(
+                    categoryName = name, 
+                    categoryLimit = limit,
+                    /*spent = 0.0  // Explicitly set spent to 0.0*/
+                )
 
                 lifecycleScope.launch {
-                    categoryDAO.insertCategory(category)
-                    loadCategories() // Reload categories after saving
+                    try {
+                        categoryDAO.insertCategory(category)
+                        Log.d("CategoryActivity", "Category created: $name with limit $limit and spent 0.0")
+                        loadCategories() // Reload categories after saving
+                    } catch (e: Exception) {
+                        Log.e("CategoryActivity", "Error creating category", e)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@CategoryActivity, "Error creating category: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
 
                 // Broadcast category update

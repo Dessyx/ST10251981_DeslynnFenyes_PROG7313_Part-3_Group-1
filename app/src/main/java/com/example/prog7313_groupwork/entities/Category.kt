@@ -9,5 +9,5 @@ data class Category(
     val id: Long = 0,
     val categoryName: String,
     val categoryLimit: String,
-    var spent: Double? = 0.0  // Amount spent in this category
+    var spent: Double? = 0.0
 )

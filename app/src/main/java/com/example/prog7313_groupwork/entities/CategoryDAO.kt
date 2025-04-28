@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
+
 @Dao
 interface CategoryDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -13,5 +14,4 @@ interface CategoryDAO {
 
     @Query("SELECT * FROM categories")
     suspend fun getAllCategories(): List<Category>
-
 }

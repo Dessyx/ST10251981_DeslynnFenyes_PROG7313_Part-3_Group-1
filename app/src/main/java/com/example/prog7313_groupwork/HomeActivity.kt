@@ -27,6 +27,7 @@ import com.example.prog7313_groupwork.adapters.HistoryItem
 import com.example.prog7313_groupwork.entities.IncomeDAO
 import java.text.SimpleDateFormat
 import java.util.*
+import android.util.Log
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var budgetGoalText: TextView
@@ -172,7 +173,7 @@ class HomeActivity : AppCompatActivity() {
 
                 // Get all categories
                 val categories = categoryDAO.getAllCategories()
-                
+
                 // Calculate overspent categories
                 val overspentCategories = categories.filter { category ->
                     val spent = category.spent ?: 0.0

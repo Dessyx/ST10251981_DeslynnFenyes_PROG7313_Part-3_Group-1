@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -222,10 +223,32 @@ class AddExpenseActivity : AppCompatActivity() {
                 userId = userId
             )
 
-            // Save expense to database
+            // Save expense to database and update category spent amount
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
+                    // Insert the expense
                     database.expenseDAO().insertExpense(expense)
+                    
+                    // Update the category's spent amount
+                    val categories = database.categoryDAO().getAllCategories()
+                    val matchingCategory = categories.find { it.categoryName == category }
+                    
+                    if (matchingCategory != null) {
+                        // Calculate new spent amount
+                        val currentSpent = matchingCategory.spent ?: 0.0
+                        val newSpent = currentSpent + expenseAmount
+                        
+                        // Create updated category with new spent amount
+                        val updatedCategory = matchingCategory.copy(spent = newSpent)
+                        
+                        // Save updated category
+                        database.categoryDAO().insertCategory(updatedCategory)
+                        
+                        Log.d("AddExpenseActivity", "Updated category ${category} spent from $currentSpent to $newSpent")
+                    } else {
+                        Log.e("AddExpenseActivity", "Category not found: $category")
+                    }
+
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@AddExpenseActivity, "Expense added successfully!", Toast.LENGTH_SHORT).show()
                         clearInputs()
@@ -234,6 +257,7 @@ class AddExpenseActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@AddExpenseActivity, "Failed to add expense: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
+                    Log.e("AddExpenseActivity", "Error adding expense", e)
                 }
             }
         } catch (e: NumberFormatException) {

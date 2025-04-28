@@ -45,7 +45,7 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
-    // Sample categories - you can replace these with categories from your database
+   /* // Sample categories - you can replace these with categories from your database
     private val categories = arrayOf(
         "Food",
         "Transportation",
@@ -55,7 +55,7 @@ class AddExpenseActivity : AppCompatActivity() {
         "Healthcare",
         "Shopping",
         "Other"
-    )
+    )*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +75,11 @@ class AddExpenseActivity : AppCompatActivity() {
         backButton = findViewById(R.id.backButton)
 
         // Set up category spinner
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
+      /*  val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categorySpinner.adapter = adapter
+        categorySpinner.adapter = adapter*/
+
+        loadCategories()
 
         // Set up date picker
         setupDatePicker()
@@ -147,6 +149,31 @@ class AddExpenseActivity : AppCompatActivity() {
         // Set initial date display
         updateDateDisplay()
     }
+
+
+    private fun loadCategories() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val categoriesList = database.categoryDAO().getAllCategories()  // 👈 Make sure you have this DAO method
+                val categoryNames = categoriesList.map { it.categoryName }  // Assuming your Category entity has a "name" field
+
+                withContext(Dispatchers.Main) {
+                    val adapter = ArrayAdapter(
+                        this@AddExpenseActivity,
+                        android.R.layout.simple_spinner_item,
+                        categoryNames
+                    )
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    categorySpinner.adapter = adapter
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AddExpenseActivity, "Failed to load categories: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
 
     private fun updateDateDisplay() {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

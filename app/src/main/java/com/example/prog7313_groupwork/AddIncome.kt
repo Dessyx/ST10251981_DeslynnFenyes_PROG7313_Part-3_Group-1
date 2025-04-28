@@ -51,7 +51,7 @@ class AddIncome : AppCompatActivity() {
 
     private fun initializeViews() {
         dateInput = findViewById(R.id.dateInput)
-        /*categorySpinner = findViewById(R.id.categorySpinner)*/
+        categorySpinner = findViewById(R.id.categorySpinner)
         amountInput = findViewById(R.id.amountInput)
         descriptionInput = findViewById(R.id.expenseDescription)
         addIncomeButton = findViewById(R.id.addExpenseButton)

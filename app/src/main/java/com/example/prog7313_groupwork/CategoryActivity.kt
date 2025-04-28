@@ -55,6 +55,9 @@ class CategoryActivity : AppCompatActivity() {
                     loadCategories() // Reload categories after saving
                 }
 
+                // Broadcast category update
+                sendBroadcast(Intent("CATEGORY_UPDATED"))
+
                 Toast.makeText(this, "Category saved!", Toast.LENGTH_SHORT).show()
                 nameEditText.text.clear()
                 limitEditText.text.clear()

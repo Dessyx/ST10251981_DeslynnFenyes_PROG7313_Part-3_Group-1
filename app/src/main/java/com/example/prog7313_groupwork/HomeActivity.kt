@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.adapters.HistoryAdapter
 import com.example.prog7313_groupwork.adapters.HistoryItem
+import com.example.prog7313_groupwork.entities.IncomeDAO
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -149,6 +150,7 @@ class HomeActivity : AppCompatActivity() {
         val db = AstraDatabase.getDatabase(this)
         val budgetDAO = db.budgetDAO()
         val categoryDAO = db.categoryDAO()
+        
 
         // Observe current budget and categories
         lifecycleScope.launch {
@@ -213,12 +215,12 @@ class HomeActivity : AppCompatActivity() {
     private fun updateActiveBalance() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Get all active expenses
-                val expenses = database.expenseDAO().getAllActiveExpenses()
+                // Get all active expenses for the current user
+                val expenses = database.expenseDAO().getAllExpensesForUser(currentUserId).first()
                 val totalExpenses = expenses.sumOf { it.amount }
 
-                // Get all active income
-                val incomes = database.incomeDAO().getAllActiveIncome()
+                // Get all active income for the current user
+                val incomes = database.incomeDAO().getAllIncomeForUser(currentUserId.toInt()).first()
                 val totalIncome = incomes.sumOf { it.amount }
 
                 // Calculate active balance (income - expenses)

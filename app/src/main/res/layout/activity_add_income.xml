@@ -136,7 +136,7 @@
             android:hint="Enter description"
             android:padding="12dp" />
 
-        <TextView
+      <!--  <TextView
             android:layout_width="186dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -145,8 +145,8 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:fontFamily="@font/kosugi_maru"/>
-
-        <EditText
+-->
+       <!-- <EditText
             android:id="@+id/attachImageInput"
             android:layout_width="375dp"
             android:layout_height="48dp"
@@ -156,7 +156,7 @@
             android:drawableEnd="@drawable/ic_attach"
             android:focusable="false"
             android:hint="Choose image"
-            android:padding="12dp" />
+            android:padding="12dp" />-->
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/addExpenseButton"

@@ -2,9 +2,11 @@ package com.example.prog7313_groupwork.entities
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import java.util.Calendar
 
 @Dao
 interface BudgetDAO {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setBudget(budget: Budget)
 
@@ -26,10 +28,23 @@ interface BudgetDAO {
     @Delete
     suspend fun deleteBudgetCategory(category: BudgetCategory)
 
-    @Query("SELECT * FROM budget WHERE month = :month AND year = :year AND isActive = 1 LIMIT 1")
+    /**
+     * Now filters by userId, month & year.
+     * Returns a Flow so HomeActivity can collect and auto-update.
+     */
+    @Query("""
+        SELECT * 
+          FROM budget
+         WHERE userId   = :userId
+           AND month    = :month
+           AND year     = :year
+           AND isActive = 1
+         LIMIT 1
+    """)
     fun getCurrentBudget(
-        month: Int = java.util.Calendar.getInstance().get(java.util.Calendar.MONTH),
-        year: Int = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+        userId: Int,
+        month:  Int = Calendar.getInstance().get(Calendar.MONTH),
+        year:   Int = Calendar.getInstance().get(Calendar.YEAR)
     ): Flow<Budget?>
 
     @Query("SELECT * FROM budget WHERE userId = :userId AND isActive = 1 ORDER BY createdDate DESC LIMIT 1")
@@ -48,22 +63,19 @@ interface BudgetDAO {
     suspend fun getTotalSpent(budgetId: Int): Double?
 
     @Transaction
-    suspend fun saveBudgetWithCategories(budget: Budget, categories: List<BudgetCategory>) {
-        val budgetId = insertBudget(budget)
-        categories.forEach { category ->
-            insertBudgetCategory(category.copy(budgetId = budgetId.toInt()))
-        }
+    suspend fun saveBudget(budget: Budget) {
+        setBudget(budget)
     }
 
     @Transaction
     suspend fun deactivateBudget(budgetId: Int) {
-        val budget = getLatestBudget(budgetId) ?: return
-        updateBudget(budget.copy(isActive = false))
+        val b = getLatestBudget(budgetId) ?: return
+        updateBudget(b.copy(isActive = false))
     }
 
     @Transaction
     suspend fun deactivateBudgetCategory(categoryId: Int) {
-        val category = getLatestCategoryByName(categoryId, "") ?: return
-        updateBudgetCategory(category.copy(isActive = false))
+        val c = getLatestCategoryByName(categoryId, "") ?: return
+        updateBudgetCategory(c.copy(isActive = false))
     }
-} 
+}

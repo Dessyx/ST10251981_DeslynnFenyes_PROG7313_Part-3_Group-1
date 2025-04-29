@@ -1,33 +1,30 @@
 package com.example.prog7313_groupwork
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import android.widget.ProgressBar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.prog7313_groupwork.adapters.HistoryAdapter
+import com.example.prog7313_groupwork.adapters.HistoryItem
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import java.util.Calendar
-import android.content.Intent
-import android.widget.ImageButton
-import android.widget.Button
-import android.widget.Toast
 import com.example.prog7313_groupwork.repository.AwardsMainClass
 import com.example.prog7313_groupwork.repository.ProfileMainClass
 import com.example.prog7313_groupwork.repository.SavingsMainClass
 import com.example.prog7313_groupwork.repository.SettingsMainClass
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.prog7313_groupwork.adapters.HistoryAdapter
-import com.example.prog7313_groupwork.adapters.HistoryItem
-import com.example.prog7313_groupwork.entities.IncomeDAO
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
-import java.util.*
-import android.util.Log
+import java.util.Date
+import java.util.Locale
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var budgetGoalText: TextView
@@ -36,189 +33,120 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var progressPercentageText: TextView
     private lateinit var activeBalanceValue: TextView
     private lateinit var greetingText: TextView
-    private lateinit var database: AstraDatabase
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
+
+    private val db by lazy { AstraDatabase.getDatabase(this) }
+    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
     private var currentUserId: Long = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
 
-        // Get user ID from shared preferences
+        // 1️⃣ Bind views
+        budgetGoalText          = findViewById(R.id.textView3)
+        overspentCategoriesText = findViewById(R.id.overspentCategories)
+        savingProgressBar       = findViewById(R.id.savingProgressBar)
+        progressPercentageText  = findViewById(R.id.progressPercentage)
+        activeBalanceValue      = findViewById(R.id.activeBalanceValue)
+        greetingText            = findViewById(R.id.greetingText)
+        historyRecyclerView     = findViewById(R.id.historyRecyclerView)
+
+        // 2️⃣ Setup history RecyclerView
+        historyAdapter = HistoryAdapter()
+        historyRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@HomeActivity)
+            adapter       = historyAdapter
+        }
+
+        // 3️⃣ Load & validate current user
         currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
             .getLong("current_user_id", -1L)
-
         if (currentUserId == -1L) {
-            // If not logged in, redirect to login
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
             return
         }
 
-        // Initialize views
-        budgetGoalText = findViewById(R.id.textView3)
-        overspentCategoriesText = findViewById(R.id.overspentCategories)
-        savingProgressBar = findViewById(R.id.savingProgressBar)
-        progressPercentageText = findViewById(R.id.progressPercentage)
-        activeBalanceValue = findViewById(R.id.activeBalanceValue)
-        greetingText = findViewById(R.id.greetingText)
-        database = AstraDatabase.getDatabase(this)
-
-        // Setup history RecyclerView
-        historyRecyclerView = findViewById(R.id.historyRecyclerView)
-        historyAdapter = HistoryAdapter()
-        historyRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@HomeActivity)
-            adapter = historyAdapter
+        // 4️⃣ Page navigation section
+        findViewById<ImageButton>(R.id.btnAddExpense).setOnClickListener {
+            startActivity(Intent(this, AddExpenseActivity::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnAddIncome).setOnClickListener {
+            startActivity(Intent(this, AddIncome::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnSetBudget).setOnClickListener {
+            startActivity(Intent(this, SetBudgetActivity::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnDebtPlanner).setOnClickListener {
+            startActivity(Intent(this, DebtPlanner::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnAddCategory).setOnClickListener {
+            startActivity(Intent(this, CategoryActivity::class.java))
+        }
+        findViewById<Button>(R.id.dashboardbtn).setOnClickListener {
+            startActivity(Intent(this, DashboardActivity::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnSavings).setOnClickListener {
+            startActivity(Intent(this, SavingsMainClass::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnAwards).setOnClickListener {
+            startActivity(Intent(this, AwardsMainClass::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnProfile).setOnClickListener {
+            startActivity(Intent(this, ProfileMainClass::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnSettings).setOnClickListener {
+            startActivity(Intent(this, SettingsMainClass::class.java))
         }
 
-        // Update user greeting
-        updateUserGreeting()
-
-        // Calculate and update active balance
+        // 5️⃣ Initial data load
+        loadBudgetAndCategories()
         updateActiveBalance()
-
-        // Load transaction history
+        updateGreeting()
         loadTransactionHistory()
-
-//----------------------------------------------------------------------------------
-//                              Page navigation section 
-
-        // Setup Add Expense button click
-        val addExpenseButton = findViewById<ImageButton>(R.id.btnAddExpense)
-        addExpenseButton.setOnClickListener {
-            val intent = Intent(this, AddExpenseActivity::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Add Income button click
-        val addIncomeButton = findViewById<ImageButton>(R.id.btnAddIncome)
-        addIncomeButton.setOnClickListener {
-            val intent = Intent(this, AddIncome::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Set Budget button click
-        val setBudgetButton = findViewById<ImageButton>(R.id.btnSetBudget)
-        setBudgetButton.setOnClickListener {
-            val intent = Intent(this, SetBudgetActivity::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Debt Planner button click
-        val debtPlannerButton = findViewById<ImageButton>(R.id.btnDebtPlanner)
-        debtPlannerButton.setOnClickListener {
-            val intent = Intent(this, DebtPlanner::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Add Category button click
-        val addCategoryButton = findViewById<ImageButton>(R.id.btnAddCategory)
-        addCategoryButton.setOnClickListener {
-            val intent = Intent(this, CategoryActivity::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Dashboard button click
-        val dashboardButton = findViewById<Button>(R.id.dashboardbtn)
-        dashboardButton.setOnClickListener {
-            val intent = Intent(this, DashboardActivity::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Savings button click
-        val savingsButton = findViewById<ImageButton>(R.id.btnSavings)
-        savingsButton.setOnClickListener {
-            val intent = Intent(this, SavingsMainClass::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Awards button click
-        val awardsButton = findViewById<ImageButton>(R.id.btnAwards)
-        awardsButton.setOnClickListener {
-            val intent = Intent(this, AwardsMainClass::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Profile button click
-        val profileButton = findViewById<ImageButton>(R.id.btnProfile)
-        profileButton.setOnClickListener {
-            val intent = Intent(this, ProfileMainClass::class.java)
-            startActivity(intent)
-        }
-
-        // Setup Settings button click
-        val settingsButton = findViewById<ImageButton>(R.id.btnSettings)
-        settingsButton.setOnClickListener {
-            val intent = Intent(this, SettingsMainClass::class.java)
-            startActivity(intent)
-        }
-
-// ----------------------------------------------------------------------------------
-
-
-        // Get DAOs
-        val db = AstraDatabase.getDatabase(this)
-        val budgetDAO = db.budgetDAO()
-        val categoryDAO = db.categoryDAO()
-        
-
-        // Observe current budget and categories
-        lifecycleScope.launch {
-            // Get current month's budget
-            budgetDAO.getCurrentBudget().collect { budget ->
-                val budgetAmount = budget?.monthlyGoal ?: 0.0
-                budgetGoalText.text = "R%.2f".format(budgetAmount)
-
-                // Get all categories
-                val categories = categoryDAO.getAllCategories()
-
-                // Calculate overspent categories
-                val overspentCategories = categories.filter { category ->
-                    val spent = category.spent ?: 0.0
-                    val limit = category.categoryLimit.toDoubleOrNull() ?: 0.0
-                    spent > limit
-                }
-
-                // Display overspent categories
-                if (overspentCategories.isNotEmpty()) {
-                    val overspentText = overspentCategories.joinToString(", ") { it.categoryName }
-                    overspentCategoriesText.text = overspentText
-                    overspentCategoriesText.setTextColor(getColor(android.R.color.holo_red_dark))
-                } else {
-                    overspentCategoriesText.text = "None"
-                    overspentCategoriesText.setTextColor(getColor(android.R.color.black))
-                }
-
-                // Calculate saving progress
-                val totalSpent = categories.sumOf { it.spent ?: 0.0 }
-                val progress = if (budgetAmount > 0) {
-                    ((1 - (totalSpent / budgetAmount)) * 100).toInt().coerceIn(0, 100)
-                } else {
-                    0
-                }
-
-                // Update progress bar and percentage
-                savingProgressBar.progress = progress
-                progressPercentageText.text = "$progress%"
-            }
-        }
     }
 
-    private fun updateUserGreeting() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                // Get user from database
-                val user = database.userDAO().getUserById(currentUserId)
-                
-                // Update UI on main thread
+    private fun loadBudgetAndCategories() {
+        val userInt   = currentUserId.toInt()
+        val budgetDAO = db.budgetDAO()
+        val catDAO    = db.categoryDAO()
+
+        lifecycleScope.launch {
+            // fetch categories
+            val categories = catDAO.getAllCategories()
+
+            // observe budget changes
+            budgetDAO.getCurrentBudget(userInt).collect { budget ->
+                val goal       = budget?.monthlyGoal ?: 0.0
+                val totalSpent = categories.sumOf { it.spent ?: 0.0 }
+                val progress   = if (goal > 0.0) {
+                    ((1 - (totalSpent / goal)) * 100).toInt().coerceIn(0, 100)
+                } else 0
+
+                val overspentList = categories
+                    .filter { (it.spent ?: 0.0) > (it.categoryLimit.toDoubleOrNull() ?: 0.0) }
+                    .joinToString(", ") { it.categoryName }
+
                 withContext(Dispatchers.Main) {
-                    greetingText.text = "Hello ${user?.NameSurname ?: "User"}"
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    greetingText.text = "Hello User"
+                    // show "R xx" for goal
+                    budgetGoalText.text = currencyFormat.format(goal)
+
+                    savingProgressBar.progress  = progress
+                    progressPercentageText.text = "$progress%"
+
+                    if (overspentList.isNotEmpty()) {
+                        overspentCategoriesText.text = overspentList
+                        overspentCategoriesText.setTextColor(
+                            getColor(android.R.color.holo_red_dark)
+                        )
+                    } else {
+                        overspentCategoriesText.text = "None"
+                        overspentCategoriesText.setTextColor(
+                            getColor(android.R.color.black)
+                        )
+                    }
                 }
             }
         }
@@ -226,85 +154,67 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateActiveBalance() {
         lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                // Get all active expenses for the current user
-                val expenses = database.expenseDAO().getAllExpensesForUser(currentUserId).first()
-                val totalExpenses = expenses.sumOf { it.amount }
+            val expenses = db.expenseDAO()
+                .getAllExpensesForUser(currentUserId).first()
+            val incomes  = db.incomeDAO()
+                .getAllIncomeForUser(currentUserId).first()
+            val balance  = incomes.sumOf { it.amount } - expenses.sumOf { it.amount }
 
-                // Get all active income for the current user
-                val incomes = database.incomeDAO().getAllIncomeForUser(currentUserId).first()
-                val totalIncome = incomes.sumOf { it.amount }
+            withContext(Dispatchers.Main) {
+                // already prefixed with R in format string
+                activeBalanceValue.text = "R %.2f".format(balance)
+            }
+        }
+    }
 
-                // Calculate active balance (income - expenses)
-                val activeBalance = totalIncome - totalExpenses
-
-                // Update UI on main thread
-                withContext(Dispatchers.Main) {
-                    activeBalanceValue.text = "R %.2f".format(activeBalance)
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@HomeActivity, "Error calculating balance: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+    private fun updateGreeting() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user = db.userDAO().getUserById(currentUserId)
+            withContext(Dispatchers.Main) {
+                greetingText.text = "Hello ${user?.NameSurname ?: "User"}"
             }
         }
     }
 
     private fun loadTransactionHistory() {
         lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                // Get all expenses and incomes
-                val expenses = database.expenseDAO().getAllExpensesForUser(currentUserId).first()
-                val incomes = database.incomeDAO().getAllIncomeForUser(currentUserId).first()
+            val expenses = db.expenseDAO()
+                .getAllExpensesForUser(currentUserId).first()
+            val incomes  = db.incomeDAO()
+                .getAllIncomeForUser(currentUserId).first()
+            val fmt      = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+            val items    = mutableListOf<HistoryItem>()
 
-                // Convert to HistoryItems
-                val historyItems = mutableListOf<HistoryItem>()
-                val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+            for (e in expenses) {
+                items += HistoryItem(
+                    title     = e.description,
+                    category  = e.category,
+                    amount    = e.amount,
+                    date      = fmt.format(Date(e.date)),
+                    isExpense = true
+                )
+            }
+            for (i in incomes) {
+                items += HistoryItem(
+                    title     = i.description,
+                    category  = i.category,
+                    amount    = i.amount,
+                    date      = fmt.format(Date(i.date)),
+                    isExpense = false
+                )
+            }
+            items.sortByDescending { hi -> fmt.parse(hi.date)?.time ?: 0L }
 
-                // Add expenses
-                expenses.forEach { expense ->
-                    historyItems.add(HistoryItem(
-                        title = expense.description,
-                        category = expense.category,
-                        amount = expense.amount,
-                        date = dateFormatter.format(Date(expense.date)),
-                        isExpense = true
-                    ))
-                }
-
-                // Add incomes
-                incomes.forEach { income ->
-                    historyItems.add(HistoryItem(
-                        title = income.description,
-                        category = income.category,
-                        amount = income.amount,
-                        date = dateFormatter.format(Date(income.date)),
-                        isExpense = false
-                    ))
-                }
-
-                // Sort by date (most recent first)
-                val sortedItems = historyItems.sortedByDescending { 
-                    SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).parse(it.date)?.time ?: 0L 
-                }
-
-                // Update the adapter on the main thread
-                withContext(Dispatchers.Main) {
-                    historyAdapter.updateHistory(sortedItems)
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@HomeActivity, "Error loading history: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+            withContext(Dispatchers.Main) {
+                historyAdapter.updateHistory(items)
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        // Update displays whenever the activity resumes
         updateActiveBalance()
-        updateUserGreeting()
-        loadTransactionHistory() // Reload history when returning to the activity
+        updateGreeting()
+        loadTransactionHistory()
     }
 }

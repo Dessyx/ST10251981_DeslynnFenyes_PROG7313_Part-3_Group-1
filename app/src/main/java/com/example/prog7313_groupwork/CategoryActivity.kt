@@ -92,6 +92,13 @@ class CategoryActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        // Setup view spending button
+        val viewSpendingButton = findViewById<Button>(R.id.viewSpendingButton)
+        viewSpendingButton.setOnClickListener {
+            val intent = Intent(this, CategorySpendingActivity::class.java)
+            startActivity(intent)
+        }
         //----------------------------------------------------------------------------------
     }
 

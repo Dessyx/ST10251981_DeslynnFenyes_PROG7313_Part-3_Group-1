@@ -26,6 +26,9 @@
             android:name=".CategoryActivity"
             android:exported="false" />
         <activity
+            android:name=".CategorySpendingActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity

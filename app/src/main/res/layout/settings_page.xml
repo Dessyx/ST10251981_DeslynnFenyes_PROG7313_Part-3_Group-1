@@ -4,211 +4,194 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/sett_background"
-    tools:context=".repository.SettingsMainClass">
+    android:background="@drawable/sett_background">
 
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="24dp"
-        tools:ignore="MissingConstraints">
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="8dp">
-
-            <!-- Back button with icon on the left -->
-            <ImageButton
-                android:id="@+id/back_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="start"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Back"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_back"
-                tools:ignore="TouchTargetSizeCheck" />
-
-
-        </LinearLayout>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:fontFamily="@font/abhaya_libre"
-            android:text="@string/settings"
-            android:textColor="#000000"
-            android:textSize="34sp"
-            android:textStyle="bold" />
-
-
-        <!-- Language -->
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
             android:orientation="vertical"
-            tools:ignore="RtlHardcoded">
+            android:padding="24dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Top Bar with Back Button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <ImageButton
+                    android:id="@+id/back_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Back"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_back" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/settings"
+                    android:textColor="#000000"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Language Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <RadioGroup
+                    android:id="@+id/languageGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/rbEnglish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/english"
+                        android:layout_marginBottom="8dp" />
+
+                    <RadioButton
+                        android:id="@+id/rbAfrikaans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/afrikaans" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- System Settings -->
+            <LinearLayout
+                android:id="@+id/layoutSystemSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_settings" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/system_settings" />
+            </LinearLayout>
+
+            <!-- Currency Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_currency" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/currency" />
+
+                <Spinner
+                    android:id="@+id/spinnerCurrency"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="16dp"
+                    android:entries="@array/currency_options"
+                    android:spinnerMode="dropdown" />
+            </LinearLayout>
+
+            <!-- Email Change Section -->
+            <EditText
+                android:id="@+id/etChangeEmail"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="@string/language"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:background="@drawable/edittext_border"
+                android:hint="@string/change_email"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp" />
 
-            <RadioGroup
-                android:id="@+id/languageGroup"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/etConfirmEmail"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edittext_border"
+                android:hint="@string/confirm_email"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp" />
 
-                <RadioButton
-                    android:id="@+id/rbEnglish"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/english" />
-
-                <RadioButton
-                    android:id="@+id/rbAfrikaans"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/afrikaans" />
-            </RadioGroup>
-        </LinearLayout>
-
-
-        <!-- System Settings -->
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <LinearLayout
-            android:id="@+id/layoutSystemSettings"
-            android:layout_width="344dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_settings" />
-
-            <TextView
-                android:layout_width="116dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:text="@string/system_settings" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="344dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_currency" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Password Change Section -->
+            <EditText
+                android:id="@+id/etChangePassword"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:text="@string/currency" />
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/edittext_border"
+                android:hint="@string/change_password"
+                android:inputType="textPassword"
+                android:minHeight="48dp" />
 
-            <Spinner
-                android:id="@+id/spinnerCurrency"
-                android:layout_width="113dp"
+            <EditText
+                android:id="@+id/etConfirmPassword"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:entries="@array/currency_options"
-                android:spinnerMode="dropdown"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/edittext_border"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword"
+                android:minHeight="48dp" />
+
+            <!-- Buttons -->
+            <Button
+                android:id="@+id/btnSaveChanges"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/black"
+                android:text="@string/save_settings"
+                android:textColor="#00BCD4" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:text="@string/log_out"
+                android:textColor="#FF0077" />
         </LinearLayout>
-
-        <!-- Email Change -->
-
-        <EditText
-            android:id="@+id/etChangeEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/edittext_border"
-            android:hint="@string/change_email"
-            android:inputType="textEmailAddress"
-            android:minHeight="48dp"
-            tools:ignore="VisualLintTextFieldSize" />
-
-        <EditText
-            android:id="@+id/etConfirmEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/edittext_border"
-            android:hint="@string/confirm_email"
-            android:inputType="textEmailAddress"
-            android:minHeight="48dp" />
-
-        <!-- Password Change -->
-        <EditText
-            android:id="@+id/etChangePassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/edittext_border"
-            android:hint="@string/change_password"
-            android:inputType="textPassword"
-            android:minHeight="48dp" />
-
-        <EditText
-            android:id="@+id/etConfirmPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/edittext_border"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:minHeight="48dp" />
-
-        <!-- Log out Button -->
-        <Button
-            android:id="@+id/btnSaveChanges"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:text="@string/save_settings"
-            android:textColor="#00BCD4" />
-
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="3dp"
-            android:backgroundTint="@color/black"
-            android:text="@string/log_out"
-            android:textColor="#FF0077"
-            tools:ignore="VisualLintButtonSize" />
-    </LinearLayout>
-
-
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

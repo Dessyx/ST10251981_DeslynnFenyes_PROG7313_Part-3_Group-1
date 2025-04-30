@@ -17,6 +17,7 @@ import android.graphics.Color
 import android.content.res.Configuration
 import com.example.prog7313_groupwork.HomeActivity
 import java.util.Locale
+import at.favre.lib.crypto.bcrypt.BCrypt
 
 class SettingsMainClass : AppCompatActivity() {
 
@@ -32,83 +33,118 @@ class SettingsMainClass : AppCompatActivity() {
     private lateinit var etConfirmPassword: EditText
     private lateinit var btnSaveChanges: Button
     private lateinit var btnLogout: Button
+    private lateinit var backButton: ImageButton
 
-    private var currentUserId: Long = 1
+    private var currentUserId: Long = -1
     private var selectedColor: Int = Color.parseColor("#EEC5D9")
+    private var isUpdatingLanguage = false
+    private var currentLanguage = "en"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_page)
 
+        // Get current user ID from shared preferences
+        currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            .getLong("current_user_id", -1L)
+
+        if (currentUserId == -1L) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         initializeViews()
         setupDatabase()
         setupListeners()
         loadUserSettings()
-
-        val backButton = findViewById<ImageButton>(R.id.back_button)
-        backButton.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
-            finish()
-        }
     }
 
     private fun initializeViews() {
-        spinnerCurrency = findViewById(R.id.spinnerCurrency)
-        languageGroup = findViewById(R.id.languageGroup)
-        rbEnglish = findViewById(R.id.rbEnglish)
-        rbAfrikaans = findViewById(R.id.rbAfrikaans)
-        layoutSystemSettings = findViewById(R.id.layoutSystemSettings)
-        etChangeEmail = findViewById(R.id.etChangeEmail)
-        etConfirmEmail = findViewById(R.id.etConfirmEmail)
-        etChangePassword = findViewById(R.id.etChangePassword)
-        etConfirmPassword = findViewById(R.id.etConfirmPassword)
-        btnLogout = findViewById(R.id.btnLogout)
-        btnSaveChanges = findViewById(R.id.btnSaveChanges)
+        try {
+            spinnerCurrency = findViewById(R.id.spinnerCurrency)
+            languageGroup = findViewById(R.id.languageGroup)
+            rbEnglish = findViewById(R.id.rbEnglish)
+            rbAfrikaans = findViewById(R.id.rbAfrikaans)
+            layoutSystemSettings = findViewById(R.id.layoutSystemSettings)
+            etChangeEmail = findViewById(R.id.etChangeEmail)
+            etConfirmEmail = findViewById(R.id.etConfirmEmail)
+            etChangePassword = findViewById(R.id.etChangePassword)
+            etConfirmPassword = findViewById(R.id.etConfirmPassword)
+            btnLogout = findViewById(R.id.btnLogout)
+            btnSaveChanges = findViewById(R.id.btnSaveChanges)
+            backButton = findViewById(R.id.back_button)
 
-        // Setup currency spinner
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.currencies,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerCurrency.adapter = adapter
+            // Setup back button
+            backButton.setOnClickListener {
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+                finish()
+            }
+
+            // Setup currency spinner
+            ArrayAdapter.createFromResource(
+                this,
+                R.array.currencies,
+                android.R.layout.simple_spinner_item
+            ).also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerCurrency.adapter = adapter
+            }
+        } catch (e: Exception) {
+            showToast("Error initializing views: ${e.message}")
         }
     }
 
     private fun setupDatabase() {
-        db = AstraDatabase.getDatabase(this)
+        try {
+            db = AstraDatabase.getDatabase(this)
+        } catch (e: Exception) {
+            showToast("Error setting up database: ${e.message}")
+        }
     }
 
     private fun setupListeners() {
-        languageGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.rbEnglish -> updateUserLanguage("en")
-                R.id.rbAfrikaans -> updateUserLanguage("af")
-            }
-        }
+        try {
+            languageGroup.setOnCheckedChangeListener { group, checkedId ->
+                if (isUpdatingLanguage) return@setOnCheckedChangeListener
+                
+                val newLanguage = when (checkedId) {
+                    R.id.rbEnglish -> "en"
+                    R.id.rbAfrikaans -> "af"
+                    else -> return@setOnCheckedChangeListener
+                }
 
-        layoutSystemSettings.setOnClickListener {
-            openColorPicker()
-        }
-
-        btnSaveChanges.setOnClickListener {
-            updateUserCredentials()
-        }
-
-        btnLogout.setOnClickListener {
-            handleLogout()
-        }
-
-        spinnerCurrency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                val selectedCurrency = parent.getItemAtPosition(pos).toString()
-                updateUserCurrency(selectedCurrency)
+                if (newLanguage != currentLanguage) {
+                    isUpdatingLanguage = true
+                    currentLanguage = newLanguage
+                    updateUserLanguage(newLanguage)
+                }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
+            layoutSystemSettings.setOnClickListener {
+                openColorPicker()
+            }
+
+            btnSaveChanges.setOnClickListener {
+                updateUserCredentials()
+            }
+
+            btnLogout.setOnClickListener {
+                handleLogout()
+            }
+
+            spinnerCurrency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+                    val selectedCurrency = parent.getItemAtPosition(pos).toString()
+                    updateUserCurrency(selectedCurrency)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
+        } catch (e: Exception) {
+            showToast("Error setting up listeners: ${e.message}")
         }
     }
 
@@ -118,11 +154,15 @@ class SettingsMainClass : AppCompatActivity() {
                 val user = db.userDAO().getUserById(currentUserId)
                 withContext(Dispatchers.Main) {
                     user?.let { loadedUser ->
+                        isUpdatingLanguage = true
                         etChangeEmail.setText(loadedUser.userEmail)
-                        when (loadedUser.language) {
+                        currentLanguage = loadedUser.language
+                        when (currentLanguage) {
                             "en" -> rbEnglish.isChecked = true
                             "af" -> rbAfrikaans.isChecked = true
                         }
+                        isUpdatingLanguage = false
+
                         val currencyAdapter = spinnerCurrency.adapter as ArrayAdapter<*>
                         val position = (0 until currencyAdapter.count).firstOrNull { 
                             currencyAdapter.getItem(it).toString() == loadedUser.currency 
@@ -134,7 +174,7 @@ class SettingsMainClass : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    showToast("Failed to load settings")
+                    showToast("Failed to load settings: ${e.message}")
                 }
             }
         }
@@ -145,23 +185,30 @@ class SettingsMainClass : AppCompatActivity() {
             try {
                 db.userDAO().updateUserLanguage(currentUserId, langCode)
                 withContext(Dispatchers.Main) {
-                    updateLocale(langCode)
+                    try {
+                        val locale = Locale(langCode)
+                        Locale.setDefault(locale)
+                        val config = Configuration()
+                        config.locale = locale
+                        resources.updateConfiguration(config, resources.displayMetrics)
+                        
+                        // Delay the recreate to ensure all UI updates are complete
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            recreate()
+                        }
+                    } catch (e: Exception) {
+                        showToast("Failed to update locale: ${e.message}")
+                    } finally {
+                        isUpdatingLanguage = false
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    showToast("Failed to update language")
+                    showToast("Failed to update language: ${e.message}")
+                    isUpdatingLanguage = false
                 }
             }
         }
-    }
-
-    private fun updateLocale(langCode: String) {
-        val locale = Locale(langCode)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        resources.updateConfiguration(config, resources.displayMetrics)
-        recreate()
     }
 
     private fun openColorPicker() {
@@ -199,15 +246,26 @@ class SettingsMainClass : AppCompatActivity() {
             return
         }
 
+        if (password.isEmpty()) {
+            showToast("Password cannot be empty")
+            return
+        }
+
+        // Hash the new password
+        val hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray())
+
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                db.userDAO().updateUserCredentials(currentUserId, email, password)
+                db.userDAO().updateUserCredentials(currentUserId, email, hashedPassword)
                 withContext(Dispatchers.Main) {
                     showToast("Credentials updated successfully")
+                    // Clear password fields after successful update
+                    etChangePassword.text.clear()
+                    etConfirmPassword.text.clear()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    showToast("Failed to update credentials")
+                    showToast("Failed to update credentials: ${e.message}")
                 }
             }
         }

@@ -44,7 +44,7 @@ abstract class AstraDatabase : RoomDatabase() {
                     "astra-database"
                 )
                 .fallbackToDestructiveMigration()
-                .allowMainThreadQueries() // Only for development, remove in production
+                .allowMainThreadQueries()
                 .build()
                 INSTANCE = instance
                 instance
@@ -53,4 +53,3 @@ abstract class AstraDatabase : RoomDatabase() {
     }
 }
 
-//Final Commit

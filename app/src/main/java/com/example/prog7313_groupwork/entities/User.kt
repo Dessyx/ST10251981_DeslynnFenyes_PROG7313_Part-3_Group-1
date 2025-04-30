@@ -15,3 +15,4 @@ data class User (
     var currency: String = "USD", // Default currency
     var themeColor: Int = 0 // Default theme color
 )
+

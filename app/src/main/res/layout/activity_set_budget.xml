@@ -69,12 +69,13 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/barlow_bold"
                 android:paddingTop="20dp"
-                android:text="Total Monthly Budget"
+                android:text="Total Monthly Max. Budget"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <!-- Category Limits Section -->
+
             <com.google.android.material.slider.Slider
                 android:id="@+id/totalBudgetSlider"
                 android:layout_width="match_parent"
@@ -89,6 +90,33 @@
                 app:trackColor="@color/ButtonPink" />
 
             <!-- Save Budget Button -->
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/barlow_bold"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:text="Total Monthly Min. Budget"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/totalBudgetSlider2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:thumb="@drawable/custom_thumb"
+                android:valueFrom="0"
+                android:valueTo="15000"
+                app:haloColor="@android:color/transparent"
+                app:labelBehavior="floating"
+                app:thumbTint="@null"
+                app:trackColor="@color/ButtonPink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/saveBudgetButton"
@@ -108,8 +136,8 @@
 
             <TextView
                 android:id="@+id/featureComingSoon"
-                android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_width="376dp"
+                android:layout_height="189dp"
                 android:layout_marginTop="16dp"
                 android:background="#E91E63"
                 android:backgroundTint="@color/ButtonPink"
@@ -121,3 +149,4 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

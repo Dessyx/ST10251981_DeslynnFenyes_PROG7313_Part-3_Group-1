@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork.adapters
 
+// Imports
 import android.app.Dialog
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -18,19 +19,26 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
+// ------------------------------------ Expense Adapter Class ----------------------------------------
+// This adapter handles the display of expenses in a RecyclerView with image support
 class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(ExpenseDiffCallback()) {
 
+    // ------------------------------------------------------------------------------------
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_expense, parent, false)
         return ExpenseViewHolder(view)
     }
 
+    // ------------------------------------------------------------------------------------
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
+    // ------------------------------------ Expense ViewHolder Class ----------------------------------------
+    // This class holds references to the views and handles the binding of expense data
     class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        // View references
         private val categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
         private val categoryName: TextView = itemView.findViewById(R.id.categoryName)
         private val expenseName: TextView = itemView.findViewById(R.id.expenseName)
@@ -39,7 +47,10 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
         private val imageButton: ImageButton = itemView.findViewById(R.id.attachImageInput)
         private val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
+        // ------------------------------------------------------------------------------------
+        // Binds the expense data to the views
         fun bind(expense: Expense) {
+            // Set basic text fields
             categoryName.text = expense.category
             expenseName.text = expense.description
             expenseDate.text = dateFormatter.format(Date(expense.date))
@@ -55,7 +66,7 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
                 imageButton.visibility = View.GONE
             }
 
-            // Set category icon based on category
+            // Set category icon based on category name
             val iconResource = when (expense.category.toLowerCase(Locale.ROOT)) {
                 "transport", "petrol" -> R.drawable.ic_transport
                 "food" -> R.drawable.ic_food
@@ -68,6 +79,8 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
             categoryIcon.setImageResource(iconResource)
         }
 
+        // ------------------------------------------------------------------------------------
+        // Shows a dialog with the full-size expense image
         private fun showImageDialog(imagePath: String) {
             val dialog = Dialog(itemView.context)
             dialog.setContentView(R.layout.dialog_image)
@@ -93,6 +106,8 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
         }
     }
 
+    // ------------------------------------ Expense Diff Callback Class ----------------------------------------
+    // This class handles the comparison of expense items for efficient updates
     private class ExpenseDiffCallback : DiffUtil.ItemCallback<Expense>() {
         override fun areItemsTheSame(oldItem: Expense, newItem: Expense): Boolean {
             return oldItem.id == newItem.id
@@ -102,4 +117,5 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Ex
             return oldItem == newItem
         }
     }
-} 
+}
+// -----------------------------------<<< End Of File >>>------------------------------------------

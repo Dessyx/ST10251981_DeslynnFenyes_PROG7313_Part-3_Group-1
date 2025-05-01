@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork.repository
 
+// Imports
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -19,8 +20,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+//--------------------------------------- Profile Main Class -----------------------------------------------
+// This class handles the profile management functionality including viewing, editing and deleting user profiles
 class ProfileMainClass : AppCompatActivity() {
 
+    // Variable declarations
     private lateinit var database: AstraDatabase
     private lateinit var btnSaveProfile: Button
     private lateinit var btnDeleteProfile: Button
@@ -30,20 +34,20 @@ class ProfileMainClass : AppCompatActivity() {
     private var currentUserId: Long = -1
     private lateinit var savings: TextView
 
+    // ------------------------------------------------------------------------------------
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.profile_page)
 
-        // Initialize views
+        // Initialize views and database
         initializeViews()
-
-        // Initialize AstraDatabase
         database = AstraDatabase.getDatabase(this)
 
-        // Load existing profile if any
+        // Load existing profile and update savings display
         loadExistingProfile()
         updateSavingsDisplay()
 
+        // Set up click listeners for buttons
         btnSaveProfile.setOnClickListener {
             validateAndSaveProfile()
         }
@@ -52,6 +56,7 @@ class ProfileMainClass : AppCompatActivity() {
             showDeleteConfirmationDialog()
         }
 
+        // Set up back button navigation
         val backButton = findViewById<ImageButton>(R.id.back_button)
         backButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -61,6 +66,8 @@ class ProfileMainClass : AppCompatActivity() {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Initializes all the views from the layout
     private fun initializeViews() {
         btnSaveProfile = findViewById(R.id.btnSaveProfile)
         btnDeleteProfile = findViewById(R.id.btnDeleteProfile)
@@ -70,6 +77,8 @@ class ProfileMainClass : AppCompatActivity() {
         savings = findViewById(R.id.tvTotalSaved)
     }
 
+    // ------------------------------------------------------------------------------------
+    // Loads the existing user profile if one exists
     private fun loadExistingProfile() {
         lifecycleScope.launch {
             try {
@@ -95,6 +104,8 @@ class ProfileMainClass : AppCompatActivity() {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Validates the input fields before saving the profile
     private fun validateAndSaveProfile() {
         val name = etName.text.toString().trim()
         val surname = etSurname.text.toString().trim()
@@ -113,10 +124,14 @@ class ProfileMainClass : AppCompatActivity() {
         saveUserProfile(name, surname, email)
     }
 
+    // ------------------------------------------------------------------------------------
+    // Validates if the email address is in a correct format
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
+    // ------------------------------------------------------------------------------------
+    // Saves the user profile to the database
     private fun saveUserProfile(name: String, surname: String, email: String) {
         lifecycleScope.launch {
             try {
@@ -149,6 +164,8 @@ class ProfileMainClass : AppCompatActivity() {
         }
     }
     
+    // ------------------------------------------------------------------------------------
+    // Shows a confirmation dialog before deleting the profile
     private fun showDeleteConfirmationDialog() {
         AlertDialog.Builder(this)
             .setTitle("Delete Profile")
@@ -160,6 +177,8 @@ class ProfileMainClass : AppCompatActivity() {
             .show()
     }
     
+    // ------------------------------------------------------------------------------------
+    // Deletes the user profile from the database
     private fun deleteUserProfile() {
         if (currentUserId == -1L) {
             Toast.makeText(this, "No profile to delete", Toast.LENGTH_SHORT).show()
@@ -196,7 +215,8 @@ class ProfileMainClass : AppCompatActivity() {
         }
     }
 
-
+    // ------------------------------------------------------------------------------------
+    // Updates the savings display with the current total savings
     private fun updateSavingsDisplay() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -208,8 +228,12 @@ class ProfileMainClass : AppCompatActivity() {
                     savings.text = String.format("R %.2f", totalSavings)
                 }
             } catch (e: Exception) {
-                // Handle error if needed
+                // Handle error by showing 0.00
+                withContext(Dispatchers.Main) {
+                    savings.text = "R 0.00"
+                }
             }
         }
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

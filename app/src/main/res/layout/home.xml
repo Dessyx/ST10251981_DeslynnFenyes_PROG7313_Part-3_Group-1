@@ -246,7 +246,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/historyRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="166dp"
+        android:layout_height="170dp"
         android:layout_marginTop="7dp"
         android:clipToPadding="false"
         android:paddingHorizontal="8dp"

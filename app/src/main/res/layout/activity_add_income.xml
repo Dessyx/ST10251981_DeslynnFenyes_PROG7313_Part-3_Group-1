@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="42dp"
+            android:layout_marginBottom="10dp"
             android:fontFamily="@font/abhaya_libre_extrabold"
             android:text="Add Income"
             android:textColor="@android:color/black"
@@ -55,16 +56,17 @@
         <TextView
             android:layout_width="186dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
             android:layout_marginBottom="8dp"
+            android:fontFamily="@font/kosugi_maru"
             android:paddingLeft="15dp"
             android:text="Date"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:fontFamily="@font/kosugi_maru"/>
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/dateInput"
-            android:layout_width="375dp"
+            android:layout_width="307dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
@@ -98,16 +100,17 @@
         <TextView
             android:layout_width="186dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
             android:layout_marginBottom="8dp"
+            android:fontFamily="@font/kosugi_maru"
             android:paddingLeft="15dp"
             android:text="Amount"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:fontFamily="@font/kosugi_maru"/>
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/amountInput"
-            android:layout_width="372dp"
+            android:layout_width="307dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
@@ -119,16 +122,17 @@
         <TextView
             android:layout_width="186dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
             android:layout_marginBottom="8dp"
+            android:fontFamily="@font/kosugi_maru"
             android:paddingLeft="15dp"
             android:text="Description"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:fontFamily="@font/kosugi_maru"/>
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/expenseDescription"
-            android:layout_width="381dp"
+            android:layout_width="307dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"

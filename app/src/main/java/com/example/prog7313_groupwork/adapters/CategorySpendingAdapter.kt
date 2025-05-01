@@ -1,5 +1,5 @@
 package com.example.prog7313_groupwork.adapters
-
+// Imports
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.entities.Category
 
+// ------------------------------------ Category Spending Adaptor ----------------------------------------
+// This Adapter handles the display of the filtered categories on the activity_category_spending.xml page.
 class CategorySpendingAdapter : RecyclerView.Adapter<CategorySpendingAdapter.CategorySpendingViewHolder>() {
-    private var categories: List<Category> = emptyList()
+    private var categories: List<Category> = emptyList() // Declaring the list for categories
 
     class CategorySpendingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val categoryIcon: ImageView = view.findViewById(R.id.categoryIcon)
@@ -22,12 +24,14 @@ class CategorySpendingAdapter : RecyclerView.Adapter<CategorySpendingAdapter.Cat
         val percentageText: TextView = view.findViewById(R.id.percentageText)
     }
 
+    // ------------------------------------------------------------------------------------
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategorySpendingViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_category_spending, parent, false)
         return CategorySpendingViewHolder(view)
     }
 
+    // ------------------------------------------------------------------------------------
     override fun onBindViewHolder(holder: CategorySpendingViewHolder, position: Int) {
         val category = categories[position]
         val spent = category.spent ?: 0.0
@@ -63,10 +67,13 @@ class CategorySpendingAdapter : RecyclerView.Adapter<CategorySpendingAdapter.Cat
         holder.categoryIcon.setImageResource(iconResId)
     }
 
+    // ------------------------------------------------------------------------------------
     override fun getItemCount() = categories.size
 
+    // ------------------------------------------------------------------------------------
     fun updateCategories(newCategories: List<Category>) {
         categories = newCategories
         notifyDataSetChanged()
     }
-} 
+}
+// -----------------------------------<<< End Of File >>>------------------------------------------

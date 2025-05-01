@@ -12,26 +12,25 @@
         android:id="@+id/userProfileIcon"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="348dp"
+
         android:background="@null"
         android:contentDescription="User Profile"
-
         android:scaleType="centerCrop"
         android:src="@drawable/ic_user_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="-8dp" />
 
     <TextView
         android:id="@+id/greetingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="40dp"
         android:text="@string/hello_xavier_Martin"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/userProfileIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +43,7 @@
         android:id="@+id/activeBalanceLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:text="Active balance"
         android:textColor="@android:color/black"
         android:textSize="16sp"
@@ -246,7 +245,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/historyRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="166dp"
+        android:layout_height="170dp"
         android:layout_marginTop="7dp"
         android:clipToPadding="false"
         android:paddingHorizontal="8dp"

@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// imports
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
@@ -14,10 +15,11 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.*
 
+// -------------------- Functionality for activity_debt_planner.xml -------------------------------
 class DebtPlanner : AppCompatActivity() {
     private lateinit var totalDebtInput: TextInputEditText
     private lateinit var monthlySalaryInput: TextInputEditText
-    private lateinit var paymentPeriodInput: TextInputEditText
+    private lateinit var paymentPeriodInput: TextInputEditText   // variable declaration
     private lateinit var monthlyPaymentText: TextView
     private lateinit var calculateButton: Button
     private lateinit var saveButton: Button
@@ -28,10 +30,9 @@ class DebtPlanner : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_debt_planner)
 
-        // Initialize database
+        // Initialize database and views
         database = AstraDatabase.getDatabase(this)
 
-        // Initialize views
         initializeViews()
         setupClickListeners()
         loadLatestDebtPlan()
@@ -45,11 +46,11 @@ class DebtPlanner : AppCompatActivity() {
         calculateButton = findViewById(R.id.calculateButton)
         saveButton = findViewById(R.id.saveButton)
         backButton = findViewById(R.id.backButton)
-
-        // Set initial text for monthly payment
         monthlyPaymentText.text = formatCurrency(0.0)
     }
 
+    // ---------------------------------------------------------------------------------
+    // on click listeners
     private fun setupClickListeners() {
         calculateButton.setOnClickListener {
             calculateMonthlyPayment()
@@ -64,6 +65,8 @@ class DebtPlanner : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------------------
+    // Performs a calculation using your total debt and Salary to show you how much pm to pay.
     private fun calculateMonthlyPayment(): Double? {
         try {
             val totalDebt = totalDebtInput.text.toString().toDoubleOrNull()
@@ -102,6 +105,8 @@ class DebtPlanner : AppCompatActivity() {
         }
     }
 
+    // --------------------------------------------------------------------------------------------
+    // Saves the debt plan into the database
     private fun saveDebtPlan() {
         val monthlyPayment = calculateMonthlyPayment() ?: return
 
@@ -132,10 +137,11 @@ class DebtPlanner : AppCompatActivity() {
         }
     }
 
+    // ----------------------------------------------------------------------------------------------
+    // Displays the most recent debt plan
     private fun loadLatestDebtPlan() {
         lifecycleScope.launch {
             try {
-                // TODO: Get actual user ID from session
                 val userId = 1
                 val latestPlan = database.debtPlanDAO().getLatestDebtPlanForUser(userId)
                 
@@ -151,8 +157,10 @@ class DebtPlanner : AppCompatActivity() {
         }
     }
 
+    // formats the currency
     private fun formatCurrency(amount: Double): String {
         val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
         return currencyFormat.format(amount)
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

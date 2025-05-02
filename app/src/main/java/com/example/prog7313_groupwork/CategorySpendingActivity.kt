@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// imports
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.ImageButton
@@ -18,23 +19,23 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
+// --------------------- Functionality for activity_category_spending.xml ------------------------
 class CategorySpendingActivity : AppCompatActivity() {
 
     private lateinit var categorySpendingAdapter: CategorySpendingAdapter
     private lateinit var periodText: TextView
     private lateinit var totalSpentText: TextView
-    private var startDate: Calendar = Calendar.getInstance()
+    private var startDate: Calendar = Calendar.getInstance()   // Declaring varibales
     private var endDate: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category_spending)
 
-        // Initialize views
         periodText = findViewById(R.id.periodText)
         totalSpentText = findViewById(R.id.totalSpentText)
 
-        // Set initial date range (current month)
+        // Sets the initial date range (current month)
         startDate.set(Calendar.DAY_OF_MONTH, 1)
         startDate.set(Calendar.HOUR_OF_DAY, 0)
         startDate.set(Calendar.MINUTE, 0)
@@ -49,7 +50,6 @@ class CategorySpendingActivity : AppCompatActivity() {
 
         updateDateDisplay()
 
-        // Setup RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.categorySpendingRecyclerView)
         categorySpendingAdapter = CategorySpendingAdapter()
         recyclerView.apply {
@@ -57,19 +57,20 @@ class CategorySpendingActivity : AppCompatActivity() {
             adapter = categorySpendingAdapter
         }
 
-        // Setup filter button
+        // --------------------------------------------------------------------------------------
+        // On click listener
         val filterButton = findViewById<ImageButton>(R.id.filterButton)
         filterButton.setOnClickListener {
             showDateRangePicker()
         }
 
-        // Setup back button
+        // --------------------------------------------------------------------------------------
+        // navigation
         val backButton = findViewById<ImageButton>(R.id.backButton)
         backButton.setOnClickListener {
             finish()
         }
 
-        // Load initial data
         loadCategorySpending()
     }
 
@@ -131,7 +132,7 @@ class CategorySpendingActivity : AppCompatActivity() {
                 val categories = db.categoryDAO().getAllCategories()
                 val expenseDAO = db.expenseDAO()
 
-                // Calculate spending for each category in the date range
+                // Calculate spending for each category in the period that the user chose
                 val categoriesWithSpending = categories.map { category ->
                     val expenses = expenseDAO.getExpensesByDateRange(
                         userId,
@@ -143,7 +144,7 @@ class CategorySpendingActivity : AppCompatActivity() {
                     category.copy(spent = totalSpent)
                 }
 
-                // Calculate total spending across all categories
+                // Calculates the total spent in all categories
                 val totalSpending = categoriesWithSpending.sumOf { it.spent ?: 0.0 }
 
                 withContext(Dispatchers.Main) {
@@ -157,4 +158,5 @@ class CategorySpendingActivity : AppCompatActivity() {
             }
         }
     }
-} 
+}
+// -----------------------------------<<< End Of File >>>------------------------------------------

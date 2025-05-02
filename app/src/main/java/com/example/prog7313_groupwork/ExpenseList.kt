@@ -1,0 +1,187 @@
+package com.example.prog7313_groupwork
+
+import android.app.DatePickerDialog
+import android.os.Bundle
+import android.view.View
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.prog7313_groupwork.adapters.ExpenseAdapter
+import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
+
+class ExpenseList : AppCompatActivity() {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var expenseAdapter: ExpenseAdapter
+    private lateinit var filterButton: ImageButton
+    private lateinit var periodText: TextView
+    private lateinit var database: AstraDatabase
+    
+    private var startDate: Calendar = Calendar.getInstance()
+    private var endDate: Calendar = Calendar.getInstance()
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_expense_list)
+        
+        database = AstraDatabase.getDatabase(this)
+        
+        // Initialize views
+        recyclerView = findViewById(R.id.expenseRecyclerView)
+        filterButton = findViewById(R.id.filterButton)
+        periodText = findViewById(R.id.periodText)
+        
+        // Setup RecyclerView
+        expenseAdapter = ExpenseAdapter()
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@ExpenseList)
+            adapter = expenseAdapter
+        }
+        
+        // Set default date range (current month)
+        startDate.set(Calendar.DAY_OF_MONTH, 1)
+        updatePeriodText()
+        
+        // Setup click listeners
+        filterButton.setOnClickListener {
+            showFilterDialog()
+        }
+        
+        // Load initial data
+        loadExpenses()
+        
+        // Setup back button
+        findViewById<ImageButton>(R.id.backButton)?.setOnClickListener {
+            finish()
+        }
+    }
+    
+    private fun showFilterDialog() {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.dialog_date_filter, null)
+        dialog.setContentView(view)
+        
+        view.findViewById<View>(R.id.lastMonthButton).setOnClickListener {
+            setLastMonthPeriod()
+            dialog.dismiss()
+        }
+        
+        view.findViewById<View>(R.id.last3MonthsButton).setOnClickListener {
+            setLast3MonthsPeriod()
+            dialog.dismiss()
+        }
+        
+        view.findViewById<View>(R.id.customPeriodButton).setOnClickListener {
+            showDateRangePicker()
+            dialog.dismiss()
+        }
+        
+        dialog.show()
+    }
+    
+    private fun setLastMonthPeriod() {
+        startDate = Calendar.getInstance().apply {
+            add(Calendar.MONTH, -1)
+            set(Calendar.DAY_OF_MONTH, 1)
+        }
+        endDate = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_MONTH, 1)
+            add(Calendar.DATE, -1)
+        }
+        updatePeriodText()
+        loadExpenses()
+    }
+    
+    private fun setLast3MonthsPeriod() {
+        startDate = Calendar.getInstance().apply {
+            add(Calendar.MONTH, -3)
+            set(Calendar.DAY_OF_MONTH, 1)
+        }
+        endDate = Calendar.getInstance()
+        updatePeriodText()
+        loadExpenses()
+    }
+    
+    private fun showDateRangePicker() {
+        // Show start date picker
+        DatePickerDialog(
+            this,
+            { _, year, month, day ->
+                startDate.set(year, month, day)
+                // After selecting start date, show end date picker
+                showEndDatePicker()
+            },
+            startDate.get(Calendar.YEAR),
+            startDate.get(Calendar.MONTH),
+            startDate.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
+    
+    private fun showEndDatePicker() {
+        DatePickerDialog(
+            this,
+            { _, year, month, day ->
+                endDate.set(year, month, day)
+                updatePeriodText()
+                loadExpenses()
+            },
+            endDate.get(Calendar.YEAR),
+            endDate.get(Calendar.MONTH),
+            endDate.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
+    
+    private fun updatePeriodText() {
+        val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+        val startText = dateFormat.format(startDate.time)
+        val endText = dateFormat.format(endDate.time)
+        
+        periodText.text = if (startText == endText) {
+            startText
+        } else {
+            "$startText - $endText"
+        }
+    }
+    
+    private fun loadExpenses() {
+        lifecycleScope.launch {
+            try {
+                // Get user ID from shared preferences
+                val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getLong("current_user_id", -1L)
+
+                if (userId == -1L) {
+                    Toast.makeText(this@ExpenseList, "Please log in to view expenses", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+                
+                // Convert Calendar dates to Long timestamps
+                val startDateLong = startDate.timeInMillis
+                val endDateLong = endDate.timeInMillis
+                
+                database.expenseDAO().getExpensesByDateRange(userId, startDateLong, endDateLong)
+                    .collect { expenses ->
+                        if (expenses.isEmpty()) {
+                            Toast.makeText(this@ExpenseList, "No expenses found for this period", Toast.LENGTH_SHORT).show()
+                        }
+                        expenseAdapter.submitList(expenses.sortedByDescending { it.date })
+                    }
+            } catch (e: Exception) {
+                Toast.makeText(this@ExpenseList, "Error loading expenses: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadExpenses()
+    }
+}

@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork.repository
 
+// imports
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -12,16 +13,19 @@ import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Award
 import kotlinx.coroutines.launch
 
+//                                   P3 FEATURE
+// ------------------------------ Awards Activity Class -------------------------------
 class AwardsMainClass : AppCompatActivity() {
 
     private lateinit var db: AstraDatabase
     private lateinit var etGoal: EditText
-    private lateinit var goalStatusText: TextView
+    private lateinit var goalStatusText: TextView       // Variable declaration
     private lateinit var giftCardImage: ImageView
     private lateinit var badgeImage: ImageView
     private lateinit var trophyLayout: LinearLayout
-    private var currentUserId: Long = 1 // You should get this from your login/session management
+    private var currentUserId: Long = 1
 
+    //----------------------------------------------------------------------------------
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.awards_page)
@@ -32,11 +36,11 @@ class AwardsMainClass : AppCompatActivity() {
         etGoal = findViewById(R.id.etGoal)
         giftCardImage = findViewById(R.id.ivGiftCard)
         badgeImage = findViewById(R.id.ivBadge)
-        goalStatusText = findViewById(R.id.tvTitle) // Using existing TextView from layout
-        trophyLayout = findViewById(R.id.trophyLayout) // Updated ID
+        goalStatusText = findViewById(R.id.tvTitle)
+        trophyLayout = findViewById(R.id.trophyLayout)
 
        /* // Hide reward visuals initially
-        trophyLayout.visibility = View.GONE
+        trophyLayout.visibility = View.GONE    For p3
         giftCardImage.visibility = View.GONE
         badgeImage.visibility = View.GONE*/
 
@@ -45,10 +49,12 @@ class AwardsMainClass : AppCompatActivity() {
             true
         }
 
+        // ----------------------------------------------------------------------------
         // Load existing awards
         loadUserAwards()
         
-        // Setup back button
+        // -----------------------------------------------------------------------------
+        // Navigation
         val backButton = findViewById<ImageButton>(R.id.btnBack)
         backButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -56,8 +62,11 @@ class AwardsMainClass : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        //------------------------------------------------------------------------------
     }
 
+    //----------------------------------------------------------------------------------
+    // Validates and saves the goal                                         For p3
     private fun checkAndSaveGoal() {
         val goalText = etGoal.text.toString()
         if (goalText.isBlank()) {

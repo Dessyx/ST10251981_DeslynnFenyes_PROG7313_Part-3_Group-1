@@ -39,15 +39,15 @@ class ProfileMainClass : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.profile_page)
 
-        // Initialize views and database
+        // Initializes views and database
         initializeViews()
         database = AstraDatabase.getDatabase(this)
 
-        // Load existing profile and update savings display
+
         loadExistingProfile()
         updateSavingsDisplay()
-
-        // Set up click listeners for buttons
+        //----------------------------------------------------------------------------------
+        // On CLick listeners
         btnSaveProfile.setOnClickListener {
             validateAndSaveProfile()
         }
@@ -56,7 +56,8 @@ class ProfileMainClass : AppCompatActivity() {
             showDeleteConfirmationDialog()
         }
 
-        // Set up back button navigation
+        //------------------------------------------------------------------------------------
+        // Navigation
         val backButton = findViewById<ImageButton>(R.id.back_button)
         backButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -67,7 +68,7 @@ class ProfileMainClass : AppCompatActivity() {
     }
 
     // ------------------------------------------------------------------------------------
-    // Initializes all the views from the layout
+    // Initializes views
     private fun initializeViews() {
         btnSaveProfile = findViewById(R.id.btnSaveProfile)
         btnDeleteProfile = findViewById(R.id.btnDeleteProfile)
@@ -138,9 +139,9 @@ class ProfileMainClass : AppCompatActivity() {
                 val user = User(
                     id = if (currentUserId != -1L) currentUserId else 0,
                     NameSurname = "$name $surname",
-                    PhoneNumber = 0, // Default value, you might want to add a phone field in your UI
+                    PhoneNumber = 0,
                     userEmail = email,
-                    passwordHash = "" // This should be handled in a different screen/flow
+                    passwordHash = ""
                 )
 
                 database.userDAO().insertUser(user)
@@ -187,7 +188,6 @@ class ProfileMainClass : AppCompatActivity() {
         
         lifecycleScope.launch {
             try {
-                // Delete the specific user instead of clearing all users
                 database.userDAO().deleteUserById(currentUserId)
                 
                 runOnUiThread {
@@ -220,15 +220,12 @@ class ProfileMainClass : AppCompatActivity() {
     private fun updateSavingsDisplay() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Get total savings from database
                 val totalSavings = database.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
 
-                // Update UI on main thread
                 withContext(Dispatchers.Main) {
                     savings.text = String.format("R %.2f", totalSavings)
                 }
             } catch (e: Exception) {
-                // Handle error by showing 0.00
                 withContext(Dispatchers.Main) {
                     savings.text = "R 0.00"
                 }

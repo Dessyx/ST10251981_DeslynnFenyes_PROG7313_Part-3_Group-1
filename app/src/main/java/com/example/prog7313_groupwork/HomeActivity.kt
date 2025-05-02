@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// imports
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -29,7 +30,7 @@ import java.util.Locale
 class HomeActivity : AppCompatActivity() {
     private lateinit var budgetGoalText: TextView
     private lateinit var overspentCategoriesText: TextView
-    private lateinit var savingProgressBar: ProgressBar
+    private lateinit var savingProgressBar: ProgressBar       // Declaring variables
     private lateinit var progressPercentageText: TextView
     private lateinit var activeBalanceValue: TextView
     private lateinit var greetingText: TextView
@@ -44,7 +45,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
 
-        // 1️⃣ Bind views
         budgetGoalText          = findViewById(R.id.textView3)
         overspentCategoriesText = findViewById(R.id.overspentCategories)
         savingProgressBar       = findViewById(R.id.savingProgressBar)
@@ -53,14 +53,13 @@ class HomeActivity : AppCompatActivity() {
         greetingText            = findViewById(R.id.greetingText)
         historyRecyclerView     = findViewById(R.id.historyRecyclerView)
 
-        // 2️⃣ Setup history RecyclerView
         historyAdapter = HistoryAdapter()
         historyRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter       = historyAdapter
         }
 
-        // 3️⃣ Load & validate current user
+        // Gets the current user
         currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
             .getLong("current_user_id", -1L)
         if (currentUserId == -1L) {
@@ -69,7 +68,8 @@ class HomeActivity : AppCompatActivity() {
             return
         }
 
-        // 4️⃣ Page navigation section
+        // -----------------------------------------------------------------------------------------
+        // Navigation section
         findViewById<ImageButton>(R.id.btnAddExpense).setOnClickListener {
             startActivity(Intent(this, AddExpenseActivity::class.java))
         }
@@ -101,23 +101,23 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsMainClass::class.java))
         }
 
-        // 5️⃣ Initial data load
         loadBudgetAndCategories()
         updateActiveBalance()
         updateGreeting()
         loadTransactionHistory()
     }
 
+    //----------------------------------------------------------------------------------------------
+    //
     private fun loadBudgetAndCategories() {
         val userInt   = currentUserId.toInt()
         val budgetDAO = db.budgetDAO()
         val catDAO    = db.categoryDAO()
 
         lifecycleScope.launch {
-            // fetch categories
             val categories = catDAO.getAllCategories()
 
-            // observe budget changes
+            // fetches category data
             budgetDAO.getCurrentBudget(userInt).collect { budget ->
                 val goal       = budget?.monthlyGoal ?: 0.0
                 val totalSpent = categories.sumOf { it.spent ?: 0.0 }
@@ -130,12 +130,12 @@ class HomeActivity : AppCompatActivity() {
                     .joinToString(", ") { it.categoryName }
 
                 withContext(Dispatchers.Main) {
-                    // show "R xx" for goal
                     budgetGoalText.text = currencyFormat.format(goal)
 
                     savingProgressBar.progress  = progress
                     progressPercentageText.text = "$progress%"
 
+                    // Part 3 - flags overspent categories red
                     if (overspentList.isNotEmpty()) {
                         overspentCategoriesText.text = overspentList
                         overspentCategoriesText.setTextColor(
@@ -152,6 +152,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Displays the current balance as the user spends money and recieves income
     private fun updateActiveBalance() {
         lifecycleScope.launch(Dispatchers.IO) {
             val expenses = db.expenseDAO()
@@ -161,12 +163,13 @@ class HomeActivity : AppCompatActivity() {
             val balance  = incomes.sumOf { it.amount } - expenses.sumOf { it.amount }
 
             withContext(Dispatchers.Main) {
-                // already prefixed with R in format string
                 activeBalanceValue.text = "R %.2f".format(balance)
             }
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // Greets user using their entered name and surname
     private fun updateGreeting() {
         lifecycleScope.launch(Dispatchers.IO) {
             val user = db.userDAO().getUserById(currentUserId)
@@ -176,6 +179,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Displays the users income and expense history
     private fun loadTransactionHistory() {
         lifecycleScope.launch(Dispatchers.IO) {
             val expenses = db.expenseDAO()
@@ -218,3 +223,4 @@ class HomeActivity : AppCompatActivity() {
         loadTransactionHistory()
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

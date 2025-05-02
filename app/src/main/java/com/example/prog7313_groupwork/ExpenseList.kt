@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// imports
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
@@ -18,11 +19,12 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+// ---------------------- Functionality for activity_expense_list.xml --------------------------------
 class ExpenseList : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var expenseAdapter: ExpenseAdapter
     private lateinit var filterButton: ImageButton
-    private lateinit var periodText: TextView
+    private lateinit var periodText: TextView               // Declaration of variables
     private lateinit var database: AstraDatabase
     
     private var startDate: Calendar = Calendar.getInstance()
@@ -32,14 +34,13 @@ class ExpenseList : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expense_list)
         
-        database = AstraDatabase.getDatabase(this)
+        database = AstraDatabase.getDatabase(this)  // initialize database
         
         // Initialize views
         recyclerView = findViewById(R.id.expenseRecyclerView)
         filterButton = findViewById(R.id.filterButton)
         periodText = findViewById(R.id.periodText)
-        
-        // Setup RecyclerView
+
         expenseAdapter = ExpenseAdapter()
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@ExpenseList)
@@ -49,21 +50,24 @@ class ExpenseList : AppCompatActivity() {
         // Set default date range (current month)
         startDate.set(Calendar.DAY_OF_MONTH, 1)
         updatePeriodText()
-        
-        // Setup click listeners
+
+        //-------------------------------------------------------------------------------------------
+        // on click listeners
         filterButton.setOnClickListener {
             showFilterDialog()
         }
-        
-        // Load initial data
+
         loadExpenses()
-        
-        // Setup back button
+
+        //-------------------------------------------------------------------------------------------
         findViewById<ImageButton>(R.id.backButton)?.setOnClickListener {
             finish()
         }
     }
-    
+
+    //----------------------------------------------------------------------------------------------
+    // Displays the option sto choose last month, last 3 months or custom period
+    // to filter expenses by
     private fun showFilterDialog() {
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.dialog_date_filter, null)
@@ -86,7 +90,9 @@ class ExpenseList : AppCompatActivity() {
         
         dialog.show()
     }
-    
+
+    // ---------------------------------------------------------------------------------------------
+    // Filters expenses to show the last months
     private fun setLastMonthPeriod() {
         startDate = Calendar.getInstance().apply {
             add(Calendar.MONTH, -1)
@@ -99,7 +105,9 @@ class ExpenseList : AppCompatActivity() {
         updatePeriodText()
         loadExpenses()
     }
-    
+
+    // ---------------------------------------------------------------------------------------------
+    // Filters expenses to show the 3 last months
     private fun setLast3MonthsPeriod() {
         startDate = Calendar.getInstance().apply {
             add(Calendar.MONTH, -3)
@@ -109,14 +117,14 @@ class ExpenseList : AppCompatActivity() {
         updatePeriodText()
         loadExpenses()
     }
-    
+
+    // ---------------------------------------------------------------------------------------------
+    // Filters expenses to show the expenses within the users selected period
     private fun showDateRangePicker() {
-        // Show start date picker
         DatePickerDialog(
             this,
             { _, year, month, day ->
                 startDate.set(year, month, day)
-                // After selecting start date, show end date picker
                 showEndDatePicker()
             },
             startDate.get(Calendar.YEAR),
@@ -138,7 +146,8 @@ class ExpenseList : AppCompatActivity() {
             endDate.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
-    
+
+    //----------------------------------------------------------------------------------------------
     private fun updatePeriodText() {
         val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
         val startText = dateFormat.format(startDate.time)
@@ -150,11 +159,12 @@ class ExpenseList : AppCompatActivity() {
             "$startText - $endText"
         }
     }
-    
+
+    // --------------------------------------------------------------------------------------------
+    // Displays the expenses to the user
     private fun loadExpenses() {
         lifecycleScope.launch {
             try {
-                // Get user ID from shared preferences
                 val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
                     .getLong("current_user_id", -1L)
 
@@ -162,8 +172,7 @@ class ExpenseList : AppCompatActivity() {
                     Toast.makeText(this@ExpenseList, "Please log in to view expenses", Toast.LENGTH_SHORT).show()
                     return@launch
                 }
-                
-                // Convert Calendar dates to Long timestamps
+
                 val startDateLong = startDate.timeInMillis
                 val endDateLong = endDate.timeInMillis
                 
@@ -185,3 +194,4 @@ class ExpenseList : AppCompatActivity() {
         loadExpenses()
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// imports
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import at.favre.lib.crypto.bcrypt.BCrypt
 
+// -----------------------------
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText

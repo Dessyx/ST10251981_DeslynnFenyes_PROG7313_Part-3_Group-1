@@ -14,7 +14,7 @@ interface UserDAO {
     // ------------------------------------------------------------------------------------
     // Inserts a new user or replaces an existing one
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUser(user: User)
+    suspend fun insertUser(user: User): Long
 
     // ------------------------------------------------------------------------------------
     // Retrieves the most recently created user

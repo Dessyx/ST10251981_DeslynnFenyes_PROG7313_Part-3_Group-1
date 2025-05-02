@@ -67,7 +67,7 @@ class SettingsMainClass : AppCompatActivity() {
             spinnerCurrency = findViewById(R.id.spinnerCurrency)
             languageGroup = findViewById(R.id.languageGroup)
             rbEnglish = findViewById(R.id.rbEnglish)
-            rbAfrikaans = findViewById(R.id.rbAfrikaans)
+            /*rbAfrikaans = findViewById(R.id.rbAfrikaans)*/
             layoutSystemSettings = findViewById(R.id.layoutSystemSettings)
             etChangeEmail = findViewById(R.id.etChangeEmail)
             etConfirmEmail = findViewById(R.id.etConfirmEmail)
@@ -120,7 +120,7 @@ class SettingsMainClass : AppCompatActivity() {
                 
                 val newLanguage = when (checkedId) {
                     R.id.rbEnglish -> "en"
-                    R.id.rbAfrikaans -> "af"
+                   /* R.id.rbAfrikaans -> "af"*/
                     else -> return@setOnCheckedChangeListener
                 }
 

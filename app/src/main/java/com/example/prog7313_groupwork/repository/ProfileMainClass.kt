@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.HomeActivity
+import com.example.prog7313_groupwork.LoginActivity
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.User
@@ -179,9 +180,11 @@ class ProfileMainClass : AppCompatActivity() {
             Toast.makeText(this, "No profile to delete", Toast.LENGTH_SHORT).show()
             return
         }
+
         lifecycleScope.launch {
             try {
                 database.userDAO().deleteUserById(currentUserId)
+
                 runOnUiThread {
                     Toast.makeText(
                         this@ProfileMainClass,
@@ -189,11 +192,10 @@ class ProfileMainClass : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    Intent(this@ProfileMainClass, HomeActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        startActivity(this)
-                        finish()
-                    }
+                    val intent = Intent(this@ProfileMainClass, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
+                    finish()
                 }
             } catch (e: Exception) {
                 runOnUiThread {

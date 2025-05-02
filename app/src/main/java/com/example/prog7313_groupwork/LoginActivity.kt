@@ -16,12 +16,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import at.favre.lib.crypto.bcrypt.BCrypt
 
-// -----------------------------
+// ----------------------------- Functionality of login.xml ----------------------------------
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
-    private lateinit var loginButton: MaterialButton
+    private lateinit var loginButton: MaterialButton       // Variable declaration
     private lateinit var registerButton: MaterialButton
     private lateinit var backButton: ImageButton
     private lateinit var database: AstraDatabase
@@ -40,6 +40,8 @@ class LoginActivity : AppCompatActivity() {
         registerButton = findViewById(R.id.registerButton)
         backButton = findViewById(R.id.back_button)
 
+        // -----------------------------------------------------------------------------------------
+        // on click listeners
         registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
@@ -60,13 +62,15 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+        // -----------------------------------------------------------------------------------------
 
             lifecycleScope.launch {
                 try {
                     val user = withContext(Dispatchers.IO) {
-                        database.userDAO().getUserByEmail(email)
+                        database.userDAO().getUserByEmail(email) // Fetches the users email
                     }
 
+                    // Handles the login checks and functionality
                     if (user != null) {
                         val result = BCrypt.verifyer().verify(password.toCharArray(), user.passwordHash)
                         if (result.verified) {
@@ -81,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(intent)
                             finish()
-                        } else {
+                        } else {   // Error handling display
                             Toast.makeText(this@LoginActivity, "Invalid email or password", Toast.LENGTH_SHORT).show()
                         }
                     } else {
@@ -94,3 +98,4 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

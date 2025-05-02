@@ -196,8 +196,7 @@ class ProfileMainClass : AppCompatActivity() {
                         "Profile deleted successfully",
                         Toast.LENGTH_SHORT
                     ).show()
-                    
-                    // Navigate back to home screen
+
                     val intent = Intent(this@ProfileMainClass, HomeActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     startActivity(intent)

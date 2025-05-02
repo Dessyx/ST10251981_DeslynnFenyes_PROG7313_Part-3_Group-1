@@ -23,7 +23,7 @@ import androidx.room.PrimaryKey
 data class BudgetCategory(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0, // Auto-generated unique identifier
-    val budgetId: Int, // ID of the parent budget
+    val budgetId: Int, // ID of the budget
     val userId: Int, // ID of the user who owns this category
     val name: String, // Name of the budget category
     val icon: String, // Icon for the category

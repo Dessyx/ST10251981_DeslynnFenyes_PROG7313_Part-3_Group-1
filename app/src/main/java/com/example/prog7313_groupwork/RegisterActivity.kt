@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// imports
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
@@ -15,11 +16,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import at.favre.lib.crypto.bcrypt.BCrypt
 
+// ----------------------------- Functionality of activity_register.xml ----------------------------------
 class RegisterActivity : AppCompatActivity() {
     private lateinit var nameInput: EditText
     private lateinit var emailInput: EditText
     private lateinit var phoneInput: EditText
-    private lateinit var passwordInput: EditText
+    private lateinit var passwordInput: EditText            // Variable declaration
     private lateinit var registerButton: MaterialButton
     private lateinit var backButton: ImageButton
     private lateinit var database: AstraDatabase
@@ -28,10 +30,10 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // Initialize database
+        //------------------------------------------------------------------------------------------
+        // Initialize view and database
         database = AstraDatabase.getDatabase(this)
 
-        // Initialize views
         nameInput = findViewById(R.id.nameInput)
         emailInput = findViewById(R.id.emailInput)
         phoneInput = findViewById(R.id.phoneInput)
@@ -39,7 +41,8 @@ class RegisterActivity : AppCompatActivity() {
         registerButton = findViewById(R.id.registerButton)
         backButton = findViewById(R.id.backButton)
 
-        // Set click listeners
+        //------------------------------------------------------------------------------------------
+        // on click listeners
         registerButton.setOnClickListener {
             registerUser()
         }
@@ -49,8 +52,11 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        //-------------------------------------------------------------------------------------------
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Captures the users details and inserts the data into the database, creating an account
     private fun registerUser() {
         val name = nameInput.text.toString().trim()
         val email = emailInput.text.toString().trim()
@@ -76,10 +82,9 @@ class RegisterActivity : AppCompatActivity() {
         try {
             val phone = phoneStr.toInt()
             
-            // Hash the password using BCrypt
+            // Hash the password using BCrypt for data security
             val hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray())
 
-            // Create user object
             val user = User(
                 NameSurname = name,
                 PhoneNumber = phone,
@@ -99,12 +104,10 @@ class RegisterActivity : AppCompatActivity() {
                         return@launch
                     }
 
-                    // Insert new user
                     database.userDAO().insertUser(user)
 
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@RegisterActivity, "Registration successful!", Toast.LENGTH_SHORT).show()
-                        // Navigate to login activity
                         val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                         startActivity(intent)
                         finish()
@@ -124,3 +127,5 @@ class RegisterActivity : AppCompatActivity() {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }
+
+// -----------------------------------<<< End Of File >>>------------------------------------------

@@ -31,4 +31,4 @@ Users can:
 - Contribute to savings
 
 
-📺 YOUTUBE LINK: 
+📺 YOUTUBE LINK: https://www.youtube.com/watch?v=goj3jzFmdJA

@@ -1,12 +1,14 @@
 package com.example.prog7313_groupwork.entities
-
+// imports
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+// ------------------------------------ Expense Entity Class ----------------------------------------
+// This class represents a user's expense record with category and amount details
 @Entity(
-    tableName = "savings",
+    tableName = "savings", // the savings table
     foreignKeys = [
         ForeignKey(
             entity = User::class,
@@ -17,6 +19,7 @@ import androidx.room.PrimaryKey
     ],
     indices = [Index("userId")]
 )
+
 data class Savings(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -27,3 +30,4 @@ data class Savings(
     val description: String = "",
     val category: String = "General"
 )
+// -----------------------------------<<< End Of File >>>------------------------------------------

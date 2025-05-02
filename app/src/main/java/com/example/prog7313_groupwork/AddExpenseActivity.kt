@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// imports
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -22,6 +23,7 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
+// ---------------------- Functionality for activity_add_expense --------------------------------
 class AddExpenseActivity : AppCompatActivity() {
     private lateinit var dateInput: EditText
     private lateinit var categorySpinner: Spinner
@@ -46,24 +48,12 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
-   /* // Sample categories - you can replace these with categories from your database
-    private val categories = arrayOf(
-        "Food",
-        "Transportation",
-        "Housing",
-        "Utilities",
-        "Entertainment",
-        "Healthcare",
-        "Shopping",
-        "Other"
-    )*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
 
-        // Initialize database
-        database = AstraDatabase.getDatabase(this)
+        database = AstraDatabase.getDatabase(this) // Initialize database
 
         // Initialize views
         dateInput = findViewById(R.id.dateInput)
@@ -75,20 +65,13 @@ class AddExpenseActivity : AppCompatActivity() {
         viewExpenseButton = findViewById(R.id.viewExpenseButton)
         backButton = findViewById(R.id.backButton)
 
-        // Set up category spinner
-      /*  val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categorySpinner.adapter = adapter*/
 
         loadCategories()
-
-        // Set up date picker
         setupDatePicker()
-
-        // Set up image attachment
         setupImageAttachment()
 
-        // Set click listeners
+        // -------------------------------------------------------------------------
+        // on click listeners
         addExpenseButton.setOnClickListener {
             addExpense()
         }
@@ -109,6 +92,7 @@ class AddExpenseActivity : AppCompatActivity() {
 
 
     }
+
 
     private fun setupImageAttachment() {
         attachImageInput.setOnClickListener {
@@ -140,6 +124,8 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
+    // ---------------------------------------------------------------------------------
+    // Note: AI (ChatGPT) was used in this section of the date picker
     private fun setupDatePicker() {
         dateInput.setOnClickListener {
             val year = selectedDate.get(Calendar.YEAR)
@@ -152,16 +138,17 @@ class AddExpenseActivity : AppCompatActivity() {
             }, year, month, day).show()
         }
 
-        // Set initial date display
         updateDateDisplay()
     }
 
 
+  // ------------------------------------------------------------------------------------
+    // Populates the drop down of categories
     private fun loadCategories() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val categoriesList = database.categoryDAO().getAllCategories()  // 👈 Make sure you have this DAO method
-                val categoryNames = categoriesList.map { it.categoryName }  // Assuming your Category entity has a "name" field
+                val categoriesList = database.categoryDAO().getAllCategories()
+                val categoryNames = categoriesList.map { it.categoryName }
 
                 withContext(Dispatchers.Main) {
                     val adapter = ArrayAdapter(
@@ -180,18 +167,19 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
-
+// -------------------------------------------------------------------------------------------
+    // refreshes
     private fun updateDateDisplay() {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         dateInput.setText(dateFormat.format(selectedDate.time))
     }
-
+// --------------------------------------------------------------------------------------------
+    // Inserts all fields into the database
     private fun addExpense() {
         val amount = amountInput.text.toString()
         val description = descriptionInput.text.toString()
         val category = categorySpinner.selectedItem.toString()
 
-        // Validation
         if (amount.isEmpty()) {
             Toast.makeText(this, "Please enter an amount", Toast.LENGTH_SHORT).show()
             return
@@ -204,7 +192,6 @@ class AddExpenseActivity : AppCompatActivity() {
                 return
             }
 
-            // Get user ID from shared preferences
             val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
                 .getLong("current_user_id", -1L)
 
@@ -213,7 +200,6 @@ class AddExpenseActivity : AppCompatActivity() {
                 return
             }
 
-            // Create expense object
             val expense = Expense(
                 date = selectedDate.timeInMillis,
                 category = category,
@@ -226,22 +212,16 @@ class AddExpenseActivity : AppCompatActivity() {
             // Save expense to database and update category spent amount
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
-                    // Insert the expense
+
                     database.expenseDAO().insertExpense(expense)
-                    
-                    // Update the category's spent amount
+
                     val categories = database.categoryDAO().getAllCategories()
                     val matchingCategory = categories.find { it.categoryName == category }
                     
                     if (matchingCategory != null) {
-                        // Calculate new spent amount
                         val currentSpent = matchingCategory.spent ?: 0.0
                         val newSpent = currentSpent + expenseAmount
-                        
-                        // Create updated category with new spent amount
                         val updatedCategory = matchingCategory.copy(spent = newSpent)
-                        
-                        // Save updated category
                         database.categoryDAO().insertCategory(updatedCategory)
                         
                         Log.d("AddExpenseActivity", "Updated category ${category} spent from $currentSpent to $newSpent")
@@ -276,3 +256,4 @@ class AddExpenseActivity : AppCompatActivity() {
         attachImageInput.text.clear()
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

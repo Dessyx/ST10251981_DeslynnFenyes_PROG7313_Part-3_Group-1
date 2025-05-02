@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork.repository
 
+// imports
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -17,33 +18,30 @@ import com.example.prog7313_groupwork.entities.Savings
 import kotlinx.coroutines.launch
 
 
-
+// -------------------------- Handles savings_page.xml functionality ----------------------------
 class SavingsMainClass : AppCompatActivity() {
 
     private lateinit var db: AstraDatabase
     private lateinit var etSaveAmount: EditText
-    private lateinit var btnAddSavings: Button
+    private lateinit var btnAddSavings: Button       // Variable declaration
     private lateinit var tvTotalSavings: TextView
     private lateinit var progressBarSavings: ProgressBar
     private lateinit var tvProgressPercent: TextView
     
-    private val savingsGoal = 6000.0  // Monthly goal as Double
-    private var currentUserId: Long = 1 // Should be set from login session
+    private val savingsGoal = 6000.0
+    private var currentUserId: Long = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.savings_page)
 
-        // Initialize views
-        initializeViews()
+        initializeViews()   // Initialize views
+        db = AstraDatabase.getDatabase(this) // initialize database
 
-        // Initialize database
-        db = AstraDatabase.getDatabase(this)
-
-        // Update initial display
         updateSavingsDisplay()
 
-        // Set up click listener
+        //----------------------------------------------------------------------------------
+        // on click listener
         btnAddSavings.setOnClickListener {
             validateAndAddSavings()
         }
@@ -70,6 +68,8 @@ class SavingsMainClass : AppCompatActivity() {
         tvProgressPercent = findViewById(R.id.tvProgressPercent)
     }
 
+    //---------------------------------------------------------------------------------------
+    // Checks and adds savings input
     private fun validateAndAddSavings() {
         val input = etSaveAmount.text.toString()
         if (input.isBlank()) {
@@ -83,9 +83,11 @@ class SavingsMainClass : AppCompatActivity() {
             return
         }
 
-        addSavings(amount)
+        addSavings(amount) // passes the amount through the addSavings method
     }
 
+    //----------------------------------------------------------------------------------------
+    // Inserts the savings amount to the savings table
     private fun addSavings(amount: Double) {
         lifecycleScope.launch {
             try {
@@ -112,6 +114,8 @@ class SavingsMainClass : AppCompatActivity() {
         }
     }
 
+    //------------------------------------------------------------------------------------------
+    // Updates the savings display to the most recent
     private fun updateSavingsDisplay() {
         lifecycleScope.launch {
             try {
@@ -131,3 +135,4 @@ class SavingsMainClass : AppCompatActivity() {
         }
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

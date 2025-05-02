@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork.repository
 
+//imports
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -19,11 +20,12 @@ import com.example.prog7313_groupwork.HomeActivity
 import java.util.Locale
 import at.favre.lib.crypto.bcrypt.BCrypt
 
+// ---------------------- Functionality for settings_page.xml ---------------------------------
 class SettingsMainClass : AppCompatActivity() {
 
     private lateinit var db: AstraDatabase
     private lateinit var spinnerCurrency: Spinner
-    private lateinit var languageGroup: RadioGroup
+    private lateinit var languageGroup: RadioGroup              // Variable declaration
     private lateinit var rbEnglish: RadioButton
     private lateinit var rbAfrikaans: RadioButton
     private lateinit var layoutSystemSettings: LinearLayout
@@ -34,17 +36,16 @@ class SettingsMainClass : AppCompatActivity() {
     private lateinit var btnSaveChanges: Button
     private lateinit var btnLogout: Button
     private lateinit var backButton: ImageButton
-
     private var currentUserId: Long = -1
     private var selectedColor: Int = Color.parseColor("#EEC5D9")
     private var isUpdatingLanguage = false
     private var currentLanguage = "en"
 
+    //----------------------------------------------------------------------------------------
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_page)
 
-        // Get current user ID from shared preferences
         currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
             .getLong("current_user_id", -1L)
 
@@ -59,7 +60,8 @@ class SettingsMainClass : AppCompatActivity() {
         setupListeners()
         loadUserSettings()
     }
-
+//---------------------------------------------------------------------------------------
+    // initialize views
     private fun initializeViews() {
         try {
             spinnerCurrency = findViewById(R.id.spinnerCurrency)
@@ -75,7 +77,8 @@ class SettingsMainClass : AppCompatActivity() {
             btnSaveChanges = findViewById(R.id.btnSaveChanges)
             backButton = findViewById(R.id.back_button)
 
-            // Setup back button
+      //----------------------------------------------------------------------------------
+            // on click listener
             backButton.setOnClickListener {
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -83,7 +86,8 @@ class SettingsMainClass : AppCompatActivity() {
                 finish()
             }
 
-            // Setup currency spinner
+       //---------------------------------------------------------------------------------
+            // currency adapter for dropdown
             ArrayAdapter.createFromResource(
                 this,
                 R.array.currencies,
@@ -97,6 +101,8 @@ class SettingsMainClass : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------------------
+    // sets up database
     private fun setupDatabase() {
         try {
             db = AstraDatabase.getDatabase(this)
@@ -105,6 +111,8 @@ class SettingsMainClass : AppCompatActivity() {
         }
     }
 
+    //--------------------------------------------------------------------------------------
+    // on click listeners
     private fun setupListeners() {
         try {
             languageGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -148,6 +156,8 @@ class SettingsMainClass : AppCompatActivity() {
         }
     }
 
+    //--------------------------------------------------------------------------------------
+    // fetches current user settings
     private fun loadUserSettings() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -180,6 +190,8 @@ class SettingsMainClass : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------
+    // sets app language to chosen language
     private fun updateUserLanguage(langCode: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -192,7 +204,7 @@ class SettingsMainClass : AppCompatActivity() {
                         config.locale = locale
                         resources.updateConfiguration(config, resources.displayMetrics)
                         
-                        // Delay the recreate to ensure all UI updates are complete
+
                         lifecycleScope.launch(Dispatchers.Main) {
                             recreate()
                         }
@@ -230,6 +242,8 @@ class SettingsMainClass : AppCompatActivity() {
             .show()
     }
 
+    //-------------------------------------------------------------------------------
+    // Sets the users details to the entered details
     private fun updateUserCredentials() {
         val email = etChangeEmail.text.toString()
         val confirmEmail = etConfirmEmail.text.toString()
@@ -251,7 +265,6 @@ class SettingsMainClass : AppCompatActivity() {
             return
         }
 
-        // Hash the new password
         val hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray())
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -259,7 +272,6 @@ class SettingsMainClass : AppCompatActivity() {
                 db.userDAO().updateUserCredentials(currentUserId, email, hashedPassword)
                 withContext(Dispatchers.Main) {
                     showToast("Credentials updated successfully")
-                    // Clear password fields after successful update
                     etChangePassword.text.clear()
                     etConfirmPassword.text.clear()
                 }
@@ -271,6 +283,8 @@ class SettingsMainClass : AppCompatActivity() {
         }
     }
 
+    //-----------------------------------------------------------------------------------
+    // Updates the user currency to selected
     private fun updateUserCurrency(currency: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -286,6 +300,8 @@ class SettingsMainClass : AppCompatActivity() {
         }
     }
 
+    // --------------------------------------------------------------------------------
+    // Updates theme color
     private fun saveUserThemeColor(color: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -300,9 +316,9 @@ class SettingsMainClass : AppCompatActivity() {
             }
         }
     }
-
+    //---------------------------------------------------------------------------------
+    // logs out
     private fun handleLogout() {
-        // Add your logout logic here
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
@@ -311,3 +327,5 @@ class SettingsMainClass : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
+
+// -----------------------------------<<< End Of File >>>------------------------------------------

@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+//imports
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
@@ -15,11 +16,12 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+// --------------------------- Functionaloty for activity_add_income.xml -------------------------
 class AddIncome : AppCompatActivity() {
     private lateinit var dateInput: EditText
     private lateinit var amountInput: EditText
     private lateinit var descriptionInput: EditText
-    private lateinit var addIncomeButton: MaterialButton
+    private lateinit var addIncomeButton: MaterialButton   // Variable declaration
     private lateinit var database: AstraDatabase
     private var selectedDate: Calendar = Calendar.getInstance()
     private val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -31,11 +33,12 @@ class AddIncome : AppCompatActivity() {
         // Initialize database
         database = AstraDatabase.getDatabase(this)
 
-        // Initialize views
         initializeViews()
-        setupDatePicker()
+        setupDatePicker()   // Initialize views
         setupAddIncomeButton()
-        
+
+        // --------------------------------------------------------------------------------------
+        // Navigation section
         val backButton = findViewById<ImageButton>(R.id.back_button)
         backButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -45,6 +48,7 @@ class AddIncome : AppCompatActivity() {
         }
     }
 
+    //--------------------------------------------------------------------------------------------
     private fun initializeViews() {
         dateInput = findViewById(R.id.dateInput)
         amountInput = findViewById(R.id.amountInput)
@@ -52,6 +56,8 @@ class AddIncome : AppCompatActivity() {
         addIncomeButton = findViewById(R.id.addExpenseButton)
     }
 
+    // ---------------------------------------------------------------------------------
+    // Note: AI (ChatGPT) was used in this section of the date picker
     private fun setupDatePicker() {
         dateInput.setOnClickListener {
             val year = selectedDate.get(Calendar.YEAR)
@@ -64,20 +70,25 @@ class AddIncome : AppCompatActivity() {
             }, year, month, day).show()
         }
 
-        // Set initial date display
         updateDateDisplay()
     }
 
+    //------------------------------------------------------------------------------------
+    // refreshes
     private fun updateDateDisplay() {
         dateInput.setText(dateFormatter.format(selectedDate.time))
     }
 
+    // -------------------------------------------------------------------------------------
+    // on click listener
     private fun setupAddIncomeButton() {
         addIncomeButton.setOnClickListener {
             saveIncome()
         }
     }
 
+    //---------------------------------------------------------------------------------------
+    // Saves the users entered income information into the database
     private fun saveIncome() {
         val amount = amountInput.text.toString()
         val description = descriptionInput.text.toString()
@@ -131,3 +142,4 @@ class AddIncome : AppCompatActivity() {
         }
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

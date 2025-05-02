@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// imports
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+// --------------------- Functionality for category.xml --------------------------------------
 class CategoryActivity : AppCompatActivity() {
 
     private lateinit var categoryDAO: CategoryDAO
@@ -31,7 +33,6 @@ class CategoryActivity : AppCompatActivity() {
         val db = AstraDatabase.getDatabase(this)
         categoryDAO = db.categoryDAO()
 
-        // Setup RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.categoriesRecyclerView)
         categoryAdapter = CategoryAdapter()
         recyclerView.apply {
@@ -43,15 +44,16 @@ class CategoryActivity : AppCompatActivity() {
         val limitEditText = findViewById<EditText>(R.id.editTextCategoryLimit)
         val saveButton = findViewById<Button>(R.id.saveButton)
 
-        // Load existing categories
-        loadCategories()
+        loadCategories()  // loads categories in database
 
+        //------------------------------------------------------------------------------------
+        // on click listener
         saveButton.setOnClickListener {
             val name = nameEditText.text.toString().trim()
             val limit = limitEditText.text.toString().trim()
-
+        // ------------------------------------------------------------------------------------
+            // adds category information entered
             if (name.isNotEmpty() && limit.isNotEmpty()) {
-                // Create category with explicit spent value
                 val category = Category(
                     categoryName = name, 
                     categoryLimit = limit,
@@ -71,7 +73,6 @@ class CategoryActivity : AppCompatActivity() {
                     }
                 }
 
-                // Broadcast category update
                 sendBroadcast(Intent("CATEGORY_UPDATED"))
 
                 Toast.makeText(this, "Category saved!", Toast.LENGTH_SHORT).show()
@@ -109,3 +110,5 @@ class CategoryActivity : AppCompatActivity() {
         }
     }
 }
+
+// -----------------------------------<<< End Of File >>>------------------------------------------

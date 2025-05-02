@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork
 
+// import
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -20,6 +21,9 @@ import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+// -------------------------- Functionality of camera --------------------------------------
+// Note that AI was used for the entirety of this class.
+// It was used to assist in debugging and providing working camera functionality.
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
@@ -121,4 +125,6 @@ class CameraActivity : AppCompatActivity() {
         super.onDestroy()
         imgCaptureExecutor.shutdown()
     }
-} 
+}
+
+// -----------------------------------<<< End Of File >>>------------------------------------------

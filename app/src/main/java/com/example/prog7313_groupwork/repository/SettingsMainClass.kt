@@ -271,6 +271,12 @@ class SettingsMainClass : AppCompatActivity() {
             try {
                 db.userDAO().updateUserCredentials(currentUserId, email, hashedPassword)
                 withContext(Dispatchers.Main) {
+                    // Update SharedPreferences with new email
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    prefs.edit().apply {
+                        putString("user_email", email)
+                        apply()
+                    }
                     showToast("Credentials updated successfully")
                     etChangePassword.text.clear()
                     etConfirmPassword.text.clear()

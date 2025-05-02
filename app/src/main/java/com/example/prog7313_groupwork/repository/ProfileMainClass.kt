@@ -146,6 +146,13 @@ class ProfileMainClass : AppCompatActivity() {
 
                 database.userDAO().insertUser(user)
 
+                // Update SharedPreferences with new email
+                val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                prefs.edit().apply {
+                    putString("user_email", email)
+                    apply()
+                }
+
                 runOnUiThread {
                     Toast.makeText(
                         this@ProfileMainClass,

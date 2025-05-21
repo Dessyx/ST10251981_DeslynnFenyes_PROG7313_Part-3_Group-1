@@ -21,9 +21,7 @@ Commited frequently to keep the code safe and retrievable when we needed to reve
 ## 💡 Design Overview
 ### UI/UX Design
 - 🎨 Color Scheme
-  <span style="display:inline-block;width:20px;height:20px;background-color:pink;border:1px solid #ccc;margin-right:10px;"></span>
-  <span style="display:inline-block;width:20px;height:20px;background-color:green;border:1px solid #ccc;margin-right:10px;"></span>
-  <span style="display:inline-block;width:20px;height:20px;background-color:black;border:1px solid #ccc;"></span>
+  <img src="Screenshots/ColorScheme.png" alt="App Screenshot" style="width:50%;"/>
 
 - Follows Material Design 3 for a modern and consistent interfaces
 - Responsive layouts using ConstraintLayout & LinearLayout

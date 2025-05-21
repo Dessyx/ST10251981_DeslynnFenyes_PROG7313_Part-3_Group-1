@@ -10,8 +10,8 @@ With built-in motivation features such as an achievement system, the application
 By offering clear insights and tracking tools, the app assists users in making informed financial decisions and achieving long-term financial stability.
 
 ## App Overview
-![App Screenshot](Screenshots/Landing.png "This is the app Landing screen")
-![App Screenshot](Screenshots/Home.png "This is the app home screen")
+App screenshots -TO DO
+
 
 
 ## UTILIZATION OF GITHUB AND GITHUB ACTIONS
@@ -21,7 +21,7 @@ Commited frequently to keep the code safe and retrievable when we needed to reve
 ## 💡 Design Overview
 ### UI/UX Design
 - 🎨 Color Scheme
-  <img src="Screenshots/ColorScheme.png" alt="App Screenshot" style="width:50%;"/>
+<img src="Screenshots/ColorScheme.png" alt="App Screenshot" style="width:20%;"/>
 
 - Follows Material Design 3 for a modern and consistent interfaces
 - Responsive layouts using ConstraintLayout & LinearLayout

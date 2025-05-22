@@ -234,18 +234,14 @@
 
 
     <!-- Placeholder for bar chart -->
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/CatGraph"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="16dp" />
 
     <!-- Spending Trends -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="137dp"
-        android:layout_marginTop="16dp"
-        android:background="#EEEEEE"
-        android:gravity="center"
-        android:text="Feature is in working."
-        android:textColor="#888888"
-        android:textStyle="italic" />
-
     <TextView
         android:id="@+id/spendingTrendsTitle"
         android:layout_width="wrap_content"
@@ -258,7 +254,7 @@
     <!-- Placeholder for line chart -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="122dp"
+        android:layout_height="144dp"
         android:layout_marginTop="8dp"
         android:background="#EEEEEE"
         android:gravity="center"

@@ -96,4 +96,8 @@ dependencies {
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
     testImplementation(kotlin("test"))
+
+    //MPAndroidChart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
 }

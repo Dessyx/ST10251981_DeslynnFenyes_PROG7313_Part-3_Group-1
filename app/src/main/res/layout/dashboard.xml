@@ -242,7 +242,7 @@
         android:layout_marginTop="16dp"
         android:background="#EEEEEE"
         android:gravity="center"
-        android:text="Feature coming soon"
+        android:text="Feature is in working."
         android:textColor="#888888"
         android:textStyle="italic" />
 

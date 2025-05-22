@@ -69,10 +69,10 @@
     <!-- Savings and Spending Cards -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
+        android:layout_height="59dp"
         android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:weightSum="2">
 
         <LinearLayout
@@ -104,12 +104,12 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="100dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@drawable/card_border"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="8dp"
-            android:layout_marginStart="8dp">
+            android:padding="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -238,7 +238,7 @@
     <!-- Spending Trends -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="137dp"
         android:layout_marginTop="16dp"
         android:background="#EEEEEE"
         android:gravity="center"
@@ -258,7 +258,7 @@
     <!-- Placeholder for line chart -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="89dp"
+        android:layout_height="122dp"
         android:layout_marginTop="8dp"
         android:background="#EEEEEE"
         android:gravity="center"

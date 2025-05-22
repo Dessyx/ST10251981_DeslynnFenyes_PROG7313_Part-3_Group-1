@@ -149,16 +149,12 @@
                 android:textSize="17sp"
                 app:cornerRadius="0dp" />
 
-            <TextView
-                android:id="@+id/featureComingSoon"
-                android:layout_width="376dp"
-                android:layout_height="189dp"
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/budgetPieChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
                 android:layout_marginTop="16dp"
-                android:background="#E91E63"
-                android:backgroundTint="@color/ButtonPink"
-                android:gravity="center"
-                android:text="Feature coming soon!"
-                android:textSize="25sp" />
+                android:layout_marginHorizontal="16dp" />
 
         </LinearLayout>
     </ScrollView>

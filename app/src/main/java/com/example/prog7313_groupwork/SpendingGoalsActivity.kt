@@ -1,6 +1,11 @@
 package com.example.prog7313_groupwork
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -58,18 +63,41 @@ class SpendingGoalsActivity : AppCompatActivity() {
                 // Calculate total spent and categories within limit
                 var totalSpent = 0.0
                 var categoriesWithinLimit = 0
-                val categoryDetails = StringBuilder()
+                val categoryDetails = SpannableStringBuilder()
                 
                 categories.forEach { category ->
                     val spent = category.spent ?: 0.0
                     val limit = category.categoryLimit.toDoubleOrNull() ?: 0.0
                     totalSpent += spent
                     
-                    // Add category details to the text
-                    categoryDetails.append("${category.categoryName}:\n")
-                    categoryDetails.append("  Spent: ${currencyFormat.format(spent)}\n")
+                    // Add category name
+                    val categoryName = SpannableString("${category.categoryName}:\n")
+                    categoryDetails.append(categoryName)
+                    
+                    // Add spent amount
+                    val spentText = "  Spent: ${currencyFormat.format(spent)}\n"
+                    val spentSpannable = SpannableString(spentText)
+                    if (spent > limit) {
+                        spentSpannable.setSpan(ForegroundColorSpan(Color.RED), 0, spentText.length, 0)
+                        spentSpannable.setSpan(StyleSpan(android.graphics.Typeface.BOLD), 0, spentText.length, 0)
+                    }
+                    categoryDetails.append(spentSpannable)
+                    
+                    // Add limit
                     categoryDetails.append("  Limit: ${currencyFormat.format(limit)}\n")
-                    categoryDetails.append("  Status: ${if (spent <= limit) "✅ Within limit" else "⚠️ Over limit"}\n\n")
+                    
+                    // Add status with warning for overspent categories
+                    val statusText = if (spent <= limit) {
+                        "  Status: ✅ Within limit\n\n"
+                    } else {
+                        "  Status: ⚠️ OVER LIMIT!\n\n"
+                    }
+                    val statusSpannable = SpannableString(statusText)
+                    if (spent > limit) {
+                        statusSpannable.setSpan(ForegroundColorSpan(Color.RED), 0, statusText.length, 0)
+                        statusSpannable.setSpan(StyleSpan(android.graphics.Typeface.BOLD), 0, statusText.length, 0)
+                    }
+                    categoryDetails.append(statusSpannable)
                     
                     if (spent <= limit) {
                         categoriesWithinLimit++
@@ -96,8 +124,8 @@ class SpendingGoalsActivity : AppCompatActivity() {
                     // Update progress text
                     progressText.text = "$progressPercentage% of budget used"
                     
-                    // Update categories text
-                    categoriesText.text = categoryDetails.toString()
+                    // Update categories text with formatted content
+                    categoriesText.text = categoryDetails
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

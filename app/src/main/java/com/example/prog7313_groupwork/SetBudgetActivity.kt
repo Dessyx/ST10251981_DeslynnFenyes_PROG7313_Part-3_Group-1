@@ -1,6 +1,6 @@
-
 package com.example.prog7313_groupwork
 // import
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.Toast
@@ -61,6 +61,10 @@ class SetBudgetActivity : AppCompatActivity() {
 
         backButton.setOnClickListener {
             finish()
+        }
+
+        findViewById<MaterialButton>(R.id.viewSpendingGoalsButton).setOnClickListener {
+            startActivity(Intent(this, SpendingGoalsActivity::class.java))
         }
     }
     //----------------------------------------------------------------------------------------------

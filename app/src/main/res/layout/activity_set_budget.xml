@@ -52,14 +52,14 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
                 android:fontFamily="@font/abhaya_libre_extrabold"
-                android:paddingTop="35dp"
+                android:paddingTop="0dp"
                 android:text="Set Budget"
                 android:textColor="@android:color/black"
-                android:textSize="32sp"
+                android:textSize="40sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -130,6 +130,21 @@
                 android:backgroundTint="#000000"
                 android:fontFamily="@font/kosugi_maru"
                 android:text="Save Budget"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                app:cornerRadius="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewSpendingGoalsButton"
+                android:layout_width="304dp"
+                android:layout_height="58dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#090909"
+                android:fontFamily="@font/kosugi_maru"
+                android:text="View Spending Goals"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp"
                 app:cornerRadius="0dp" />

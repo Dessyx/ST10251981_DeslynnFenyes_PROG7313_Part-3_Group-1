@@ -96,5 +96,4 @@ dependencies {
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
     testImplementation(kotlin("test"))
-
 }

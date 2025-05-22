@@ -41,7 +41,7 @@ class SpendingGoalsActivity : AppCompatActivity() {
         progressText = findViewById(R.id.progressText)
         categoriesText = findViewById(R.id.categoriesText)
         
-        // Set up back button
+        // Back button
         findViewById<Button>(R.id.backButton).setOnClickListener {
             finish()
         }

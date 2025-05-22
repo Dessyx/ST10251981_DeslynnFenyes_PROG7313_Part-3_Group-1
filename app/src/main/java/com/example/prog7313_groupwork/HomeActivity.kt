@@ -221,6 +221,7 @@ class HomeActivity : AppCompatActivity() {
         updateActiveBalance()
         updateGreeting()
         loadTransactionHistory()
+        loadBudgetAndCategories()
     }
 }
 // -----------------------------------<<< End Of File >>>------------------------------------------

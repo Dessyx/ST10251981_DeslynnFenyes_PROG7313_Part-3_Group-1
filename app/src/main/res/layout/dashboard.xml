@@ -10,7 +10,7 @@
     <!-- Top icons row -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="58dp"
         android:layout_marginBottom="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -37,7 +37,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:padding="1dp">
+        android:padding="0dp">
 
         <TextView
             android:id="@+id/pageTitle"
@@ -68,16 +68,16 @@
 
     <!-- Savings and Spending Cards -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="59dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="384dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="0dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="2">
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="68dp"
             android:layout_weight="1"
             android:background="@drawable/card_border"
             android:gravity="center"
@@ -103,7 +103,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="68dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@drawable/card_border"

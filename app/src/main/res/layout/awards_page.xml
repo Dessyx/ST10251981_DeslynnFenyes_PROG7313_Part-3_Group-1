@@ -38,15 +38,6 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_back" />
 
-                <TextView
-                    android:id="@+id/Notif"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/feature_comming_soon"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
 
             </LinearLayout>
 
@@ -63,15 +54,42 @@
                 android:textStyle="bold" />
 
             <!-- Goal Input -->
-            <EditText
-                android:id="@+id/etGoal"
-                android:layout_width="237dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/edittext_border"
-                android:hint="@string/enter_amount"
-                android:inputType="number"
-                android:padding="12dp"
+
+            <!-- Gift Card Progress Bar Section -->
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="@string/trophy"
+                android:src="@drawable/ic_trophy" />
+
+            <TextView
+                android:id="@+id/giftCardProgressLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Gift Card progress"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <ProgressBar
+                android:id="@+id/giftCardProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="250dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/progress_bar_custom" />
+
+            <TextView
+                android:id="@+id/giftCardProgressPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:text="0%"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
@@ -84,20 +102,6 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:contentDescription="@string/trophy"
-                    android:src="@drawable/ic_trophy" />
-
-                <TextView
-                    android:id="@+id/tvGoalStatus"
-                    android:layout_width="185dp"
-                    android:layout_height="32dp"
-                    android:text="@string/goal_achieved"
-                    android:textColor="#000000"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Gift Card -->
@@ -108,16 +112,23 @@
                 android:layout_marginTop="32dp"
                 android:contentDescription="@string/gift_card"
                 android:elevation="4dp"
-                android:src="@drawable/giftcard" />
+                android:src="@drawable/giftcard"
+                android:visibility="gone" />
+
+            <!-- Congratulatory Message -->
+            <TextView
+                android:id="@+id/giftCardCongrats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="Congratulations, here is your reward!"
+                android:textColor="#388E3C"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <!-- Badge -->
-            <ImageView
-                android:id="@+id/ivBadge"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="24dp"
-                android:contentDescription="@string/badge"
-                android:src="@drawable/trophy2" />
 
         </LinearLayout>
     </ScrollView>

@@ -18,12 +18,11 @@ import kotlinx.coroutines.launch
 class AwardsMainClass : AppCompatActivity() {
 
     private lateinit var db: AstraDatabase
-    private lateinit var etGoal: EditText
-    private lateinit var goalStatusText: TextView       // Variable declaration
     private lateinit var giftCardImage: ImageView
-    private lateinit var badgeImage: ImageView
-    private lateinit var trophyLayout: LinearLayout
-    private var currentUserId: Long = 1
+    private lateinit var giftCardProgressBar: ProgressBar
+    private lateinit var giftCardProgressPercent: TextView
+    private lateinit var giftCardCongrats: TextView
+    private var currentUserId: Long = -1L
 
     //----------------------------------------------------------------------------------
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,28 +31,23 @@ class AwardsMainClass : AppCompatActivity() {
 
         db = AstraDatabase.getDatabase(this)
 
-        // Initialize views
-        etGoal = findViewById(R.id.etGoal)
-        giftCardImage = findViewById(R.id.ivGiftCard)
-        badgeImage = findViewById(R.id.ivBadge)
-        goalStatusText = findViewById(R.id.tvTitle)
-        trophyLayout = findViewById(R.id.trophyLayout)
-
-       /* // Hide reward visuals initially
-        trophyLayout.visibility = View.GONE    For p3
-        giftCardImage.visibility = View.GONE
-        badgeImage.visibility = View.GONE*/
-
-        etGoal.setOnEditorActionListener { _, _, _ ->
-            checkAndSaveGoal()
-            true
+        // Get user ID from SharedPreferences
+        currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            .getLong("current_user_id", -1L)
+        if (currentUserId == -1L) {
+            Toast.makeText(this, "Please log in to use awards feature", Toast.LENGTH_SHORT).show()
+            finish()
+            return
         }
 
-        // ----------------------------------------------------------------------------
-        // Load existing awards
-        loadUserAwards()
-        
-        // -----------------------------------------------------------------------------
+        // Initialize views
+        giftCardImage = findViewById(R.id.ivGiftCard)
+        giftCardProgressBar = findViewById(R.id.giftCardProgressBar)
+        giftCardProgressPercent = findViewById(R.id.giftCardProgressPercent)
+        giftCardCongrats = findViewById(R.id.giftCardCongrats)
+
+        updateGiftCardProgress()
+
         // Navigation
         val backButton = findViewById<ImageButton>(R.id.btnBack)
         backButton.setOnClickListener {
@@ -62,80 +56,32 @@ class AwardsMainClass : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        //------------------------------------------------------------------------------
     }
 
-    //----------------------------------------------------------------------------------
-    // Validates and saves the goal                                         For p3
-    private fun checkAndSaveGoal() {
-        val goalText = etGoal.text.toString()
-        if (goalText.isBlank()) {
-            Toast.makeText(this, "Please enter a goal amount", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val goal = goalText.toIntOrNull()
-        if (goal == null || goal <= 0) {
-            Toast.makeText(this, "Enter a valid positive number", Toast.LENGTH_SHORT).show()
-            return
-        }
-
+    private fun updateGiftCardProgress() {
         lifecycleScope.launch {
-            // Create a new award
-            val award = Award(
-                userId = currentUserId,
-                goalAmount = goal,
-                awardType = if (goal >= 5000) "GIFT_CARD" else "BADGE"
-            )
-
-            // Save to database
-            db.awardDAO().insertAward(award)
-
-            // Check if goal is achieved based on total savings
-            checkGoalAchievement(award)
-        }
-    }
-
-    private suspend fun checkGoalAchievement(award: Award) {
-        val totalSavings = db.userDAO().getTotalSavings(currentUserId) ?: 0
-
-        if (totalSavings >= award.goalAmount) {
-            award.achieved = true
-            award.dateAchieved = System.currentTimeMillis()
-            db.awardDAO().updateAward(award)
-
-            // Update UI
+            val totalSavings = db.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+            val monthlyGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getFloat("monthly_savings_goal", 0f).toDouble()
+            val percent = if (monthlyGoal > 0) {
+                ((totalSavings / monthlyGoal) * 100).coerceAtMost(100.0).toInt()
+            } else 0
             runOnUiThread {
-                showAwardAchieved(award)
-            }
-        }
-    }
-
-    private fun showAwardAchieved(award: Award) {
-        trophyLayout.visibility = View.VISIBLE
-
-        when (award.awardType) {
-            "GIFT_CARD" -> {
-                giftCardImage.visibility = View.VISIBLE
-                badgeImage.visibility = View.GONE
-            }
-            "BADGE" -> {
-                badgeImage.visibility = View.VISIBLE
-                giftCardImage.visibility = View.GONE
-            }
-        }
-
-        goalStatusText.text = getString(R.string.goal_achieved)
-    }
-
-    private fun loadUserAwards() {
-        lifecycleScope.launch {
-            val awards = db.awardDAO().getUserAwards(currentUserId)
-            for (award in awards) {
-                if (award.achieved) {
-                    showAwardAchieved(award)
+                giftCardProgressBar.progress = percent
+                giftCardProgressPercent.text = "$percent%"
+                if (percent >= 100) {
+                    giftCardImage.visibility = View.VISIBLE
+                    giftCardCongrats.visibility = View.VISIBLE
+                } else {
+                    giftCardImage.visibility = View.GONE
+                    giftCardCongrats.visibility = View.GONE
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateGiftCardProgress()
     }
 }

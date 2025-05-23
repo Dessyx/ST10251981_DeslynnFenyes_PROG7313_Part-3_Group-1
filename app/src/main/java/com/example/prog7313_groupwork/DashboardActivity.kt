@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import android.widget.ProgressBar
 
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,6 +41,8 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var secondGraphText: TextView
     private var currentUserId: Long = 1
     private var selectedDate: Calendar = Calendar.getInstance()
+    private lateinit var giftCardProgressBar: ProgressBar
+    private lateinit var giftCardProgressLabel: TextView
 
     //-------------------------------------------------------------------------------------
 
@@ -68,6 +71,8 @@ class DashboardActivity : AppCompatActivity() {
         barChart = findViewById(R.id.CatGraph)
         secondBarChart = findViewById(R.id.secondGraph)
         secondGraphText = findViewById(R.id.spendingTrendsTitle)
+        giftCardProgressBar = findViewById(R.id.giftCardProgress)
+        giftCardProgressLabel = findViewById(R.id.giftCardProgressLabel)
 
         // Set up back button click listener
         backButton.setOnClickListener {
@@ -115,6 +120,7 @@ class DashboardActivity : AppCompatActivity() {
         updateBarChart(monthSpinner.selectedItem.toString())
         updateSecondBarChart()
         updateDateDisplay()
+        updateGiftCardProgress()
     }
 
     private fun setupBarChart() {
@@ -383,12 +389,32 @@ class DashboardActivity : AppCompatActivity() {
         spendingTrendsText.text = dateFormat.format(selectedDate.time)
     }
 
+    private fun updateGiftCardProgress() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val totalSavings = database.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+                val monthlyGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getFloat("monthly_savings_goal", 0f).toDouble()
+                val percent = if (monthlyGoal > 0) {
+                    ((totalSavings / monthlyGoal) * 100).coerceAtMost(100.0).toInt()
+                } else 0
+                withContext(Dispatchers.Main) {
+                    giftCardProgressBar.progress = percent
+                    giftCardProgressLabel.text = "Gift card progress ($percent%)"
+                }
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         updateSavingsDisplay()
         updateTotalSpentDisplay(monthSpinner.selectedItem.toString())
         updateBarChart(monthSpinner.selectedItem.toString())
         updateSecondBarChart()
+        updateGiftCardProgress()
     }
 }
 

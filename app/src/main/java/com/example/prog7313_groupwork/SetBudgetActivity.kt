@@ -15,6 +15,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
@@ -64,7 +65,7 @@ class SetBudgetActivity : AppCompatActivity() {
             centerText = "Budget\nDistribution"
             setCenterTextSize(16f)
             setDrawEntryLabels(false)
-            setExtraOffsets(16f, 16f, 16f, 32f)
+            setExtraOffsets(32f, 32f, 32f, 48f)
             legend.isEnabled = true
             legend.textSize = 12f
             legend.verticalAlignment = com.github.mikephil.charting.components.Legend.LegendVerticalAlignment.BOTTOM
@@ -176,14 +177,22 @@ class SetBudgetActivity : AppCompatActivity() {
             }
             val dataSet = PieDataSet(entries, "Budget Distribution")
             dataSet.colors = colors
-            dataSet.valueTextSize = 14f
-            dataSet.valueFormatter = PercentFormatter(pieChart)
+            dataSet.valueTextSize = 8f
+            // Custom ValueFormatter for 'k' format
+            val kFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return if (value >= 1000f) String.format("%.0fk", value / 1000f) else value.toInt().toString()
+                }
+            }
+            dataSet.valueFormatter = kFormatter
             dataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
             dataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-            dataSet.sliceSpace = 3f
-            dataSet.valueLinePart1Length = 0.5f
-            dataSet.valueLinePart2Length = 0.5f
+            dataSet.sliceSpace = 2f
+            dataSet.valueLinePart1Length = 0.4f
+            dataSet.valueLinePart2Length = 0.4f
+            dataSet.valueLinePart1OffsetPercentage = 100f
             dataSet.valueLineColor = Color.DKGRAY
+            dataSet.setDrawValues(true)
             val data = PieData(dataSet)
             data.setValueTextSize(14f)
             data.setValueTextColor(Color.BLACK)

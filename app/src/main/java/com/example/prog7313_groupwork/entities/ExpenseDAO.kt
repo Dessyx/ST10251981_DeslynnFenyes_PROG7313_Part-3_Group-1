@@ -40,9 +40,14 @@ interface ExpenseDAO {
     fun getExpensesByDateRange(userId: Long, startDate: Long, endDate: Long): Flow<List<Expense>>
 
     // ------------------------------------------------------------------------------------
-    // Calculates the total amount spent by a user
-    @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId AND isActive = 1")
-    suspend fun getTotalExpenseForUser(userId: Long): Double?
+    // Calculates the total amount spent by a user within a specific date range
+    @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId AND date BETWEEN :startDate AND :endDate AND isActive = 1")
+    suspend fun getTotalExpenseForUserInDateRange(userId: Long, startDate: Long, endDate: Long): Double?
+
+    // ------------------------------------------------------------------------------------
+    // Retrieves expenses for a user in a specific date range
+    @Query("SELECT * FROM expenses WHERE userId = :userId AND date BETWEEN :startDate AND :endDate AND isActive = 1")
+    suspend fun getExpensesForUserInDateRange(userId: Long, startDate: Long, endDate: Long): List<Expense>
 
     // ------------------------------------------------------------------------------------
     // Retrieves all expenses for a specific category

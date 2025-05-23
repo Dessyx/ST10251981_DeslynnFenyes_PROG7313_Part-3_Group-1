@@ -1,11 +1,13 @@
 package com.example.prog7313_groupwork
 
 // imports
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.AdapterView
 import android.content.Intent
@@ -34,7 +36,10 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var totalSpentText: TextView
     private lateinit var database: AstraDatabase
     private lateinit var barChart: BarChart
+    private lateinit var secondBarChart: BarChart
+    private lateinit var secondGraphText: TextView
     private var currentUserId: Long = 1
+    private var selectedDate: Calendar = Calendar.getInstance()
 
     //-------------------------------------------------------------------------------------
 
@@ -45,42 +50,71 @@ class DashboardActivity : AppCompatActivity() {
         // Initialize database and views
         database = AstraDatabase.getDatabase(this)
 
+        // Get current user ID from SharedPreferences
+        currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            .getLong("current_user_id", -1L)
+
+        if (currentUserId == -1L) {
+            Toast.makeText(this, "Please log in to view dashboard", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
         monthSpinner = findViewById(R.id.monthSpinner)
         spendingTrendsText = findViewById(R.id.spendingTrendsTitle)
         backButton = findViewById(R.id.back_button)
         dashSavingsText = findViewById(R.id.dash_savings)
         totalSpentText = findViewById(R.id.totalSpent)
         barChart = findViewById(R.id.CatGraph)
+        secondBarChart = findViewById(R.id.secondGraph)
+        secondGraphText = findViewById(R.id.spendingTrendsTitle)
 
-        setupBarChart()
-//----------------------------------------------------------------------------------
-//                              Page navigation section 
-
+        // Set up back button click listener
         backButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
             finish()
         }
-// ----------------------------------------------------------------------------------
 
-        //  month spinner listener
+        setupBarChart()
+        setupSecondBarChart()
+        setupDatePicker()
+
+        // Set current month as default selection
+        val currentMonth = SimpleDateFormat("MMMM", Locale.getDefault()).format(Date())
+        val months = resources.getStringArray(R.array.months_array)
+        val currentMonthIndex = months.indexOf(currentMonth)
+        if (currentMonthIndex != -1) {
+            monthSpinner.setSelection(currentMonthIndex)
+        }
+
+        // Month spinner listener
         monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedMonth = parent?.getItemAtPosition(position).toString()
-                spendingTrendsText.text = "Spending trends for $selectedMonth"
                 updateBarChart(selectedMonth)
+                updateTotalSpentDisplay(selectedMonth)
+                // Reset selected date to first day of selected month
+                val calendar = Calendar.getInstance()
+                val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+                calendar.time = monthFormat.parse(selectedMonth) ?: Date()
+                calendar.set(Calendar.DAY_OF_MONTH, 1)
+                selectedDate = calendar
+                updateSecondBarChart()
+                updateDateDisplay()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // p3
+                // Handle nothing selected
             }
         }
 
         // Update displays
         updateSavingsDisplay()
-        updateTotalSpentDisplay()
+        updateTotalSpentDisplay(monthSpinner.selectedItem.toString())
         updateBarChart(monthSpinner.selectedItem.toString())
+        updateSecondBarChart()
+        updateDateDisplay()
     }
 
     private fun setupBarChart() {
@@ -111,16 +145,79 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupSecondBarChart() {
+        secondBarChart.apply {
+            description.isEnabled = false
+            setDrawGridBackground(false)
+            setDrawBarShadow(false)
+            setScaleEnabled(true)
+            setPinchZoom(false)
+            
+            xAxis.apply {
+                position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
+                granularity = 1f
+                setDrawGridLines(false)
+            }
+            
+            axisLeft.apply {
+                setDrawGridLines(true)
+                axisMinimum = 0f
+            }
+            
+            axisRight.isEnabled = false
+            
+            legend.apply {
+                isEnabled = true
+                textSize = 12f
+            }
+        }
+    }
+
+    private fun setupDatePicker() {
+        spendingTrendsText.setOnClickListener {
+            val year = selectedDate.get(Calendar.YEAR)
+            val month = selectedDate.get(Calendar.MONTH)
+            val day = selectedDate.get(Calendar.DAY_OF_MONTH)
+
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                selectedDate.set(selectedYear, selectedMonth, selectedDay)
+                updateSecondBarChart()
+                updateDateDisplay()
+            }, year, month, day).show()
+        }
+    }
+
     private fun updateBarChart(selectedMonth: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                // Get all categories
                 val categories = database.categoryDAO().getAllCategories()
                 val entries = mutableListOf<BarEntry>()
                 val limitEntries = mutableListOf<BarEntry>()
                 val labels = mutableListOf<String>()
 
+                // Get the month number (1-12) from the month name
+                val calendar = Calendar.getInstance()
+                val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+                calendar.time = monthFormat.parse(selectedMonth) ?: Date()
+                val monthNumber = calendar.get(Calendar.MONTH) + 1 // Adding 1 because Calendar.MONTH is 0-based
+
+                // Get the year
+                val year = Calendar.getInstance().get(Calendar.YEAR)
+
+                // Calculate start and end timestamps for the selected month
+                calendar.set(year, monthNumber - 1, 1, 0, 0, 0)
+                val startTimestamp = calendar.timeInMillis
+                calendar.add(Calendar.MONTH, 1)
+                val endTimestamp = calendar.timeInMillis
+
+                // Get expenses for the selected month
+                val expenses = database.expenseDAO().getExpensesForUserInDateRange(currentUserId, startTimestamp, endTimestamp)
+
+                // Calculate spent amount for each category
                 categories.forEachIndexed { index, category ->
-                    val spent = category.spent ?: 0.0
+                    val categoryExpenses = expenses.filter { it.category == category.categoryName }
+                    val spent = categoryExpenses.sumOf { it.amount }
                     val limit = category.categoryLimit.toDoubleOrNull() ?: 0.0
                     
                     entries.add(BarEntry(index.toFloat(), spent.toFloat()))
@@ -148,6 +245,118 @@ class DashboardActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@DashboardActivity, "Error updating chart: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun updateSecondBarChart() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Get all categories
+                val categories = database.categoryDAO().getAllCategories()
+                val entries = mutableListOf<BarEntry>()
+                val limitEntries = mutableListOf<BarEntry>()
+                val labels = mutableListOf<String>()
+
+                // Calculate start and end timestamps for the selected day
+                val startOfDay = Calendar.getInstance().apply {
+                    time = selectedDate.time
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }.timeInMillis
+
+                val endOfDay = Calendar.getInstance().apply {
+                    time = selectedDate.time
+                    set(Calendar.HOUR_OF_DAY, 23)
+                    set(Calendar.MINUTE, 59)
+                    set(Calendar.SECOND, 59)
+                    set(Calendar.MILLISECOND, 999)
+                }.timeInMillis
+
+                // Get expenses for the selected day
+                val expenses = database.expenseDAO().getExpensesForUserInDateRange(currentUserId, startOfDay, endOfDay)
+
+                // Calculate spent amount for each category
+                categories.forEachIndexed { index, category ->
+                    val categoryExpenses = expenses.filter { it.category == category.categoryName }
+                    val spent = categoryExpenses.sumOf { it.amount }
+                    val limit = category.categoryLimit.toDoubleOrNull() ?: 0.0
+                    
+                    entries.add(BarEntry(index.toFloat(), spent.toFloat()))
+                    limitEntries.add(BarEntry(index.toFloat(), limit.toFloat()))
+                    labels.add(category.categoryName)
+                }
+
+                val spentDataSet = BarDataSet(entries, "Spent").apply {
+                    color = android.graphics.Color.parseColor("#4CAF50") // Green color for spent
+                    valueTextColor = android.graphics.Color.parseColor("#4CAF50")
+                    valueTextSize = 10f
+                }
+
+                val limitDataSet = BarDataSet(limitEntries, "Limit").apply {
+                    color = android.graphics.Color.parseColor("#FF9800") // Orange color for limit
+                    valueTextColor = android.graphics.Color.parseColor("#FF9800")
+                    valueTextSize = 10f
+                }
+
+                val data = BarData(spentDataSet, limitDataSet).apply {
+                    barWidth = 0.3f
+                    groupBars(0f, 0.1f, 0.1f)
+                }
+
+                withContext(Dispatchers.Main) {
+                    secondBarChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+                    secondBarChart.data = data
+                    secondBarChart.invalidate()
+
+                    // Update the title to show the selected date
+                    val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+                    spendingTrendsText.text = dateFormat.format(selectedDate.time)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@DashboardActivity, "Error updating daily chart: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun updateTotalSpentDisplay(selectedMonth: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Get the month number (1-12) from the month name
+                val calendar = Calendar.getInstance()
+                val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+                calendar.time = monthFormat.parse(selectedMonth) ?: Date()
+                val monthNumber = calendar.get(Calendar.MONTH) + 1
+
+                // Get the year
+                val year = Calendar.getInstance().get(Calendar.YEAR)
+
+                // Calculate start and end timestamps for the selected month
+                calendar.set(year, monthNumber - 1, 1, 0, 0, 0)
+                val startTimestamp = calendar.timeInMillis
+                calendar.add(Calendar.MONTH, 1)
+                val endTimestamp = calendar.timeInMillis
+
+                // Get total expenses for the selected month
+                val totalExpenses = database.expenseDAO()
+                    .getTotalExpenseForUserInDateRange(currentUserId, startTimestamp, endTimestamp) ?: 0.0
+
+                withContext(Dispatchers.Main) {
+                    totalSpentText.text = String.format("R %.2f", totalExpenses)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@DashboardActivity, "Error updating total spent: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -167,26 +376,17 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    // ------------------------------------------------------------------------------------------
-    // Fetches and displays the total spent
-    private fun updateTotalSpentDisplay() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val totalExpenses = database.expenseDAO().getTotalExpenseForUser(currentUserId) ?: 0.0
-                withContext(Dispatchers.Main) {
-                    totalSpentText.text = String.format("R %.2f", totalExpenses)
-                }
-            } catch (e: Exception) {
-
-            }
-        }
+    private fun updateDateDisplay() {
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        spendingTrendsText.text = dateFormat.format(selectedDate.time)
     }
 
     override fun onResume() {
         super.onResume()
         updateSavingsDisplay()
-        updateTotalSpentDisplay()
+        updateTotalSpentDisplay(monthSpinner.selectedItem.toString())
         updateBarChart(monthSpinner.selectedItem.toString())
+        updateSecondBarChart()
     }
 }
 

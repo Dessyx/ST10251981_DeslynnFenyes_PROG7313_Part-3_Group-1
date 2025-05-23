@@ -3,6 +3,7 @@ package com.example.prog7313_groupwork
 // imports
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
@@ -132,8 +133,8 @@ class HomeActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     budgetGoalText.text = currencyFormat.format(goal)
 
-                    savingProgressBar.progress  = progress
-                    progressPercentageText.text = "$progress%"
+                    // Update savings progress instead of budget progress
+                    updateSavingsProgress()
 
                     // Part 3 - flags overspent categories red
                     if (overspentList.isNotEmpty()) {
@@ -148,6 +149,32 @@ class HomeActivity : AppCompatActivity() {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    // Add new function to calculate and display savings progress
+    private fun updateSavingsProgress() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val total = db.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+                
+                // Get the monthly goal from SharedPreferences
+                val monthlySavingsGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getFloat("monthly_savings_goal", 0f).toDouble()
+
+                val percent = if (monthlySavingsGoal > 0) {
+                    ((total / monthlySavingsGoal) * 100)
+                        .coerceAtMost(100.0)
+                        .toInt()
+                } else 0
+
+                withContext(Dispatchers.Main) {
+                    savingProgressBar.progress = percent
+                    progressPercentageText.text = "$percent%"
+                }
+            } catch (e: Exception) {
+                Log.e("HomeActivity", "Error updating savings progress: ${e.message}", e)
             }
         }
     }
@@ -222,6 +249,7 @@ class HomeActivity : AppCompatActivity() {
         updateGreeting()
         loadTransactionHistory()
         loadBudgetAndCategories()
+        updateSavingsProgress()
     }
 }
 // -----------------------------------<<< End Of File >>>------------------------------------------

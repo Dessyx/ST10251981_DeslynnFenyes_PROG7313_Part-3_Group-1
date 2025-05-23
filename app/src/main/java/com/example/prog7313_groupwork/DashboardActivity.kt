@@ -105,7 +105,7 @@ class DashboardActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Handle nothing selected
+
             }
         }
 
@@ -293,14 +293,14 @@ class DashboardActivity : AppCompatActivity() {
                 }
 
                 val spentDataSet = BarDataSet(entries, "Spent").apply {
-                    color = android.graphics.Color.parseColor("#4CAF50") // Green color for spent
-                    valueTextColor = android.graphics.Color.parseColor("#4CAF50")
+                    color = android.graphics.Color.parseColor("#fdcfe5") // Green color for spent
+                    valueTextColor = android.graphics.Color.parseColor("#f7529d")
                     valueTextSize = 10f
                 }
 
                 val limitDataSet = BarDataSet(limitEntries, "Limit").apply {
-                    color = android.graphics.Color.parseColor("#FF9800") // Orange color for limit
-                    valueTextColor = android.graphics.Color.parseColor("#FF9800")
+                    color = android.graphics.Color.parseColor("#cae5bb") // Orange color for limit
+                    valueTextColor = android.graphics.Color.parseColor("#0ccd17")
                     valueTextSize = 10f
                 }
 
@@ -378,6 +378,8 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateDateDisplay() {
         val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        // Set the year to current year
+        selectedDate.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR))
         spendingTrendsText.text = dateFormat.format(selectedDate.time)
     }
 

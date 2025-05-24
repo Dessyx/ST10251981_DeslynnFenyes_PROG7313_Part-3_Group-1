@@ -23,6 +23,8 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import android.widget.ProgressBar
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,14 +33,13 @@ import java.util.*
 // ----------------------- Functionality for dashboard.xml ------------------------------
 class DashboardActivity : AppCompatActivity() {
     private lateinit var monthSpinner: Spinner
-    private lateinit var spendingTrendsText: TextView
+    private lateinit var daySpinner: Spinner
     private lateinit var backButton: ImageButton
     private lateinit var dashSavingsText: TextView
     private lateinit var totalSpentText: TextView
     private lateinit var database: AstraDatabase
     private lateinit var barChart: BarChart
     private lateinit var secondBarChart: BarChart
-    private lateinit var secondGraphText: TextView
     private var currentUserId: Long = 1
     private var selectedDate: Calendar = Calendar.getInstance()
     private lateinit var giftCardProgressBar: ProgressBar
@@ -64,13 +65,12 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         monthSpinner = findViewById(R.id.monthSpinner)
-        spendingTrendsText = findViewById(R.id.spendingTrendsTitle)
+        daySpinner = findViewById(R.id.daySpinner)
         backButton = findViewById(R.id.back_button)
         dashSavingsText = findViewById(R.id.dash_savings)
         totalSpentText = findViewById(R.id.totalSpent)
         barChart = findViewById(R.id.CatGraph)
         secondBarChart = findViewById(R.id.secondGraph)
-        secondGraphText = findViewById(R.id.spendingTrendsTitle)
         giftCardProgressBar = findViewById(R.id.giftCardProgress)
         giftCardProgressLabel = findViewById(R.id.giftCardProgressLabel)
 
@@ -83,43 +83,13 @@ class DashboardActivity : AppCompatActivity() {
 
         setupBarChart()
         setupSecondBarChart()
-        setupDatePicker()
-
-        // Set current month as default selection
-        val currentMonth = SimpleDateFormat("MMMM", Locale.getDefault()).format(Date())
-        val months = resources.getStringArray(R.array.months_array)
-        val currentMonthIndex = months.indexOf(currentMonth)
-        if (currentMonthIndex != -1) {
-            monthSpinner.setSelection(currentMonthIndex)
-        }
-
-        // Month spinner listener
-        monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedMonth = parent?.getItemAtPosition(position).toString()
-                updateBarChart(selectedMonth)
-                updateTotalSpentDisplay(selectedMonth)
-                // Reset selected date to first day of selected month
-                val calendar = Calendar.getInstance()
-                val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
-                calendar.time = monthFormat.parse(selectedMonth) ?: Date()
-                calendar.set(Calendar.DAY_OF_MONTH, 1)
-                selectedDate = calendar
-                updateSecondBarChart()
-                updateDateDisplay()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-        }
+        setupSpinners()
 
         // Update displays
         updateSavingsDisplay()
         updateTotalSpentDisplay(monthSpinner.selectedItem.toString())
         updateBarChart(monthSpinner.selectedItem.toString())
         updateSecondBarChart()
-        updateDateDisplay()
         updateGiftCardProgress()
     }
 
@@ -179,17 +149,68 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupDatePicker() {
-        spendingTrendsText.setOnClickListener {
-            val year = selectedDate.get(Calendar.YEAR)
-            val month = selectedDate.get(Calendar.MONTH)
-            val day = selectedDate.get(Calendar.DAY_OF_MONTH)
+    private fun setupSpinners() {
+        // Set current month as default selection
+        val currentMonth = SimpleDateFormat("MMMM", Locale.getDefault()).format(Date())
+        val months = resources.getStringArray(R.array.months_array)
+        val currentMonthIndex = months.indexOf(currentMonth)
+        if (currentMonthIndex != -1) {
+            monthSpinner.setSelection(currentMonthIndex)
+        }
 
-            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                selectedDate.set(selectedYear, selectedMonth, selectedDay)
+        // Set current day as default selection
+        val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
+        val days = resources.getStringArray(R.array.days_array)
+        val currentDayIndex = days.indexOf(currentDay)
+        if (currentDayIndex != -1) {
+            daySpinner.setSelection(currentDayIndex)
+        }
+
+        // Month spinner listener
+        monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedMonth = parent?.getItemAtPosition(position).toString()
+                updateBarChart(selectedMonth)
+                updateTotalSpentDisplay(selectedMonth)
+                
+                // Update selected date with the new month
+                val calendar = Calendar.getInstance()
+                val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+                calendar.time = monthFormat.parse(selectedMonth) ?: Date()
+                
+                // Keep the current day if it's valid for the new month
+                val currentDay = selectedDate.get(Calendar.DAY_OF_MONTH)
+                val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+                val newDay = if (currentDay <= daysInMonth) currentDay else 1
+                
+                calendar.set(Calendar.DAY_OF_MONTH, newDay)
+                selectedDate = calendar
+                
+                // Update day spinner selection
+                val dayIndex = days.indexOf(newDay.toString())
+                if (dayIndex != -1) {
+                    daySpinner.setSelection(dayIndex)
+                }
+                
                 updateSecondBarChart()
-                updateDateDisplay()
-            }, year, month, day).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Handle nothing selected
+            }
+        }
+
+        // Day spinner listener
+        daySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedDay = parent?.getItemAtPosition(position).toString().toInt()
+                selectedDate.set(Calendar.DAY_OF_MONTH, selectedDay)
+                updateSecondBarChart()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Handle nothing selected
+            }
         }
     }
 
@@ -267,9 +288,22 @@ class DashboardActivity : AppCompatActivity() {
                 val limitEntries = mutableListOf<BarEntry>()
                 val labels = mutableListOf<String>()
 
+                // Get the selected month from the month spinner
+                val selectedMonth = monthSpinner.selectedItem.toString()
+                val calendar = Calendar.getInstance()
+                val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+                calendar.time = monthFormat.parse(selectedMonth) ?: Date()
+                
+                // Set the year to current year
+                calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR))
+                
+                // Set the day from the day spinner
+                val selectedDay = daySpinner.selectedItem.toString().toInt()
+                calendar.set(Calendar.DAY_OF_MONTH, selectedDay)
+
                 // Calculate start and end timestamps for the selected day
                 val startOfDay = Calendar.getInstance().apply {
-                    time = selectedDate.time
+                    time = calendar.time
                     set(Calendar.HOUR_OF_DAY, 0)
                     set(Calendar.MINUTE, 0)
                     set(Calendar.SECOND, 0)
@@ -277,7 +311,7 @@ class DashboardActivity : AppCompatActivity() {
                 }.timeInMillis
 
                 val endOfDay = Calendar.getInstance().apply {
-                    time = selectedDate.time
+                    time = calendar.time
                     set(Calendar.HOUR_OF_DAY, 23)
                     set(Calendar.MINUTE, 59)
                     set(Calendar.SECOND, 59)
@@ -319,10 +353,6 @@ class DashboardActivity : AppCompatActivity() {
                     secondBarChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
                     secondBarChart.data = data
                     secondBarChart.invalidate()
-
-                    // Update the title to show the selected date
-                    val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-                    spendingTrendsText.text = dateFormat.format(selectedDate.time)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -382,13 +412,6 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateDateDisplay() {
-        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-        // Set the year to current year
-        selectedDate.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR))
-        spendingTrendsText.text = dateFormat.format(selectedDate.time)
-    }
-
     private fun updateGiftCardProgress() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -401,6 +424,19 @@ class DashboardActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     giftCardProgressBar.progress = percent
                     giftCardProgressLabel.text = "Gift card progress ($percent%)"
+                    
+                    // Apply glow effect when progress reaches 100%
+                    val giftCardImage = findViewById<ImageView>(R.id.giftCardImage)
+                    if (percent >= 100) {
+                        giftCardImage.background = ContextCompat.getDrawable(this@DashboardActivity, R.drawable.gift_card_glow)
+                        // Add animation for the glow effect
+                        val scaleAnimation = android.view.animation.AnimationUtils.loadAnimation(this@DashboardActivity, android.R.anim.fade_in)
+                        scaleAnimation.duration = 1000
+                        giftCardImage.startAnimation(scaleAnimation)
+                    } else {
+                        giftCardImage.background = null
+                        giftCardImage.clearAnimation()
+                    }
                 }
             } catch (e: Exception) {
                 // Handle error

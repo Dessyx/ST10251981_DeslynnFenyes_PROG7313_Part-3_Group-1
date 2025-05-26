@@ -461,7 +461,7 @@ class DashboardActivity : AppCompatActivity() {
                     }
                 }
             } catch (e: Exception) {
-                // Handle error
+
             }
         }
     }

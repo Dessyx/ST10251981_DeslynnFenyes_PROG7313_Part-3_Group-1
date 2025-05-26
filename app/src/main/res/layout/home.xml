@@ -248,10 +248,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/historyRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="0dp"
         android:layout_marginTop="7dp"
+        android:layout_marginBottom="16dp"
         android:clipToPadding="false"
         android:paddingHorizontal="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/budget_goal_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -263,12 +265,12 @@
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/card_border"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/savingProgress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/historyRecyclerView">
-
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/textView2"
@@ -309,12 +311,13 @@
         android:layout_height="106dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/card_border"
         android:orientation="vertical"
         android:padding="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/budget_goal_layout">
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -345,7 +348,6 @@
                 android:textColor="#E53935"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -355,7 +357,6 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!--TO DO: Change to savings progress - dessy-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -388,17 +389,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
         android:background="@android:color/white"
         android:elevation="4dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/savingProgress"
-        tools:layout_editor_absoluteX="16dp">
-
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -416,17 +414,7 @@
                 android:contentDescription="Add savings"
                 android:scaleType="fitCenter"
                 android:src="@drawable/savings_icon" />
-            <!--
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:text="Add Category"
-                android:textColor="#000000"
-                android:textSize="7sp" />-->
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="0dp"
@@ -444,17 +432,7 @@
                 android:contentDescription="Win awards"
                 android:scaleType="fitCenter"
                 android:src="@drawable/awards_icon" />
-            <!--
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:text="Add Category"
-                android:textColor="#000000"
-                android:textSize="7sp" />-->
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="0dp"
@@ -472,15 +450,6 @@
                 android:contentDescription="Profile"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_user_profile" />
-
-            <!--  <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:text="Add Category"
-                android:textColor="#000000"
-                android:textSize="7sp" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -499,16 +468,6 @@
                 android:contentDescription="Settings"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_settings" />
-
-            <!--  <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="4dp"
-                  android:gravity="center"
-                  android:text="Add Category"
-                  android:textColor="#000000"
-                  android:textSize="7sp" />-->
         </LinearLayout>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

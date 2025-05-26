@@ -223,6 +223,17 @@
                     android:minHeight="48dp"
                     android:prompt="@string/month_prompt"
                     android:spinnerMode="dropdown" />
+
+                <Spinner
+                    android:id="@+id/daySpinner"
+                    android:layout_width="194dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center|end"
+                    android:layout_marginTop="8dp"
+                    android:entries="@array/days_array"
+                    android:minHeight="48dp"
+                    android:prompt="@string/day_prompt"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
 
         </LinearLayout>
@@ -287,7 +298,7 @@
                     app:srcCompat="@drawable/filter_date" />
 
                 <Spinner
-                    android:id="@+id/daySpinner"
+                    android:id="@+id/daySpinner2"
                     android:layout_width="194dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center|end"

@@ -109,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     //----------------------------------------------------------------------------------------------
-    //
+    // Displays overspent categories and savings progress
     private fun loadBudgetAndCategories() {
         val userInt   = currentUserId.toInt()
         val budgetDAO = db.budgetDAO()
@@ -133,10 +133,10 @@ class HomeActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     budgetGoalText.text = currencyFormat.format(goal)
 
-                    // Update savings progress instead of budget progress
+                    // Update savings progress
                     updateSavingsProgress()
 
-                    // Part 3 - flags overspent categories red
+                    // Flags overspent categories red
                     if (overspentList.isNotEmpty()) {
                         overspentCategoriesText.text = overspentList
                         overspentCategoriesText.setTextColor(
@@ -153,13 +153,13 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // Add new function to calculate and display savings progress
+    //----------------------------------------------------------------------------------------------
+    // Calculates and display savings progress
     private fun updateSavingsProgress() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val total = db.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
-                
-                // Get the monthly goal from SharedPreferences
+
                 val monthlySavingsGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
                     .getFloat("monthly_savings_goal", 0f).toDouble()
 

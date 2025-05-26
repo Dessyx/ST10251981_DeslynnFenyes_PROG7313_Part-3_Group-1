@@ -29,11 +29,12 @@ import androidx.core.content.ContextCompat
 import java.text.SimpleDateFormat
 import java.util.*
 
-//testing
+
 // ----------------------- Functionality for dashboard.xml ------------------------------
 class DashboardActivity : AppCompatActivity() {
     private lateinit var monthSpinner: Spinner
     private lateinit var daySpinner: Spinner
+    private lateinit var daySpinner2: Spinner
     private lateinit var backButton: ImageButton
     private lateinit var dashSavingsText: TextView
     private lateinit var totalSpentText: TextView
@@ -66,6 +67,7 @@ class DashboardActivity : AppCompatActivity() {
 
         monthSpinner = findViewById(R.id.monthSpinner)
         daySpinner = findViewById(R.id.daySpinner)
+        daySpinner2 = findViewById(R.id.daySpinner2)
         backButton = findViewById(R.id.back_button)
         dashSavingsText = findViewById(R.id.dash_savings)
         totalSpentText = findViewById(R.id.totalSpent)
@@ -164,6 +166,7 @@ class DashboardActivity : AppCompatActivity() {
         val currentDayIndex = days.indexOf(currentDay)
         if (currentDayIndex != -1) {
             daySpinner.setSelection(currentDayIndex)
+            daySpinner2.setSelection(currentDayIndex)
         }
 
         // Month spinner listener
@@ -190,6 +193,7 @@ class DashboardActivity : AppCompatActivity() {
                 val dayIndex = days.indexOf(newDay.toString())
                 if (dayIndex != -1) {
                     daySpinner.setSelection(dayIndex)
+                    daySpinner2.setSelection(dayIndex)
                 }
                 
                 updateSecondBarChart()
@@ -201,10 +205,16 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         // Day spinner listener
-        daySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        val daySpinnerListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedDay = parent?.getItemAtPosition(position).toString().toInt()
                 selectedDate.set(Calendar.DAY_OF_MONTH, selectedDay)
+                // Sync both spinners
+                if (parent?.id == R.id.daySpinner) {
+                    daySpinner2.setSelection(position)
+                } else {
+                    daySpinner.setSelection(position)
+                }
                 updateSecondBarChart()
             }
 
@@ -212,6 +222,9 @@ class DashboardActivity : AppCompatActivity() {
                 // Handle nothing selected
             }
         }
+
+        daySpinner.onItemSelectedListener = daySpinnerListener
+        daySpinner2.onItemSelectedListener = daySpinnerListener
     }
 
     private fun updateBarChart(selectedMonth: String) {

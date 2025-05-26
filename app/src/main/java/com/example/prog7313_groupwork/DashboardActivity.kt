@@ -25,6 +25,11 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import android.widget.ProgressBar
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,13 +39,12 @@ import java.util.*
 class DashboardActivity : AppCompatActivity() {
     private lateinit var monthSpinner: Spinner
     private lateinit var daySpinner: Spinner
-    private lateinit var daySpinner2: Spinner
     private lateinit var backButton: ImageButton
     private lateinit var dashSavingsText: TextView
     private lateinit var totalSpentText: TextView
     private lateinit var database: AstraDatabase
     private lateinit var barChart: BarChart
-    private lateinit var secondBarChart: BarChart
+    private lateinit var lineChart: LineChart
     private var currentUserId: Long = 1
     private var selectedDate: Calendar = Calendar.getInstance()
     private lateinit var giftCardProgressBar: ProgressBar
@@ -67,12 +71,11 @@ class DashboardActivity : AppCompatActivity() {
 
         monthSpinner = findViewById(R.id.monthSpinner)
         daySpinner = findViewById(R.id.daySpinner)
-        daySpinner2 = findViewById(R.id.daySpinner2)
         backButton = findViewById(R.id.back_button)
         dashSavingsText = findViewById(R.id.dash_savings)
         totalSpentText = findViewById(R.id.totalSpent)
         barChart = findViewById(R.id.CatGraph)
-        secondBarChart = findViewById(R.id.secondGraph)
+        lineChart = findViewById(R.id.secondGraph)
         giftCardProgressBar = findViewById(R.id.giftCardProgress)
         giftCardProgressLabel = findViewById(R.id.giftCardProgressLabel)
 
@@ -84,7 +87,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         setupBarChart()
-        setupSecondBarChart()
+        setupLineChart()
         setupSpinners()
 
         // Update displays
@@ -123,11 +126,11 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSecondBarChart() {
-        secondBarChart.apply {
+    private fun setupLineChart() {
+        lineChart.apply {
             description.isEnabled = false
             setDrawGridBackground(false)
-            setDrawBarShadow(false)
+            setDrawBorders(true)
             setScaleEnabled(true)
             setPinchZoom(false)
             
@@ -135,6 +138,7 @@ class DashboardActivity : AppCompatActivity() {
                 position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
                 setDrawGridLines(false)
+                labelRotationAngle = -45f
             }
             
             axisLeft.apply {
@@ -148,6 +152,8 @@ class DashboardActivity : AppCompatActivity() {
                 isEnabled = true
                 textSize = 12f
             }
+
+            animateX(1000)
         }
     }
 
@@ -166,7 +172,6 @@ class DashboardActivity : AppCompatActivity() {
         val currentDayIndex = days.indexOf(currentDay)
         if (currentDayIndex != -1) {
             daySpinner.setSelection(currentDayIndex)
-            daySpinner2.setSelection(currentDayIndex)
         }
 
         // Month spinner listener
@@ -193,38 +198,28 @@ class DashboardActivity : AppCompatActivity() {
                 val dayIndex = days.indexOf(newDay.toString())
                 if (dayIndex != -1) {
                     daySpinner.setSelection(dayIndex)
-                    daySpinner2.setSelection(dayIndex)
                 }
                 
                 updateSecondBarChart()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Handle nothing selected
+
             }
         }
 
         // Day spinner listener
-        val daySpinnerListener = object : AdapterView.OnItemSelectedListener {
+        daySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedDay = parent?.getItemAtPosition(position).toString().toInt()
                 selectedDate.set(Calendar.DAY_OF_MONTH, selectedDay)
-                // Sync both spinners
-                if (parent?.id == R.id.daySpinner) {
-                    daySpinner2.setSelection(position)
-                } else {
-                    daySpinner.setSelection(position)
-                }
                 updateSecondBarChart()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Handle nothing selected
+
             }
         }
-
-        daySpinner.onItemSelectedListener = daySpinnerListener
-        daySpinner2.onItemSelectedListener = daySpinnerListener
     }
 
     private fun updateBarChart(selectedMonth: String) {
@@ -240,7 +235,7 @@ class DashboardActivity : AppCompatActivity() {
                 val calendar = Calendar.getInstance()
                 val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
                 calendar.time = monthFormat.parse(selectedMonth) ?: Date()
-                val monthNumber = calendar.get(Calendar.MONTH) + 1 // Adding 1 because Calendar.MONTH is 0-based
+                val monthNumber = calendar.get(Calendar.MONTH) + 1
 
                 // Get the year
                 val year = Calendar.getInstance().get(Calendar.YEAR)
@@ -297,75 +292,88 @@ class DashboardActivity : AppCompatActivity() {
             try {
                 // Get all categories
                 val categories = database.categoryDAO().getAllCategories()
-                val entries = mutableListOf<BarEntry>()
-                val limitEntries = mutableListOf<BarEntry>()
-                val labels = mutableListOf<String>()
-
+                
                 // Get the selected month from the month spinner
                 val selectedMonth = monthSpinner.selectedItem.toString()
                 val calendar = Calendar.getInstance()
                 val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
                 calendar.time = monthFormat.parse(selectedMonth) ?: Date()
-                
-                // Set the year to current year
+
                 calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR))
+                val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+                val dataSets = mutableListOf<ILineDataSet>()
                 
-                // Set the day from the day spinner
-                val selectedDay = daySpinner.selectedItem.toString().toInt()
-                calendar.set(Calendar.DAY_OF_MONTH, selectedDay)
+                // Set the colors for different categories
+                val categoryColors = listOf(
+                    "#E91E63", // Pink
+                    "#2196F3", // Blue
+                    "#4CAF50", // Green
+                    "#FFC107", // Amber
+                    "#9C27B0", // Purple
+                    "#FF5722", // Deep Orange
+                    "#00BCD4", // Cyan
+                    "#795548"  // Brown
+                )
 
-                // Calculate start and end timestamps for the selected day
-                val startOfDay = Calendar.getInstance().apply {
-                    time = calendar.time
-                    set(Calendar.HOUR_OF_DAY, 0)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }.timeInMillis
-
-                val endOfDay = Calendar.getInstance().apply {
-                    time = calendar.time
-                    set(Calendar.HOUR_OF_DAY, 23)
-                    set(Calendar.MINUTE, 59)
-                    set(Calendar.SECOND, 59)
-                    set(Calendar.MILLISECOND, 999)
-                }.timeInMillis
-
-                // Get expenses for the selected day
-                val expenses = database.expenseDAO().getExpensesForUserInDateRange(currentUserId, startOfDay, endOfDay)
-
-                // Calculate spent amount for each category
+                // Process each category
                 categories.forEachIndexed { index, category ->
-                    val categoryExpenses = expenses.filter { it.category == category.categoryName }
-                    val spent = categoryExpenses.sumOf { it.amount }
-                    val limit = category.categoryLimit.toDoubleOrNull() ?: 0.0
+                    val entries = mutableListOf<Entry>()
                     
-                    entries.add(BarEntry(index.toFloat(), spent.toFloat()))
-                    limitEntries.add(BarEntry(index.toFloat(), limit.toFloat()))
-                    labels.add(category.categoryName)
+                    // Get expenses for each day of the month for this category
+                    for (day in 1..daysInMonth) {
+                        calendar.set(Calendar.DAY_OF_MONTH, day)
+                        
+                        // Calculate start and end timestamps for the current day
+                        val startOfDay = Calendar.getInstance().apply {
+                            time = calendar.time
+                            set(Calendar.HOUR_OF_DAY, 0)
+                            set(Calendar.MINUTE, 0)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }.timeInMillis
+
+                        val endOfDay = Calendar.getInstance().apply {
+                            time = calendar.time
+                            set(Calendar.HOUR_OF_DAY, 23)
+                            set(Calendar.MINUTE, 59)
+                            set(Calendar.SECOND, 59)
+                            set(Calendar.MILLISECOND, 999)
+                        }.timeInMillis
+
+                        // Get expenses for the current day and category
+                        val expenses = database.expenseDAO()
+                            .getExpensesForUserInDateRange(currentUserId, startOfDay, endOfDay)
+                            .filter { it.category == category.categoryName }
+                        
+                        val dailyCategoryExpenses = expenses.sumOf { it.amount }
+                        entries.add(Entry(day.toFloat(), dailyCategoryExpenses.toFloat()))
+                    }
+
+
+                    val color = android.graphics.Color.parseColor(
+                        categoryColors[index % categoryColors.size]
+                    )
+                    
+                    val dataSet = LineDataSet(entries, category.categoryName).apply {
+                        this.color = color
+                        setCircleColor(color)
+                        setDrawCircles(true)
+                        setDrawValues(true)
+                        valueTextSize = 8f
+                        valueTextColor = color
+                        lineWidth = 2f
+                        mode = LineDataSet.Mode.CUBIC_BEZIER
+                    }
+                    
+                    dataSets.add(dataSet)
                 }
 
-                val spentDataSet = BarDataSet(entries, "Spent").apply {
-                    color = android.graphics.Color.parseColor("#fdcfe5") // Green color for spent
-                    valueTextColor = android.graphics.Color.parseColor("#f7529d")
-                    valueTextSize = 10f
-                }
-
-                val limitDataSet = BarDataSet(limitEntries, "Limit").apply {
-                    color = android.graphics.Color.parseColor("#cae5bb") // Orange color for limit
-                    valueTextColor = android.graphics.Color.parseColor("#0ccd17")
-                    valueTextSize = 10f
-                }
-
-                val data = BarData(spentDataSet, limitDataSet).apply {
-                    barWidth = 0.3f
-                    groupBars(0f, 0.1f, 0.1f)
-                }
+                val data = LineData(dataSets)
 
                 withContext(Dispatchers.Main) {
-                    secondBarChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-                    secondBarChart.data = data
-                    secondBarChart.invalidate()
+                    lineChart.data = data
+                    lineChart.xAxis.valueFormatter = IndexAxisValueFormatter((1..daysInMonth).map { it.toString() })
+                    lineChart.invalidate()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -376,25 +384,25 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
+    //---------------------------------------------------------------------------------
+    //
     private fun updateTotalSpentDisplay(selectedMonth: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Get the month number (1-12) from the month name
                 val calendar = Calendar.getInstance()
                 val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
                 calendar.time = monthFormat.parse(selectedMonth) ?: Date()
                 val monthNumber = calendar.get(Calendar.MONTH) + 1
 
-                // Get the year
                 val year = Calendar.getInstance().get(Calendar.YEAR)
 
-                // Calculate start and end timestamps for the selected month
+                // Calculates start and end timestamps for the selected month
                 calendar.set(year, monthNumber - 1, 1, 0, 0, 0)
                 val startTimestamp = calendar.timeInMillis
                 calendar.add(Calendar.MONTH, 1)
                 val endTimestamp = calendar.timeInMillis
 
-                // Get total expenses for the selected month
+                // Gets the total expenses for the selected month
                 val totalExpenses = database.expenseDAO()
                     .getTotalExpenseForUserInDateRange(currentUserId, startTimestamp, endTimestamp) ?: 0.0
 
@@ -425,6 +433,8 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
+    //---------------------------------------------------------------------------------------
+    // Handles the savings bar display and gift card progress
     private fun updateGiftCardProgress() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -438,11 +448,10 @@ class DashboardActivity : AppCompatActivity() {
                     giftCardProgressBar.progress = percent
                     giftCardProgressLabel.text = "Gift card progress ($percent%)"
                     
-                    // Apply glow effect when progress reaches 100%
+                    // Gift card glows when savings progress reaches the users goal
                     val giftCardImage = findViewById<ImageView>(R.id.giftCardImage)
                     if (percent >= 100) {
                         giftCardImage.background = ContextCompat.getDrawable(this@DashboardActivity, R.drawable.gift_card_glow)
-                        // Add animation for the glow effect
                         val scaleAnimation = android.view.animation.AnimationUtils.loadAnimation(this@DashboardActivity, android.R.anim.fade_in)
                         scaleAnimation.duration = 1000
                         giftCardImage.startAnimation(scaleAnimation)

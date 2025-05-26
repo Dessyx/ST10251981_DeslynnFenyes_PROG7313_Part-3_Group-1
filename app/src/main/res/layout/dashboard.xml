@@ -229,7 +229,7 @@
                     android:layout_width="194dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center|end"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="0dp"
                     android:entries="@array/days_array"
                     android:minHeight="48dp"
                     android:prompt="@string/day_prompt"
@@ -278,40 +278,14 @@
                     android:layout_width="112dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Filter by Date."
+                    android:text="Daily Spending Trends"
                     android:textColor="@color/black" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:background="@drawable/card_border"
-                android:orientation="horizontal"
-                android:padding="1dp">
-
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/filter_date" />
-
-                <Spinner
-                    android:id="@+id/daySpinner2"
-                    android:layout_width="194dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center|end"
-                    android:layout_marginTop="0dp"
-                    android:entries="@array/days_array"
-                    android:minHeight="48dp"
-                    android:prompt="@string/day_prompt"
-                    android:spinnerMode="dropdown" />
-            </LinearLayout>
         </LinearLayout>
 
-        <!-- Second Bar Chart -->
-        <com.github.mikephil.charting.charts.BarChart
+        <!-- Second Chart - Daily Spending Trend -->
+        <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/secondGraph"
             android:layout_width="match_parent"
             android:layout_height="180dp"

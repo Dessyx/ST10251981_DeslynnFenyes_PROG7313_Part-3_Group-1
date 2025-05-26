@@ -251,7 +251,7 @@
         <LinearLayout
             android:id="@+id/spendingTrendsLayout"
             android:layout_width="match_parent"
-            android:layout_height="99dp"
+            android:layout_height="60dp"
             android:orientation="vertical"
             android:padding="1dp">
 

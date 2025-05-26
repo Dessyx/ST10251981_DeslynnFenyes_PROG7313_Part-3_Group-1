@@ -296,7 +296,7 @@
         <Button
             android:id="@+id/dashboardbtn"
             android:layout_width="wrap_content"
-            android:layout_height="40sp"
+            android:layout_height="48sp"
             android:layout_gravity="top"
             android:layout_marginStart="2dp"
             android:backgroundTint="@android:color/black"

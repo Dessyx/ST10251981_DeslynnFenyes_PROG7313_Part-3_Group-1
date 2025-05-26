@@ -122,8 +122,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="Congratulations, here is your reward!"
-                android:textColor="#388E3C"
+                android:text="Congratulations, You have won a Woolworths gift card!"
+                android:textColor="#e40c85"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="gone" />

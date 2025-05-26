@@ -59,7 +59,7 @@ Commited frequently to keep the code safe and retrievable when we needed to reve
 
 ## 👾 TECHNOLOGIES USED
 
-Android Studio
+Android Studio,
 Kotlin
 
 ## 🎲 FEATURES
@@ -74,6 +74,14 @@ Users can:
 - Use the debt planner to calculate how much to pay off per month
 - View their spending trends in the dashboard
 - Contribute to savings
+
+### Additional Features
+💰 Savings page
+- Users can set a savings goal and add to their savings regularly to motivate the user to put aside money.
+🏅 Awards page
+- Users can track their savings progress. Once the user reaches their savings goal, they are awarded with a gift card.
+
+These features of ours are gamification elements made to encourage the user to save money and make the budgeting experience fun!
 
 
 ## 📺 YOUTUBE LINK: https://www.youtube.com/watch?v=goj3jzFmdJA

@@ -109,7 +109,7 @@
                 android:gravity="center"
                 android:text="@string/add_expense"
                 android:textColor="#000000"
-                android:textSize="7sp" />
+                android:textSize="8sp" />
         </LinearLayout>
 
         <!-- 2. Add Income -->
@@ -137,7 +137,7 @@
                 android:gravity="center"
                 android:text="@string/add_income"
                 android:textColor="#000000"
-                android:textSize="7sp" />
+                android:textSize="8sp" />
         </LinearLayout>
 
         <!-- 3. Set Budget -->
@@ -165,7 +165,7 @@
                 android:gravity="center"
                 android:text="Set Budget"
                 android:textColor="#000000"
-                android:textSize="7sp" />
+                android:textSize="8sp" />
         </LinearLayout>
 
         <!-- 4. Add Category -->
@@ -193,7 +193,7 @@
                 android:gravity="center"
                 android:text="Add Category"
                 android:textColor="#000000"
-                android:textSize="7sp" />
+                android:textSize="8sp" />
         </LinearLayout>
 
         <!-- 5. Debt Planner -->
@@ -221,7 +221,7 @@
                 android:gravity="center"
                 android:text="Debt Planner"
                 android:textColor="#000000"
-                android:textSize="7sp" />
+                android:textSize="8sp" />
         </LinearLayout>
 
 
@@ -299,6 +299,7 @@
             android:layout_height="48sp"
             android:layout_gravity="top"
             android:layout_marginStart="2dp"
+            android:layout_marginTop="-5dp"
             android:backgroundTint="@android:color/black"
             android:text="See dashboard"
             android:textColor="@android:color/white"

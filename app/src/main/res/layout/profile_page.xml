@@ -8,11 +8,12 @@
 
 
     <LinearLayout
-        android:layout_width="413dp"
+        android:layout_width="match_parent"
         android:layout_height="727dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="24dp"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="-2dp">
 
@@ -92,9 +93,8 @@
 
         <EditText
             android:id="@+id/etName"
-            android:layout_width="307dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_gravity="center|center_vertical"
             android:layout_marginTop="24dp"
             android:background="@drawable/edittext_border"
             android:hint="@string/name"
@@ -103,9 +103,8 @@
 
         <EditText
             android:id="@+id/etSurname"
-            android:layout_width="307dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/edittext_border"
             android:hint="@string/surname"
@@ -115,20 +114,18 @@
         <!-- Save Button -->
         <Button
             android:id="@+id/btnSaveProfile"
-            android:layout_width="307dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|center_vertical"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/black"
             android:text="@string/save"
             android:textColor="#FFFFFF" />
 
-        <!-- Save Button -->
+        <!-- Delete Button -->
         <Button
             android:id="@+id/btnDeleteProfile"
-            android:layout_width="307dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|center_vertical"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/black"
             android:text="@string/delete_profile"

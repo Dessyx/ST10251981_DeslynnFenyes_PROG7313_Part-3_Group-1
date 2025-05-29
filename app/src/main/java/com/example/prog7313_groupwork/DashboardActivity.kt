@@ -204,7 +204,6 @@ class DashboardActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
             }
         }
 
@@ -213,11 +212,11 @@ class DashboardActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedDay = parent?.getItemAtPosition(position).toString().toInt()
                 selectedDate.set(Calendar.DAY_OF_MONTH, selectedDay)
+                updateBarChart(monthSpinner.selectedItem.toString())
                 updateSecondBarChart()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
             }
         }
     }
@@ -237,16 +236,14 @@ class DashboardActivity : AppCompatActivity() {
                 calendar.time = monthFormat.parse(selectedMonth) ?: Date()
                 val monthNumber = calendar.get(Calendar.MONTH) + 1
 
-                // Get the year
+                // Get the year and day
                 val year = Calendar.getInstance().get(Calendar.YEAR)
-
-                // Calculate start and end timestamps for the selected month
-                calendar.set(year, monthNumber - 1, 1, 0, 0, 0)
+                val selectedDay = daySpinner.selectedItem.toString().toInt()
+                
+                calendar.set(year, monthNumber - 1, selectedDay, 0, 0, 0)
                 val startTimestamp = calendar.timeInMillis
-                calendar.add(Calendar.MONTH, 1)
+                calendar.add(Calendar.DAY_OF_MONTH, 1)
                 val endTimestamp = calendar.timeInMillis
-
-                // Get expenses for the selected month
                 val expenses = database.expenseDAO().getExpensesForUserInDateRange(currentUserId, startTimestamp, endTimestamp)
 
                 // Calculate spent amount for each category

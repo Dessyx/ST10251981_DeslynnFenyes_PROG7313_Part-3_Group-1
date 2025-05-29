@@ -3,7 +3,7 @@ import org.gradle.kotlin.dsl.implementation
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.google.gms.google.services)
+    id("com.google.gms.google-services") version "4.4.2" apply false
     id("kotlin-kapt")
 }
 
@@ -32,7 +32,7 @@ android {
     }
     
     buildFeatures {
-       // dataBinding = true
+        // dataBinding = true
         viewBinding = true
     }
     
@@ -75,9 +75,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:${libs.versions.firebase.get()}"))
-    implementation("com.google.firebase:firebase-database-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
 
     // CameraX
     implementation(libs.androidx.camera.core)
@@ -104,3 +102,7 @@ dependencies {
     // Konfetti
     implementation("nl.dionsegijn:konfetti-xml:2.0.3")
 }
+
+
+
+apply(plugin = "com.google.gms.google-services")

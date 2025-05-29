@@ -30,17 +30,17 @@ android {
             )
         }
     }
-    
+
     buildFeatures {
         // dataBinding = true
         viewBinding = true
     }
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    
+
     kotlinOptions {
         jvmTarget = "17"
     }
@@ -75,7 +75,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0")) // or latest
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     // CameraX
     implementation(libs.androidx.camera.core)
@@ -101,8 +102,7 @@ dependencies {
 
     // Konfetti
     implementation("nl.dionsegijn:konfetti-xml:2.0.3")
+
+
 }
-
-
-
 apply(plugin = "com.google.gms.google-services")

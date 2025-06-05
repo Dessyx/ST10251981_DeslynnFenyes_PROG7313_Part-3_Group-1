@@ -17,6 +17,7 @@ import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.User
 import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
+import com.example.prog7313_groupwork.firebase.FirebaseUserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,6 +29,7 @@ class ProfileMainClass : AppCompatActivity() {
     // Variable declarations
     private lateinit var database: AstraDatabase
     private lateinit var savingsService: FirebaseSavingsService
+    private lateinit var firebaseUserService: FirebaseUserService
     private lateinit var btnSaveProfile: Button
     private lateinit var btnDeleteProfile: Button
     private lateinit var etName: EditText
@@ -40,6 +42,9 @@ class ProfileMainClass : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.profile_page)
+
+        // Initialize Firebase service
+        firebaseUserService = FirebaseUserService()
 
         // Initializes views and database
         initializeViews()
@@ -77,7 +82,7 @@ class ProfileMainClass : AppCompatActivity() {
     private fun loadExistingProfile() {
         lifecycleScope.launch {
             try {
-                val existingUser = database.userDAO().getLatestUser()
+                val existingUser = firebaseUserService.getLatestUser()
                 existingUser?.let { user ->
                     currentUserId = user.id
                     existingEmail = user.userEmail
@@ -135,7 +140,7 @@ class ProfileMainClass : AppCompatActivity() {
                     userEmail    = existingEmail,
                     passwordHash = ""
                 )
-                val newId = database.userDAO().insertUser(user)
+                val newId = firebaseUserService.insertUser(user)
 
                 if (currentUserId == -1L) {
                     // this was a new user → capture their new ID
@@ -186,7 +191,7 @@ class ProfileMainClass : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                database.userDAO().deleteUserById(currentUserId)
+                firebaseUserService.deleteUserById(currentUserId)
                 savingsService.deleteSavings(currentUserId)
 
                 runOnUiThread {

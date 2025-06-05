@@ -19,6 +19,9 @@ import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
+import com.example.prog7313_groupwork.firebase.FirebaseIncomeService
+import com.example.prog7313_groupwork.firebase.FirebaseUserService
+import com.example.prog7313_groupwork.firebase.FirebaseBudgetService
 import com.example.prog7313_groupwork.repository.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -48,6 +51,9 @@ class HomeActivity : AppCompatActivity() {
     private val firebaseCategoryService = FirebaseCategoryService()
     private val firebaseExpenseService = FirebaseExpenseService()
     private val firebaseSavingsService = FirebaseSavingsService()
+    private val firebaseIncomeService = FirebaseIncomeService()
+    private val firebaseUserService = FirebaseUserService()
+    private val firebaseBudgetService = FirebaseBudgetService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +120,6 @@ class HomeActivity : AppCompatActivity() {
 
     private fun loadBudgetAndCategories() {
         val userInt = currentUserId.toInt()
-        val budgetDAO = db.budgetDAO()
 
         lifecycleScope.launch {
             try {
@@ -123,7 +128,7 @@ class HomeActivity : AppCompatActivity() {
                     firebaseCategoryService.getCategoriesForUser(currentUserId)
                 }
 
-                budgetDAO.getCurrentBudget(userInt).collect { budget ->
+                firebaseBudgetService.getCurrentBudget(userInt).collect { budget ->
                     val goal = budget?.monthlyGoal ?: 0.0
                     val totalSpent = firebaseCategories.sumOf { it.spent ?: 0.0 }
 
@@ -193,7 +198,7 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 val totalSpent = firebaseExpenseService.getTotalSpending(userId)
-                val income = db.incomeDAO().getAllIncomeForUser(userId).first()?.sumOf { it.amount } ?: 0.0
+                val income = firebaseIncomeService.getTotalIncomeForUser(userId) ?: 0.0
                 val savings = firebaseSavingsService.getTotalSavings(userId)
                 val activeBalance = income - totalSpent - savings
 
@@ -210,7 +215,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateGreeting() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val user = db.userDAO().getUserById(currentUserId)
+            val user = firebaseUserService.getUserById(currentUserId)
             withContext(Dispatchers.Main) {
                 greetingText.text = "Hello ${user?.NameSurname ?: "User"}"
             }
@@ -221,7 +226,7 @@ class HomeActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val expenses = firebaseExpenseService.getExpensesByUser(currentUserId)
-                val incomes = db.incomeDAO().getAllIncomeForUser(currentUserId).first()
+                val incomes = firebaseIncomeService.getAllIncomeForUser(currentUserId).first()
                 val fmt = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                 val items = mutableListOf<HistoryItem>()
 

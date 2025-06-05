@@ -16,6 +16,7 @@ import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Budget
 import com.example.prog7313_groupwork.entities.Category
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
+import com.example.prog7313_groupwork.firebase.FirebaseBudgetService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ class SpendingGoalsActivity : AppCompatActivity() {
     private lateinit var progressText: TextView
     private lateinit var categoriesText: TextView
     private lateinit var categoryService: FirebaseCategoryService
+    private lateinit var firebaseBudgetService: FirebaseBudgetService
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
     private val db by lazy { AstraDatabase.getDatabase(this) }
 
@@ -39,6 +41,7 @@ class SpendingGoalsActivity : AppCompatActivity() {
 
         // Initialize services
         categoryService = FirebaseCategoryService()
+        firebaseBudgetService = FirebaseBudgetService()
 
         // Initialize views
         monthlyGoalText = findViewById(R.id.monthlyGoalText)
@@ -70,7 +73,7 @@ class SpendingGoalsActivity : AppCompatActivity() {
                 }
 
                 // Get budget and categories
-                val budget = db.budgetDAO().getCurrentBudget(currentUserId.toInt()).first()
+                val budget = firebaseBudgetService.getCurrentBudget(currentUserId.toInt()).first()
                 val categories = categoryService.getCategoriesForUser(currentUserId)
                 
                 // Calculate total spent and categories within limit

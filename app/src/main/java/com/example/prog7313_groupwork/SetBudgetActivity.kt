@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Budget
 import com.example.prog7313_groupwork.entities.Category
+import com.example.prog7313_groupwork.firebase.FirebaseBudgetService
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -29,6 +30,7 @@ import java.util.Locale
 // --------------- Functionality for activity_set_budget ------------------------------------------
 class SetBudgetActivity : AppCompatActivity() {
     private val db by lazy { AstraDatabase.getDatabase(this) }
+    private lateinit var firebaseBudgetService: FirebaseBudgetService
     private lateinit var categoryService: FirebaseCategoryService
     private lateinit var maxSlider: Slider
     private lateinit var minSlider: Slider                      // Declaring variables
@@ -43,6 +45,7 @@ class SetBudgetActivity : AppCompatActivity() {
         setContentView(R.layout.activity_set_budget)
 
         // Initialize services
+        firebaseBudgetService = FirebaseBudgetService()
         categoryService = FirebaseCategoryService()
 
         maxSlider  = findViewById(R.id.totalBudgetSlider)
@@ -127,7 +130,7 @@ class SetBudgetActivity : AppCompatActivity() {
             .getLong("current_user_id", -1L).toInt()
 
         lifecycleScope.launch {
-            db.budgetDAO()
+            firebaseBudgetService
                 .getCurrentBudget(userId)
                 .first()            // just gets the latest ones
                 ?.monthlyGoal
@@ -230,7 +233,7 @@ class SetBudgetActivity : AppCompatActivity() {
             isActive    = true
         )
         lifecycleScope.launch {
-            db.budgetDAO().saveBudget(budget)
+            firebaseBudgetService.saveBudget(budget)
         }
 
         prefs.edit()

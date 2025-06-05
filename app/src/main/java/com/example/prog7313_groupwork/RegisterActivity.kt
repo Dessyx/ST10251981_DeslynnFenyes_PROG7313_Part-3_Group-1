@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import at.favre.lib.crypto.bcrypt.BCrypt
+import com.example.prog7313_groupwork.firebase.FirebaseUserService
 
 // ----------------------------- Functionality of activity_register.xml ----------------------------------
 class RegisterActivity : AppCompatActivity() {
@@ -25,6 +26,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var registerButton: MaterialButton
     private lateinit var backButton: ImageButton
     private lateinit var database: AstraDatabase
+    private lateinit var firebaseUserService: FirebaseUserService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,9 @@ class RegisterActivity : AppCompatActivity() {
         //------------------------------------------------------------------------------------------
         // Initialize view and database
         database = AstraDatabase.getDatabase(this)
+
+        // Initialize Firebase service
+        firebaseUserService = FirebaseUserService()
 
         nameInput = findViewById(R.id.nameInput)
         emailInput = findViewById(R.id.emailInput)
@@ -96,7 +101,7 @@ class RegisterActivity : AppCompatActivity() {
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     // Check if user already exists
-                    val existingUser = database.userDAO().getUserByEmail(email)
+                    val existingUser = firebaseUserService.getUserByEmail(email)
                     if (existingUser != null) {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@RegisterActivity, "Email already registered", Toast.LENGTH_SHORT).show()
@@ -104,7 +109,7 @@ class RegisterActivity : AppCompatActivity() {
                         return@launch
                     }
 
-                    database.userDAO().insertUser(user)
+                    firebaseUserService.insertUser(user)
 
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@RegisterActivity, "Registration successful!", Toast.LENGTH_SHORT).show()

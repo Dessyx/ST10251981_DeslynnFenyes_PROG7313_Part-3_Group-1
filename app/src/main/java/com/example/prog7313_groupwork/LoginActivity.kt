@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import at.favre.lib.crypto.bcrypt.BCrypt
+import com.example.prog7313_groupwork.firebase.FirebaseUserService
 
 // ----------------------------- Functionality of login.xml ----------------------------------
 class LoginActivity : AppCompatActivity() {
@@ -25,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var registerButton: MaterialButton
     private lateinit var backButton: ImageButton
     private lateinit var database: AstraDatabase
+    private lateinit var firebaseUserService: FirebaseUserService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,9 @@ class LoginActivity : AppCompatActivity() {
 
         // Initialize database
         database = AstraDatabase.getDatabase(this)
+
+        // Initialize Firebase service
+        firebaseUserService = FirebaseUserService()
 
         // Initialize views
         emailEditText = findViewById(R.id.emailEditText)
@@ -67,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     val user = withContext(Dispatchers.IO) {
-                        database.userDAO().getUserByEmail(email) // Fetches the users email
+                        firebaseUserService.getUserByEmail(email)
                     }
 
                     // Handles the login checks and functionality

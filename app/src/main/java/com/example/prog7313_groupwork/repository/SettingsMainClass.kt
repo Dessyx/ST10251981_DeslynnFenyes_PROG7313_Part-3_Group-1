@@ -19,6 +19,7 @@ import android.content.res.Configuration
 import com.example.prog7313_groupwork.HomeActivity
 import java.util.Locale
 import at.favre.lib.crypto.bcrypt.BCrypt
+import com.example.prog7313_groupwork.firebase.FirebaseUserService
 
 // ---------------------- Functionality for settings_page.xml ---------------------------------
 class SettingsMainClass : AppCompatActivity() {
@@ -40,6 +41,7 @@ class SettingsMainClass : AppCompatActivity() {
     private var selectedColor: Int = Color.parseColor("#EEC5D9")
     private var isUpdatingLanguage = false
     private var currentLanguage = "en"
+    private lateinit var firebaseUserService: FirebaseUserService
 
     //----------------------------------------------------------------------------------------
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +56,9 @@ class SettingsMainClass : AppCompatActivity() {
             finish()
             return
         }
+
+        // Initialize Firebase service
+        firebaseUserService = FirebaseUserService()
 
         initializeViews()
         setupDatabase()
@@ -161,7 +166,7 @@ class SettingsMainClass : AppCompatActivity() {
     private fun loadUserSettings() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val user = db.userDAO().getUserById(currentUserId)
+                val user = firebaseUserService.getUserById(currentUserId)
                 withContext(Dispatchers.Main) {
                     user?.let { loadedUser ->
                         isUpdatingLanguage = true
@@ -195,7 +200,7 @@ class SettingsMainClass : AppCompatActivity() {
     private fun updateUserLanguage(langCode: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                db.userDAO().updateUserLanguage(currentUserId, langCode)
+                firebaseUserService.updateUserLanguage(currentUserId, langCode)
                 withContext(Dispatchers.Main) {
                     try {
                         val locale = Locale(langCode)
@@ -269,7 +274,7 @@ class SettingsMainClass : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                db.userDAO().updateUserCredentials(currentUserId, email, hashedPassword)
+                firebaseUserService.updateUserCredentials(currentUserId, email, hashedPassword)
                 withContext(Dispatchers.Main) {
                     // Update SharedPreferences with new email
                     val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -294,7 +299,7 @@ class SettingsMainClass : AppCompatActivity() {
     private fun updateUserCurrency(currency: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                db.userDAO().updateUserCurrency(currentUserId, currency)
+                firebaseUserService.updateUserCurrency(currentUserId, currency)
                 withContext(Dispatchers.Main) {
                     showToast("Currency updated to $currency")
                 }
@@ -311,7 +316,7 @@ class SettingsMainClass : AppCompatActivity() {
     private fun saveUserThemeColor(color: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                db.userDAO().updateUserThemeColor(currentUserId, color)
+                firebaseUserService.updateUserThemeColor(currentUserId, color)
                 withContext(Dispatchers.Main) {
                     showToast("Theme color saved")
                 }

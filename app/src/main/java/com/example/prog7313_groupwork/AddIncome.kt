@@ -15,6 +15,7 @@ import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.prog7313_groupwork.firebase.FirebaseIncomeService
 
 // --------------------------- Functionaloty for activity_add_income.xml -------------------------
 class AddIncome : AppCompatActivity() {
@@ -25,6 +26,7 @@ class AddIncome : AppCompatActivity() {
     private lateinit var database: AstraDatabase
     private var selectedDate: Calendar = Calendar.getInstance()
     private val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private lateinit var firebaseIncomeService: FirebaseIncomeService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,9 @@ class AddIncome : AppCompatActivity() {
 
         // Initialize database
         database = AstraDatabase.getDatabase(this)
+
+        // Initialize Firebase service
+        firebaseIncomeService = FirebaseIncomeService()
 
         initializeViews()
         setupDatePicker()   // Initialize views
@@ -125,7 +130,7 @@ class AddIncome : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try {
-                    database.incomeDAO().insertIncome(income)
+                    firebaseIncomeService.insertIncome(income)
                     Toast.makeText(this@AddIncome, "Income added successfully!", Toast.LENGTH_SHORT).show()
                     
                     // Return to home activity and refresh it

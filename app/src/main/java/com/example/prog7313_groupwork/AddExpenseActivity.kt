@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Expense
+import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
+import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,6 +36,8 @@ class AddExpenseActivity : AppCompatActivity() {
     private lateinit var viewExpenseButton: MaterialButton
     private lateinit var backButton: ImageButton
     private lateinit var database: AstraDatabase
+    private lateinit var categoryService: FirebaseCategoryService
+    private lateinit var expenseService: FirebaseExpenseService
     private var selectedDate: Calendar = Calendar.getInstance()
     private var selectedImageUri: Uri? = null
     private var selectedImagePath: String? = null
@@ -53,7 +57,10 @@ class AddExpenseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
 
-        database = AstraDatabase.getDatabase(this) // Initialize database
+        // Initialize database and services
+        database = AstraDatabase.getDatabase(this)
+        categoryService = FirebaseCategoryService()
+        expenseService = FirebaseExpenseService()
 
         // Initialize views
         dateInput = findViewById(R.id.dateInput)
@@ -64,7 +71,6 @@ class AddExpenseActivity : AppCompatActivity() {
         addExpenseButton = findViewById(R.id.addExpenseButton)
         viewExpenseButton = findViewById(R.id.viewExpenseButton)
         backButton = findViewById(R.id.backButton)
-
 
         loadCategories()
         setupDatePicker()
@@ -89,10 +95,7 @@ class AddExpenseActivity : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
         }
-
-
     }
-
 
     private fun setupImageAttachment() {
         attachImageInput.setOnClickListener {
@@ -141,13 +144,20 @@ class AddExpenseActivity : AppCompatActivity() {
         updateDateDisplay()
     }
 
-
-  // ------------------------------------------------------------------------------------
-    // Populates the drop down of categories
     private fun loadCategories() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val categoriesList = database.categoryDAO().getAllCategories()
+                val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getLong("current_user_id", -1L)
+                
+                if (userId == -1L) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@AddExpenseActivity, "Please log in to view categories", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
+                val categoriesList = categoryService.getCategoriesForUser(userId)
                 val categoryNames = categoriesList.map { it.categoryName }
 
                 withContext(Dispatchers.Main) {
@@ -209,20 +219,22 @@ class AddExpenseActivity : AppCompatActivity() {
                 userId = userId
             )
 
-            // Save expense to database and update category spent amount
+            // Save expense to Firebase and update category spent amount
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
+                    val success = expenseService.addExpense(expense)
+                    if (!success) {
+                        throw Exception("Failed to add expense to Firebase")
+                    }
 
-                    database.expenseDAO().insertExpense(expense)
-
-                    val categories = database.categoryDAO().getAllCategories()
+                    val categories = categoryService.getCategoriesForUser(userId)
                     val matchingCategory = categories.find { it.categoryName == category }
                     
                     if (matchingCategory != null) {
                         val currentSpent = matchingCategory.spent ?: 0.0
                         val newSpent = currentSpent + expenseAmount
                         val updatedCategory = matchingCategory.copy(spent = newSpent)
-                        database.categoryDAO().insertCategory(updatedCategory)
+                        categoryService.saveCategory(updatedCategory)
                         
                         Log.d("AddExpenseActivity", "Updated category ${category} spent from $currentSpent to $newSpent")
                     } else {

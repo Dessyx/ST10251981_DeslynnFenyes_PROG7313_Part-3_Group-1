@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.adapters.CategorySpendingAdapter
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
+import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
+import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -25,12 +27,18 @@ class CategorySpendingActivity : AppCompatActivity() {
     private lateinit var categorySpendingAdapter: CategorySpendingAdapter
     private lateinit var periodText: TextView
     private lateinit var totalSpentText: TextView
+    private lateinit var categoryService: FirebaseCategoryService
+    private lateinit var expenseService: FirebaseExpenseService
     private var startDate: Calendar = Calendar.getInstance()   // Declaring varibales
     private var endDate: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category_spending)
+
+        // Initialize services
+        categoryService = FirebaseCategoryService()
+        expenseService = FirebaseExpenseService()
 
         periodText = findViewById(R.id.periodText)
         totalSpentText = findViewById(R.id.totalSpentText)
@@ -128,19 +136,14 @@ class CategorySpendingActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val db = AstraDatabase.getDatabase(this@CategorySpendingActivity)
-                val categories = db.categoryDAO().getAllCategories()
-                val expenseDAO = db.expenseDAO()
+                val categories = categoryService.getCategoriesForUser(userId)
+                val expenses = expenseService.getExpensesByUser(userId)
+                    .filter { it.date in startDate.timeInMillis..endDate.timeInMillis }
 
                 // Calculate spending for each category in the period that the user chose
                 val categoriesWithSpending = categories.map { category ->
-                    val expenses = expenseDAO.getExpensesByDateRange(
-                        userId,
-                        startDate.timeInMillis,
-                        endDate.timeInMillis
-                    ).first().filter { it.category == category.categoryName }
-                    
-                    val totalSpent = expenses.sumOf { it.amount }
+                    val categoryExpenses = expenses.filter { it.category == category.categoryName }
+                    val totalSpent = categoryExpenses.sumOf { it.amount }
                     category.copy(spent = totalSpent)
                 }
 

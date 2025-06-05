@@ -16,6 +16,7 @@ import com.example.prog7313_groupwork.adapters.CategoryAdapter
 import com.example.prog7313_groupwork.entities.Category
 import com.example.prog7313_groupwork.entities.CategoryDAO
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
+import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,15 +24,16 @@ import kotlinx.coroutines.withContext
 // --------------------- Functionality for category.xml --------------------------------------
 class CategoryActivity : AppCompatActivity() {
 
-    private lateinit var categoryDAO: CategoryDAO
+    private val firebaseCategoryService = FirebaseCategoryService()
+
     private lateinit var categoryAdapter: CategoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.category)
 
-        val db = AstraDatabase.getDatabase(this)
-        categoryDAO = db.categoryDAO()
+      /*  val db = AstraDatabase.getDatabase(this)
+        categoryDAO = db.categoryDAO()*/
 
         val recyclerView = findViewById<RecyclerView>(R.id.categoriesRecyclerView)
         categoryAdapter = CategoryAdapter()
@@ -62,7 +64,7 @@ class CategoryActivity : AppCompatActivity() {
 
                 lifecycleScope.launch {
                     try {
-                        categoryDAO.insertCategory(category)
+                        firebaseCategoryService.saveCategory(category)
                         Log.d("CategoryActivity", "Category created: $name with limit $limit and spent 0.0")
                         loadCategories() // Reload categories after saving
                     } catch (e: Exception) {
@@ -105,8 +107,12 @@ class CategoryActivity : AppCompatActivity() {
 
     private fun loadCategories() {
         lifecycleScope.launch {
-            val categories = categoryDAO.getAllCategories()
-            categoryAdapter.updateCategories(categories)
+            try {
+                val categories = firebaseCategoryService.getAllCategories()
+                categoryAdapter.updateCategories(categories)
+            } catch (e: Exception) {
+                Toast.makeText(this@CategoryActivity, "Failed to load categories", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

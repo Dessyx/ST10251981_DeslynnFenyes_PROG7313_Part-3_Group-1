@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Budget
 import com.example.prog7313_groupwork.entities.Category
+import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -28,6 +29,7 @@ import java.util.Locale
 // --------------- Functionality for activity_set_budget ------------------------------------------
 class SetBudgetActivity : AppCompatActivity() {
     private val db by lazy { AstraDatabase.getDatabase(this) }
+    private lateinit var categoryService: FirebaseCategoryService
     private lateinit var maxSlider: Slider
     private lateinit var minSlider: Slider                      // Declaring variables
     private lateinit var saveButton: MaterialButton
@@ -39,6 +41,9 @@ class SetBudgetActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_budget)
+
+        // Initialize services
+        categoryService = FirebaseCategoryService()
 
         maxSlider  = findViewById(R.id.totalBudgetSlider)
         minSlider  = findViewById(R.id.totalBudgetSlider2)
@@ -147,7 +152,15 @@ class SetBudgetActivity : AppCompatActivity() {
         }
         pieChart.visibility = android.view.View.VISIBLE
         lifecycleScope.launch {
-            val categories = db.categoryDAO().getAllCategories()
+            val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getLong("current_user_id", -1L)
+            
+            if (userId == -1L) {
+                Toast.makeText(this@SetBudgetActivity, "Please log in to view budget distribution", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            val categories = categoryService.getCategoriesForUser(userId)
             val spentByCategory = categories.mapNotNull { cat ->
                 val spent = cat.spent ?: 0.0
                 if (spent > 0) Pair(cat.categoryName, spent) else null

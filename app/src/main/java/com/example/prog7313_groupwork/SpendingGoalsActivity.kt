@@ -9,11 +9,13 @@ import android.text.style.StyleSpan
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Budget
 import com.example.prog7313_groupwork.entities.Category
+import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -27,12 +29,16 @@ class SpendingGoalsActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var progressText: TextView
     private lateinit var categoriesText: TextView
+    private lateinit var categoryService: FirebaseCategoryService
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
     private val db by lazy { AstraDatabase.getDatabase(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_spending_goals)
+
+        // Initialize services
+        categoryService = FirebaseCategoryService()
 
         // Initialize views
         monthlyGoalText = findViewById(R.id.monthlyGoalText)
@@ -52,13 +58,20 @@ class SpendingGoalsActivity : AppCompatActivity() {
 
     private fun loadSpendingData() {
         val currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
-            .getLong("current_user_id", -1L).toInt()
+            .getLong("current_user_id", -1L)
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                if (currentUserId == -1L) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@SpendingGoalsActivity, "Please log in to view spending goals", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
                 // Get budget and categories
-                val budget = db.budgetDAO().getCurrentBudget(currentUserId).first()
-                val categories = db.categoryDAO().getAllCategories()
+                val budget = db.budgetDAO().getCurrentBudget(currentUserId.toInt()).first()
+                val categories = categoryService.getCategoriesForUser(currentUserId)
                 
                 // Calculate total spent and categories within limit
                 var totalSpent = 0.0

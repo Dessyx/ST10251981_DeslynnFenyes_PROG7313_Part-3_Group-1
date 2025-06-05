@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.adapters.ExpenseAdapter
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
+import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ class ExpenseList : AppCompatActivity() {
     private lateinit var filterButton: ImageButton
     private lateinit var periodText: TextView               // Declaration of variables
     private lateinit var database: AstraDatabase
+    private lateinit var expenseService: FirebaseExpenseService
     
     private var startDate: Calendar = Calendar.getInstance()
     private var endDate: Calendar = Calendar.getInstance()
@@ -35,6 +37,7 @@ class ExpenseList : AppCompatActivity() {
         setContentView(R.layout.activity_expense_list)
         
         database = AstraDatabase.getDatabase(this)  // initialize database
+        expenseService = FirebaseExpenseService()   // initialize Firebase service
         
         // Initialize views
         recyclerView = findViewById(R.id.expenseRecyclerView)
@@ -176,13 +179,14 @@ class ExpenseList : AppCompatActivity() {
                 val startDateLong = startDate.timeInMillis
                 val endDateLong = endDate.timeInMillis
                 
-                database.expenseDAO().getExpensesByDateRange(userId, startDateLong, endDateLong)
-                    .collect { expenses ->
-                        if (expenses.isEmpty()) {
-                            Toast.makeText(this@ExpenseList, "No expenses found for this period", Toast.LENGTH_SHORT).show()
-                        }
-                        expenseAdapter.submitList(expenses.sortedByDescending { it.date })
-                    }
+                val expenses = expenseService.getExpensesByUser(userId)
+                    .filter { it.date in startDateLong..endDateLong }
+                    .sortedByDescending { it.date }
+
+                if (expenses.isEmpty()) {
+                    Toast.makeText(this@ExpenseList, "No expenses found for this period", Toast.LENGTH_SHORT).show()
+                }
+                expenseAdapter.submitList(expenses)
             } catch (e: Exception) {
                 Toast.makeText(this@ExpenseList, "Error loading expenses: ${e.message}", Toast.LENGTH_SHORT).show()
             }

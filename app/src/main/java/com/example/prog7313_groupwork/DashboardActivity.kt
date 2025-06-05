@@ -13,6 +13,8 @@ import android.widget.AdapterView
 import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
+import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
+import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,6 +45,8 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var dashSavingsText: TextView
     private lateinit var totalSpentText: TextView
     private lateinit var database: AstraDatabase
+    private lateinit var categoryService: FirebaseCategoryService
+    private lateinit var expenseService: FirebaseExpenseService
     private lateinit var barChart: BarChart
     private lateinit var lineChart: LineChart
     private var currentUserId: Long = 1
@@ -56,8 +60,10 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard)
 
-        // Initialize database and views
+        // Initialize database and services
         database = AstraDatabase.getDatabase(this)
+        categoryService = FirebaseCategoryService()
+        expenseService = FirebaseExpenseService()
 
         // Get current user ID from SharedPreferences
         currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -224,8 +230,8 @@ class DashboardActivity : AppCompatActivity() {
     private fun updateBarChart(selectedMonth: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Get all categories
-                val categories = database.categoryDAO().getAllCategories()
+                // Get all categories for the current user
+                val categories = categoryService.getCategoriesForUser(currentUserId)
                 val entries = mutableListOf<BarEntry>()
                 val limitEntries = mutableListOf<BarEntry>()
                 val labels = mutableListOf<String>()
@@ -244,7 +250,9 @@ class DashboardActivity : AppCompatActivity() {
                 val startTimestamp = calendar.timeInMillis
                 calendar.add(Calendar.DAY_OF_MONTH, 1)
                 val endTimestamp = calendar.timeInMillis
-                val expenses = database.expenseDAO().getExpensesForUserInDateRange(currentUserId, startTimestamp, endTimestamp)
+
+                val expenses = expenseService.getExpensesByUser(currentUserId)
+                    .filter { it.date in startTimestamp until endTimestamp }
 
                 // Calculate spent amount for each category
                 categories.forEachIndexed { index, category ->
@@ -287,8 +295,8 @@ class DashboardActivity : AppCompatActivity() {
     private fun updateSecondBarChart() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Get all categories
-                val categories = database.categoryDAO().getAllCategories()
+                // Get all categories for the current user
+                val categories = categoryService.getCategoriesForUser(currentUserId)
                 
                 // Get the selected month from the month spinner
                 val selectedMonth = monthSpinner.selectedItem.toString()
@@ -338,14 +346,12 @@ class DashboardActivity : AppCompatActivity() {
                         }.timeInMillis
 
                         // Get expenses for the current day and category
-                        val expenses = database.expenseDAO()
-                            .getExpensesForUserInDateRange(currentUserId, startOfDay, endOfDay)
-                            .filter { it.category == category.categoryName }
+                        val expenses = expenseService.getExpensesByUser(currentUserId)
+                            .filter { it.date in startOfDay..endOfDay && it.category == category.categoryName }
                         
                         val dailyCategoryExpenses = expenses.sumOf { it.amount }
                         entries.add(Entry(day.toFloat(), dailyCategoryExpenses.toFloat()))
                     }
-
 
                     val color = android.graphics.Color.parseColor(
                         categoryColors[index % categoryColors.size]
@@ -400,8 +406,9 @@ class DashboardActivity : AppCompatActivity() {
                 val endTimestamp = calendar.timeInMillis
 
                 // Gets the total expenses for the selected month
-                val totalExpenses = database.expenseDAO()
-                    .getTotalExpenseForUserInDateRange(currentUserId, startTimestamp, endTimestamp) ?: 0.0
+                val expenses = expenseService.getExpensesByUser(currentUserId)
+                    .filter { it.date in startTimestamp until endTimestamp }
+                val totalExpenses = expenses.sumOf { it.amount }
 
                 withContext(Dispatchers.Main) {
                     totalSpentText.text = String.format("R %.2f", totalExpenses)

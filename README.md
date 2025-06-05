@@ -11,15 +11,11 @@ By offering clear insights and tracking tools, the app assists users in making i
 
 ## App Overview
 
-<img src="Screenshots/Landing.png" width="200">
-<img src="Screenshots/Home.png" width="200">
-<img src="Screenshots/dashboard.png" width="200">
-
-
-
-## UTILIZATION OF GITHUB AND GITHUB ACTIONS
-Used Github workflows to ensure that the app runs on other devices.
-Commited frequently to keep the code safe and retrievable when we needed to revert back code.
+<p>
+  <img src="Screenshots/Landing.png" width="200">
+  <img src="Screenshots/Home.png" width="200">
+  <img src="Screenshots/dashboard.png" width="200">
+</p>
 
 ## 💡 Design Overview
 ### UI/UX Design
@@ -87,5 +83,8 @@ Users can:
 
 These features of ours are gamification elements made to encourage the user to save money and make the budgeting experience fun!
 
+## UTILIZATION OF GITHUB AND GITHUB ACTIONS
+Used Github workflows to ensure that the app runs on other devices.
+Commited frequently to keep the code safe and retrievable when we needed to revert back code.
 
 ## 📺 YOUTUBE LINK: https://www.youtube.com/watch?v=goj3jzFmdJA

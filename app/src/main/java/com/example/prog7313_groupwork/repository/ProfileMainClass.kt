@@ -16,6 +16,7 @@ import com.example.prog7313_groupwork.LoginActivity
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.User
+import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,6 +27,7 @@ class ProfileMainClass : AppCompatActivity() {
 
     // Variable declarations
     private lateinit var database: AstraDatabase
+    private lateinit var savingsService: FirebaseSavingsService
     private lateinit var btnSaveProfile: Button
     private lateinit var btnDeleteProfile: Button
     private lateinit var etName: EditText
@@ -42,6 +44,7 @@ class ProfileMainClass : AppCompatActivity() {
         // Initializes views and database
         initializeViews()
         database = AstraDatabase.getDatabase(this)
+        savingsService = FirebaseSavingsService()
 
         loadExistingProfile()
 
@@ -184,6 +187,7 @@ class ProfileMainClass : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 database.userDAO().deleteUserById(currentUserId)
+                savingsService.deleteSavings(currentUserId)
 
                 runOnUiThread {
                     Toast.makeText(
@@ -214,7 +218,7 @@ class ProfileMainClass : AppCompatActivity() {
     private fun updateSavingsDisplay() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val totalSavings = database.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+                val totalSavings = savingsService.getTotalSavings(currentUserId)
 
                 withContext(Dispatchers.Main) {
                     savings.text = String.format("R %.2f", totalSavings)
@@ -222,6 +226,11 @@ class ProfileMainClass : AppCompatActivity() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     savings.text = "R 0.00"
+                    Toast.makeText(
+                        this@ProfileMainClass,
+                        "Error loading savings: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

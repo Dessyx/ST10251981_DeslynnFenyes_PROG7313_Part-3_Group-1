@@ -137,18 +137,19 @@ class CategorySpendingActivity : AppCompatActivity() {
                 }
 
                 val categories = categoryService.getCategoriesForUser(userId)
-                val expenses = expenseService.getExpensesByUser(userId)
-                    .filter { it.date in startDate.timeInMillis..endDate.timeInMillis }
-
+                
                 // Calculate spending for each category in the period that the user chose
                 val categoriesWithSpending = categories.map { category ->
-                    val categoryExpenses = expenses.filter { it.category == category.categoryName }
-                    val totalSpent = categoryExpenses.sumOf { it.amount }
+                    val totalSpent = expenseService.getTotalSpendingByCategory(userId, category.categoryName)
                     category.copy(spent = totalSpent)
                 }
 
-                // Calculates the total spent in all categories
-                val totalSpending = categoriesWithSpending.sumOf { it.spent ?: 0.0 }
+                // Get total spending for the date range
+                val totalSpending = expenseService.getTotalSpendingByDateRange(
+                    userId,
+                    startDate.timeInMillis,
+                    endDate.timeInMillis
+                )
 
                 withContext(Dispatchers.Main) {
                     categorySpendingAdapter.updateCategories(categoriesWithSpending)

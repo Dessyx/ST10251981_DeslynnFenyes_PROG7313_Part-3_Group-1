@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.example.prog7313_groupwork.adapters.HistoryItem
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
+import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
 import com.example.prog7313_groupwork.repository.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -45,6 +47,7 @@ class HomeActivity : AppCompatActivity() {
     // Firebase service instances
     private val firebaseCategoryService = FirebaseCategoryService()
     private val firebaseExpenseService = FirebaseExpenseService()
+    private val firebaseSavingsService = FirebaseSavingsService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -154,8 +157,7 @@ class HomeActivity : AppCompatActivity() {
     private fun updateSavingsProgress() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val total = db.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
-
+                val total = firebaseSavingsService.getTotalSavings(currentUserId)
                 val monthlySavingsGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
                     .getFloat("monthly_savings_goal", 0f).toDouble()
 
@@ -170,7 +172,9 @@ class HomeActivity : AppCompatActivity() {
                     progressPercentageText.text = "$percent%"
                 }
             } catch (e: Exception) {
-                Log.e("HomeActivity", "Error updating savings progress: ${e.message}", e)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@HomeActivity, "Error updating savings progress: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -178,15 +182,28 @@ class HomeActivity : AppCompatActivity() {
     private fun updateActiveBalance() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val expenses = firebaseExpenseService.getExpensesByUser(currentUserId)
-                val incomes = db.incomeDAO().getAllIncomeForUser(currentUserId).first()
-                val balance = incomes.sumOf { it.amount } - expenses.sumOf { it.amount }
+                val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getLong("current_user_id", -1L)
+
+                if (userId == -1L) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@HomeActivity, "Please log in to view balance", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
+                val totalSpent = firebaseExpenseService.getTotalSpending(userId)
+                val income = db.incomeDAO().getAllIncomeForUser(userId).first()?.sumOf { it.amount } ?: 0.0
+                val savings = firebaseSavingsService.getTotalSavings(userId)
+                val activeBalance = income - totalSpent - savings
 
                 withContext(Dispatchers.Main) {
-                    activeBalanceValue.text = "R %.2f".format(balance)
+                    activeBalanceValue.text = "R %.2f".format(activeBalance)
                 }
             } catch (e: Exception) {
-                Log.e("HomeActivity", "Error updating active balance: ${e.message}", e)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@HomeActivity, "Error updating balance: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

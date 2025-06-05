@@ -15,13 +15,17 @@ import com.example.prog7313_groupwork.HomeActivity
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Savings
+import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import android.util.Log
 
 // -------------------------- Handles savings_page.xml functionality ----------------------------
 class SavingsMainClass : AppCompatActivity() {
 
     private lateinit var db: AstraDatabase
+    private lateinit var savingsService: FirebaseSavingsService
     private lateinit var etSaveAmount: EditText
     private lateinit var savingsGoalInput: EditText
     private lateinit var btnAddSavings: Button
@@ -37,8 +41,9 @@ class SavingsMainClass : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.savings_page)
 
-        // Initialize database
+        // Initialize database and services
         db = AstraDatabase.getDatabase(this)
+        savingsService = FirebaseSavingsService()
 
         // Get user ID from SharedPreferences
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -106,7 +111,7 @@ class SavingsMainClass : AppCompatActivity() {
                 }
                 monthlySavingsGoal = goal
                 
-                runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@SavingsMainClass,
                         "Monthly savings goal set to R$goal",
@@ -117,7 +122,7 @@ class SavingsMainClass : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.e("SavingsMainClass", "Error setting goal: ${e.message}", e)
-                runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@SavingsMainClass,
                         "Failed to set goal: ${e.message}",
@@ -156,10 +161,10 @@ class SavingsMainClass : AppCompatActivity() {
                     date = System.currentTimeMillis()
                 )
 
-                // Add to database
-                db.savingsDAO().insertSavings(savings)
+                // Add to Firebase
+                savingsService.saveSavings(savings)
 
-                runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@SavingsMainClass,
                         "Added R$amount to savings",
@@ -170,7 +175,7 @@ class SavingsMainClass : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.e("SavingsMainClass", "Error adding savings: ${e.message}", e)
-                runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@SavingsMainClass,
                         "Failed to save: ${e.message}",
@@ -182,9 +187,9 @@ class SavingsMainClass : AppCompatActivity() {
     }
 
     private fun updateSavingsDisplay() {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val total = db.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+                val total = savingsService.getTotalSavings(currentUserId)
                 
                 // Get the monthly goal from SharedPreferences
                 monthlySavingsGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -196,7 +201,7 @@ class SavingsMainClass : AppCompatActivity() {
                         .toInt()
                 } else 0
 
-                runOnUiThread {
+                withContext(Dispatchers.Main) {
                     // Display both total savings and monthly goal
                     tvTotalSavings.text = String.format("R %.2f / R %.2f", total, monthlySavingsGoal)
                     progressBarSavings.progress = percent
@@ -204,7 +209,7 @@ class SavingsMainClass : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.e("SavingsMainClass", "Error updating display: ${e.message}", e)
-                runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@SavingsMainClass,
                         "Error updating display: ${e.message}",

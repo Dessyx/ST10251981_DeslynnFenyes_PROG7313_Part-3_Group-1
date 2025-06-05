@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
+import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -47,6 +48,7 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var database: AstraDatabase
     private lateinit var categoryService: FirebaseCategoryService
     private lateinit var expenseService: FirebaseExpenseService
+    private lateinit var savingsService: FirebaseSavingsService
     private lateinit var barChart: BarChart
     private lateinit var lineChart: LineChart
     private var currentUserId: Long = 1
@@ -64,6 +66,7 @@ class DashboardActivity : AppCompatActivity() {
         database = AstraDatabase.getDatabase(this)
         categoryService = FirebaseCategoryService()
         expenseService = FirebaseExpenseService()
+        savingsService = FirebaseSavingsService()
 
         // Get current user ID from SharedPreferences
         currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -427,12 +430,14 @@ class DashboardActivity : AppCompatActivity() {
     private fun updateSavingsDisplay() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val totalSavings = database.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+                val totalSavings = savingsService.getTotalSavings(currentUserId)
                 withContext(Dispatchers.Main) {
                     dashSavingsText.text = String.format("R %.2f", totalSavings)
                 }
             } catch (e: Exception) {
-
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@DashboardActivity, "Error updating savings: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -442,7 +447,7 @@ class DashboardActivity : AppCompatActivity() {
     private fun updateGiftCardProgress() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val totalSavings = database.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
+                val totalSavings = savingsService.getTotalSavings(currentUserId)
                 val monthlyGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
                     .getFloat("monthly_savings_goal", 0f).toDouble()
                 val percent = if (monthlyGoal > 0) {
@@ -465,7 +470,9 @@ class DashboardActivity : AppCompatActivity() {
                     }
                 }
             } catch (e: Exception) {
-
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@DashboardActivity, "Error updating gift card progress: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

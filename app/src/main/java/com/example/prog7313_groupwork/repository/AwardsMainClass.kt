@@ -9,15 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.HomeActivity
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
+import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
 import com.example.prog7313_groupwork.entities.Award
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 //                                   P3 FEATURE
 // ------------------------------ Awards Activity Class -------------------------------
 class AwardsMainClass : AppCompatActivity() {
 
-    private lateinit var db: AstraDatabase
+    private lateinit var savingsService: FirebaseSavingsService
     private lateinit var giftCardImage: ImageView
     private lateinit var giftCardProgressBar: ProgressBar
     private lateinit var giftCardProgressPercent: TextView
@@ -29,7 +31,7 @@ class AwardsMainClass : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.awards_page)
 
-        db = AstraDatabase.getDatabase(this)
+        savingsService = FirebaseSavingsService()
 
         // Get user ID from SharedPreferences
         currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -59,22 +61,29 @@ class AwardsMainClass : AppCompatActivity() {
     }
 
     private fun updateGiftCardProgress() {
-        lifecycleScope.launch {
-            val totalSavings = db.savingsDAO().getTotalSavings(currentUserId) ?: 0.0
-            val monthlyGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
-                .getFloat("monthly_savings_goal", 0f).toDouble()
-            val percent = if (monthlyGoal > 0) {
-                ((totalSavings / monthlyGoal) * 100).coerceAtMost(100.0).toInt()
-            } else 0
-            runOnUiThread {
-                giftCardProgressBar.progress = percent
-                giftCardProgressPercent.text = "$percent%"
-                if (percent >= 100) {
-                    giftCardImage.visibility = View.VISIBLE
-                    giftCardCongrats.visibility = View.VISIBLE
-                } else {
-                    giftCardImage.visibility = View.GONE
-                    giftCardCongrats.visibility = View.GONE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val totalSavings = savingsService.getTotalSavings(currentUserId)
+                val monthlyGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getFloat("monthly_savings_goal", 0f).toDouble()
+                val percent = if (monthlyGoal > 0) {
+                    ((totalSavings / monthlyGoal) * 100).coerceAtMost(100.0).toInt()
+                } else 0
+
+                withContext(Dispatchers.Main) {
+                    giftCardProgressBar.progress = percent
+                    giftCardProgressPercent.text = "$percent%"
+                    if (percent >= 100) {
+                        giftCardImage.visibility = View.VISIBLE
+                        giftCardCongrats.visibility = View.VISIBLE
+                    } else {
+                        giftCardImage.visibility = View.GONE
+                        giftCardCongrats.visibility = View.GONE
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AwardsMainClass, "Error updating progress: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

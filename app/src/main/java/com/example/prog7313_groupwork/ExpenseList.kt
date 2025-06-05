@@ -15,8 +15,10 @@ import com.example.prog7313_groupwork.adapters.ExpenseAdapter
 import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -166,29 +168,31 @@ class ExpenseList : AppCompatActivity() {
     // --------------------------------------------------------------------------------------------
     // Displays the expenses to the user
     private fun loadExpenses() {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
                     .getLong("current_user_id", -1L)
 
                 if (userId == -1L) {
-                    Toast.makeText(this@ExpenseList, "Please log in to view expenses", Toast.LENGTH_SHORT).show()
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@ExpenseList, "Please log in to view expenses", Toast.LENGTH_SHORT).show()
+                    }
                     return@launch
                 }
 
-                val startDateLong = startDate.timeInMillis
-                val endDateLong = endDate.timeInMillis
-                
-                val expenses = expenseService.getExpensesByUser(userId)
-                    .filter { it.date in startDateLong..endDateLong }
-                    .sortedByDescending { it.date }
+                val expenses = expenseService.getExpensesByDateRange(
+                    userId,
+                    startDate.timeInMillis,
+                    endDate.timeInMillis
+                )
 
-                if (expenses.isEmpty()) {
-                    Toast.makeText(this@ExpenseList, "No expenses found for this period", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    expenseAdapter.updateExpenses(expenses)
                 }
-                expenseAdapter.submitList(expenses)
             } catch (e: Exception) {
-                Toast.makeText(this@ExpenseList, "Error loading expenses: ${e.message}", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ExpenseList, "Error loading expenses: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

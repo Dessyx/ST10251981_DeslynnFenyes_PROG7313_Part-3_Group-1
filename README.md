@@ -10,7 +10,10 @@ With built-in motivation features such as an achievement system, the application
 By offering clear insights and tracking tools, the app assists users in making informed financial decisions and achieving long-term financial stability.
 
 ## App Overview
-App screenshots -TO DO
+
+<img src="Screenshots/Landing.png" width="200">
+<img src="Screenshots/Home.png" width="200">
+<img src="Screenshots/dashboard.png" width="200">
 
 
 
@@ -78,6 +81,7 @@ Users can:
 ### Additional Features
 💰 Savings page
 - Users can set a savings goal and add to their savings regularly to motivate the user to put aside money.
+
 🏅 Awards page
 - Users can track their savings progress. Once the user reaches their savings goal, they are awarded with a gift card.
 

@@ -7,7 +7,6 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Budget
 import com.example.prog7313_groupwork.entities.Category
 import com.example.prog7313_groupwork.firebase.FirebaseBudgetService
@@ -29,7 +28,6 @@ import java.util.Locale
 
 // --------------- Functionality for activity_set_budget ------------------------------------------
 class SetBudgetActivity : AppCompatActivity() {
-    private val db by lazy { AstraDatabase.getDatabase(this) }
     private lateinit var firebaseBudgetService: FirebaseBudgetService
     private lateinit var categoryService: FirebaseCategoryService
     private lateinit var maxSlider: Slider

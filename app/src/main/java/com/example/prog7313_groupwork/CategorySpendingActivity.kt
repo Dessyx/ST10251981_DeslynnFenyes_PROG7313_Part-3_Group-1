@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.adapters.CategorySpendingAdapter
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import kotlinx.coroutines.Dispatchers

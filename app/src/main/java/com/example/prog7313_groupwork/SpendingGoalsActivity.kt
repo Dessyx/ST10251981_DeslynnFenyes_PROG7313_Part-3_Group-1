@@ -12,7 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Budget
 import com.example.prog7313_groupwork.entities.Category
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
@@ -33,7 +32,6 @@ class SpendingGoalsActivity : AppCompatActivity() {
     private lateinit var categoryService: FirebaseCategoryService
     private lateinit var firebaseBudgetService: FirebaseBudgetService
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
-    private val db by lazy { AstraDatabase.getDatabase(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

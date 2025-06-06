@@ -12,7 +12,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Expense
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
@@ -35,7 +34,6 @@ class AddExpenseActivity : AppCompatActivity() {
     private lateinit var addExpenseButton: MaterialButton
     private lateinit var viewExpenseButton: MaterialButton
     private lateinit var backButton: ImageButton
-    private lateinit var database: AstraDatabase
     private lateinit var categoryService: FirebaseCategoryService
     private lateinit var expenseService: FirebaseExpenseService
     private var selectedDate: Calendar = Calendar.getInstance()
@@ -57,8 +55,7 @@ class AddExpenseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
 
-        // Initialize database and services
-        database = AstraDatabase.getDatabase(this)
+        // Initialize services
         categoryService = FirebaseCategoryService()
         expenseService = FirebaseExpenseService()
 

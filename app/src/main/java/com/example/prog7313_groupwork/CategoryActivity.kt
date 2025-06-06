@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.adapters.CategoryAdapter
 import com.example.prog7313_groupwork.entities.Category
-import com.example.prog7313_groupwork.entities.CategoryDAO
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers

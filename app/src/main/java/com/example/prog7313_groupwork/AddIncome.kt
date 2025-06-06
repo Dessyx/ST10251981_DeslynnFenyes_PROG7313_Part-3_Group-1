@@ -9,7 +9,6 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Income
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
@@ -23,7 +22,6 @@ class AddIncome : AppCompatActivity() {
     private lateinit var amountInput: EditText
     private lateinit var descriptionInput: EditText
     private lateinit var addIncomeButton: MaterialButton   // Variable declaration
-    private lateinit var database: AstraDatabase
     private var selectedDate: Calendar = Calendar.getInstance()
     private val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     private lateinit var firebaseIncomeService: FirebaseIncomeService
@@ -31,9 +29,6 @@ class AddIncome : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_income)
-
-        // Initialize database
-        database = AstraDatabase.getDatabase(this)
 
         // Initialize Firebase service
         firebaseIncomeService = FirebaseIncomeService()

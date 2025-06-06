@@ -12,7 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.adapters.ExpenseAdapter
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +27,6 @@ class ExpenseList : AppCompatActivity() {
     private lateinit var expenseAdapter: ExpenseAdapter
     private lateinit var filterButton: ImageButton
     private lateinit var periodText: TextView               // Declaration of variables
-    private lateinit var database: AstraDatabase
     private lateinit var expenseService: FirebaseExpenseService
     
     private var startDate: Calendar = Calendar.getInstance()
@@ -38,7 +36,6 @@ class ExpenseList : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expense_list)
         
-        database = AstraDatabase.getDatabase(this)  // initialize database
         expenseService = FirebaseExpenseService()   // initialize Firebase service
         
         // Initialize views
@@ -187,7 +184,7 @@ class ExpenseList : AppCompatActivity() {
                 )
 
                 withContext(Dispatchers.Main) {
-                    expenseAdapter.updateExpenses(expenses)
+                    expenseAdapter.submitList(expenses)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

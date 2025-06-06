@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.widget.AdapterView
 import android.content.Intent
 import androidx.lifecycle.lifecycleScope
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
@@ -45,7 +44,6 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var dashSavingsText: TextView
     private lateinit var totalSpentText: TextView
-    private lateinit var database: AstraDatabase
     private lateinit var categoryService: FirebaseCategoryService
     private lateinit var expenseService: FirebaseExpenseService
     private lateinit var savingsService: FirebaseSavingsService
@@ -62,8 +60,7 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard)
 
-        // Initialize database and services
-        database = AstraDatabase.getDatabase(this)
+        // Initialize services
         categoryService = FirebaseCategoryService()
         expenseService = FirebaseExpenseService()
         savingsService = FirebaseSavingsService()

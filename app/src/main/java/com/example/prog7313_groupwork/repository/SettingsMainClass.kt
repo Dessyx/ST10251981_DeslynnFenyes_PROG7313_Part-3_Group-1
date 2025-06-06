@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.prog7313_groupwork.R
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.LoginActivity
 import android.graphics.Color
 import android.content.res.Configuration
@@ -24,11 +23,10 @@ import com.example.prog7313_groupwork.firebase.FirebaseUserService
 // ---------------------- Functionality for settings_page.xml ---------------------------------
 class SettingsMainClass : AppCompatActivity() {
 
-    private lateinit var db: AstraDatabase
     private lateinit var spinnerCurrency: Spinner
     private lateinit var languageGroup: RadioGroup              // Variable declaration
     private lateinit var rbEnglish: RadioButton
-    private lateinit var rbAfrikaans: RadioButton
+    /*private lateinit var rbAfrikaans: RadioButton*/
     private lateinit var layoutSystemSettings: LinearLayout
     private lateinit var etChangeEmail: EditText
     private lateinit var etConfirmEmail: EditText
@@ -61,7 +59,6 @@ class SettingsMainClass : AppCompatActivity() {
         firebaseUserService = FirebaseUserService()
 
         initializeViews()
-        setupDatabase()
         setupListeners()
         loadUserSettings()
     }
@@ -109,11 +106,7 @@ class SettingsMainClass : AppCompatActivity() {
     //-------------------------------------------------------------------------------------
     // sets up database
     private fun setupDatabase() {
-        try {
-            db = AstraDatabase.getDatabase(this)
-        } catch (e: Exception) {
-            showToast("Error setting up database: ${e.message}")
-        }
+        // Removed AstraDatabase initialization
     }
 
     //--------------------------------------------------------------------------------------
@@ -125,7 +118,7 @@ class SettingsMainClass : AppCompatActivity() {
                 
                 val newLanguage = when (checkedId) {
                     R.id.rbEnglish -> "en"
-                   /* R.id.rbAfrikaans -> "af"*/
+                    /* R.id.rbAfrikaans -> "af"*/
                     else -> return@setOnCheckedChangeListener
                 }
 
@@ -174,7 +167,7 @@ class SettingsMainClass : AppCompatActivity() {
                         currentLanguage = loadedUser.language
                         when (currentLanguage) {
                             "en" -> rbEnglish.isChecked = true
-                            "af" -> rbAfrikaans.isChecked = true
+                            /*"af" -> rbAfrikaans.isChecked = true*/
                         }
                         isUpdatingLanguage = false
 

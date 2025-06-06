@@ -8,7 +8,6 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.User
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +24,6 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var passwordInput: EditText            // Variable declaration
     private lateinit var registerButton: MaterialButton
     private lateinit var backButton: ImageButton
-    private lateinit var database: AstraDatabase
     private lateinit var firebaseUserService: FirebaseUserService
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +31,6 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         //------------------------------------------------------------------------------------------
-        // Initialize view and database
-        database = AstraDatabase.getDatabase(this)
-
         // Initialize Firebase service
         firebaseUserService = FirebaseUserService()
 

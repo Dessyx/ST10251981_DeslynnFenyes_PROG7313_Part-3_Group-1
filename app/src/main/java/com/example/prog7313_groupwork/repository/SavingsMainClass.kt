@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.HomeActivity
 import com.example.prog7313_groupwork.R
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.Savings
 import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,6 @@ import android.util.Log
 // -------------------------- Handles savings_page.xml functionality ----------------------------
 class SavingsMainClass : AppCompatActivity() {
 
-    private lateinit var db: AstraDatabase
     private lateinit var savingsService: FirebaseSavingsService
     private lateinit var etSaveAmount: EditText
     private lateinit var savingsGoalInput: EditText
@@ -41,8 +39,7 @@ class SavingsMainClass : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.savings_page)
 
-        // Initialize database and services
-        db = AstraDatabase.getDatabase(this)
+        // Initialize services
         savingsService = FirebaseSavingsService()
 
         // Get user ID from SharedPreferences

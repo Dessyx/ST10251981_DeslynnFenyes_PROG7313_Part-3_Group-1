@@ -15,13 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prog7313_groupwork.adapters.HistoryAdapter
 import com.example.prog7313_groupwork.adapters.HistoryItem
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.firebase.FirebaseCategoryService
 import com.example.prog7313_groupwork.firebase.FirebaseExpenseService
 import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
 import com.example.prog7313_groupwork.firebase.FirebaseIncomeService
 import com.example.prog7313_groupwork.firebase.FirebaseUserService
 import com.example.prog7313_groupwork.firebase.FirebaseBudgetService
+import com.example.prog7313_groupwork.firebase.FirebaseDebtPlannerService
+import com.example.prog7313_groupwork.firebase.FirebaseAwardService
 import com.example.prog7313_groupwork.repository.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -43,7 +44,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
 
-    private val db by lazy { AstraDatabase.getDatabase(this) }
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
     private var currentUserId: Long = -1L
 
@@ -54,6 +54,8 @@ class HomeActivity : AppCompatActivity() {
     private val firebaseIncomeService = FirebaseIncomeService()
     private val firebaseUserService = FirebaseUserService()
     private val firebaseBudgetService = FirebaseBudgetService()
+    private val firebaseDebtPlannerService = FirebaseDebtPlannerService()
+    private val firebaseAwardService = FirebaseAwardService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +118,7 @@ class HomeActivity : AppCompatActivity() {
         updateActiveBalance()
         updateGreeting()
         loadTransactionHistory()
+        checkAwardsAndDebtPlans()
     }
 
     private fun loadBudgetAndCategories() {
@@ -259,6 +262,32 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkAwardsAndDebtPlans() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Check for any unachieved awards
+                val nextAward = firebaseAwardService.getNextUnachievedAward(currentUserId)
+                if (nextAward != null) {
+                    val totalSavings = firebaseSavingsService.getTotalSavings(currentUserId)
+                    if (totalSavings >= nextAward.goalAmount) {
+                        nextAward.achieved = true
+                        nextAward.dateAchieved = System.currentTimeMillis()
+                        firebaseAwardService.updateAward(nextAward)
+                    }
+                }
+
+                // Check for any debt plans
+                val latestDebtPlan = firebaseDebtPlannerService.getLatestDebtPlanForUser(currentUserId.toInt())
+                if (latestDebtPlan != null) {
+                    // You can add any debt plan related checks or updates here
+                    // For example, checking if monthly payments are being made
+                }
+            } catch (e: Exception) {
+                Log.e("HomeActivity", "Error checking awards and debt plans: ${e.message}", e)
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         updateActiveBalance()
@@ -266,5 +295,6 @@ class HomeActivity : AppCompatActivity() {
         loadTransactionHistory()
         loadBudgetAndCategories()
         updateSavingsProgress()
+        checkAwardsAndDebtPlans()
     }
 }

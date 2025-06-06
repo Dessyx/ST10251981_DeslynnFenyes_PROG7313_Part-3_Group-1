@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.prog7313_groupwork.R
 import com.example.prog7313_groupwork.HomeActivity
 import com.example.prog7313_groupwork.firebase.FirebaseSavingsService
+import com.example.prog7313_groupwork.firebase.FirebaseAwardService
 import com.example.prog7313_groupwork.entities.Award
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import kotlinx.coroutines.withContext
 class AwardsMainClass : AppCompatActivity() {
 
     private lateinit var savingsService: FirebaseSavingsService
+    private lateinit var awardService: FirebaseAwardService
     private lateinit var giftCardImage: ImageView
     private lateinit var giftCardProgressBar: ProgressBar
     private lateinit var giftCardProgressPercent: TextView
@@ -32,6 +34,7 @@ class AwardsMainClass : AppCompatActivity() {
         setContentView(R.layout.awards_page)
 
         savingsService = FirebaseSavingsService()
+        awardService = FirebaseAwardService()
 
         // Get user ID from SharedPreferences
         currentUserId = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -49,6 +52,7 @@ class AwardsMainClass : AppCompatActivity() {
         giftCardCongrats = findViewById(R.id.giftCardCongrats)
 
         updateGiftCardProgress()
+        checkAndUpdateAwards()
 
         // Navigation
         val backButton = findViewById<ImageButton>(R.id.btnBack)
@@ -89,8 +93,30 @@ class AwardsMainClass : AppCompatActivity() {
         }
     }
 
+    private fun checkAndUpdateAwards() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val totalSavings = savingsService.getTotalSavings(currentUserId)
+                val nextAward = awardService.getNextUnachievedAward(currentUserId)
+                
+                nextAward?.let { award ->
+                    if (totalSavings >= award.goalAmount) {
+                        award.achieved = true
+                        award.dateAchieved = System.currentTimeMillis()
+                        awardService.updateAward(award)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AwardsMainClass, "Error checking awards: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         updateGiftCardProgress()
+        checkAndUpdateAwards()
     }
 }

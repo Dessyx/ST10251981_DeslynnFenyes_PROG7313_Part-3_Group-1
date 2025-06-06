@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
-import com.example.prog7313_groupwork.astraDatabase.AstraDatabase
 import com.example.prog7313_groupwork.entities.DebtPlan
+import com.example.prog7313_groupwork.firebase.FirebaseDebtPlannerService
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.*
@@ -24,14 +24,14 @@ class DebtPlanner : AppCompatActivity() {
     private lateinit var calculateButton: Button
     private lateinit var saveButton: Button
     private lateinit var backButton: ImageButton
-    private lateinit var database: AstraDatabase
+    private lateinit var debtPlannerService: FirebaseDebtPlannerService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_debt_planner)
 
-        // Initialize database and views
-        database = AstraDatabase.getDatabase(this)
+        // Initialize Firebase service
+        debtPlannerService = FirebaseDebtPlannerService()
 
         initializeViews()
         setupClickListeners()
@@ -128,8 +128,8 @@ class DebtPlanner : AppCompatActivity() {
                     createdDate = System.currentTimeMillis()
                 )
 
-                // Save to database
-                database.debtPlanDAO().insertDebtPlan(debtPlan)
+                // Save to Firebase
+                debtPlannerService.insertDebtPlan(debtPlan)
                 Toast.makeText(this@DebtPlanner, "Debt plan saved successfully!", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(this@DebtPlanner, "Error saving debt plan: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -143,7 +143,7 @@ class DebtPlanner : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val userId = 1
-                val latestPlan = database.debtPlanDAO().getLatestDebtPlanForUser(userId)
+                val latestPlan = debtPlannerService.getLatestDebtPlanForUser(userId)
                 
                 latestPlan?.let { plan ->
                     totalDebtInput.setText(plan.totalDebt.toString())

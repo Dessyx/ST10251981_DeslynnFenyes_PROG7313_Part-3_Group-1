@@ -25,7 +25,7 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-// ---------------------- Functionality for activity_add_expense --------------------------------
+// ---------------------- Functionality for activity_add_expense. --------------------------------
 class AddExpenseActivity : AppCompatActivity() {
     private lateinit var dateInput: EditText
     private lateinit var categorySpinner: Spinner

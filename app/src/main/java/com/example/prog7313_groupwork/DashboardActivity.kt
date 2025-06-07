@@ -251,12 +251,10 @@ class DashboardActivity : AppCompatActivity() {
                 calendar.add(Calendar.DAY_OF_MONTH, 1)
                 val endTimestamp = calendar.timeInMillis
 
-                val expenses = expenseService.getExpensesByUser(currentUserId)
-                    .filter { it.date in startTimestamp until endTimestamp }
-
                 // Calculate spent amount for each category
                 categories.forEachIndexed { index, category ->
-                    val categoryExpenses = expenses.filter { it.category == category.categoryName }
+                    val categoryExpenses = expenseService.getExpensesByCategory(currentUserId, category.categoryName)
+                        .filter { it.date in startTimestamp until endTimestamp }
                     val spent = categoryExpenses.sumOf { it.amount }
                     val limit = category.categoryLimit.toDoubleOrNull() ?: 0.0
                     
@@ -406,9 +404,7 @@ class DashboardActivity : AppCompatActivity() {
                 val endTimestamp = calendar.timeInMillis
 
                 // Gets the total expenses for the selected month
-                val expenses = expenseService.getExpensesByUser(currentUserId)
-                    .filter { it.date in startTimestamp until endTimestamp }
-                val totalExpenses = expenses.sumOf { it.amount }
+                val totalExpenses = expenseService.getTotalSpendingByDateRange(currentUserId, startTimestamp, endTimestamp)
 
                 withContext(Dispatchers.Main) {
                     totalSpentText.text = String.format("R %.2f", totalExpenses)
@@ -427,7 +423,9 @@ class DashboardActivity : AppCompatActivity() {
     private fun updateSavingsDisplay() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val totalSavings = savingsService.getTotalSavings(currentUserId)
+                val savings = savingsService.getSavingsByUser(currentUserId)
+                val totalSavings = savings?.amount ?: 0.0
+                
                 withContext(Dispatchers.Main) {
                     dashSavingsText.text = String.format("R %.2f", totalSavings)
                 }

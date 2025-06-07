@@ -13,7 +13,15 @@ class FirebaseExpenseService {
     // Add an expense to Firebase
     suspend fun addExpense(expense: Expense): Boolean {
         return try {
-            expensesCollection.add(expense).await()
+            val expenseMap = hashMapOf(
+                "userId" to expense.userId,
+                "date" to expense.date,
+                "category" to expense.category,
+                "amount" to expense.amount,
+                "description" to expense.description,
+                "imagePath" to expense.imagePath
+            )
+            expensesCollection.add(expenseMap).await()
             true
         } catch (e: Exception) {
             false
@@ -28,7 +36,17 @@ class FirebaseExpenseService {
                 .get()
                 .await()
 
-            snapshot.toObjects(Expense::class.java)
+            snapshot.documents.mapNotNull { doc ->
+                Expense(
+                    id = doc.id.toLongOrNull() ?: 0L,
+                    userId = doc.getLong("userId") ?: userId,
+                    date = doc.getLong("date") ?: System.currentTimeMillis(),
+                    category = doc.getString("category") ?: "",
+                    amount = doc.getDouble("amount") ?: 0.0,
+                    description = doc.getString("description") ?: "",
+                    imagePath = doc.getString("imagePath")
+                )
+            }
         } catch (e: Exception) {
             emptyList()
         }
@@ -45,7 +63,17 @@ class FirebaseExpenseService {
                 .get()
                 .await()
 
-            snapshot.toObjects(Expense::class.java)
+            snapshot.documents.mapNotNull { doc ->
+                Expense(
+                    id = doc.id.toLongOrNull() ?: 0L,
+                    userId = doc.getLong("userId") ?: userId,
+                    date = doc.getLong("date") ?: System.currentTimeMillis(),
+                    category = doc.getString("category") ?: "",
+                    amount = doc.getDouble("amount") ?: 0.0,
+                    description = doc.getString("description") ?: "",
+                    imagePath = doc.getString("imagePath")
+                )
+            }
         } catch (e: Exception) {
             emptyList()
         }
@@ -61,7 +89,17 @@ class FirebaseExpenseService {
                 .get()
                 .await()
 
-            snapshot.toObjects(Expense::class.java)
+            snapshot.documents.mapNotNull { doc ->
+                Expense(
+                    id = doc.id.toLongOrNull() ?: 0L,
+                    userId = doc.getLong("userId") ?: userId,
+                    date = doc.getLong("date") ?: System.currentTimeMillis(),
+                    category = doc.getString("category") ?: "",
+                    amount = doc.getDouble("amount") ?: 0.0,
+                    description = doc.getString("description") ?: "",
+                    imagePath = doc.getString("imagePath")
+                )
+            }
         } catch (e: Exception) {
             emptyList()
         }
@@ -100,8 +138,16 @@ class FirebaseExpenseService {
     // Update an expense
     suspend fun updateExpense(expenseId: String, updatedExpense: Expense): Boolean {
         return try {
+            val expenseMap = hashMapOf(
+                "userId" to updatedExpense.userId,
+                "date" to updatedExpense.date,
+                "category" to updatedExpense.category,
+                "amount" to updatedExpense.amount,
+                "description" to updatedExpense.description,
+                "imagePath" to updatedExpense.imagePath
+            )
             expensesCollection.document(expenseId)
-                .set(updatedExpense, SetOptions.merge())
+                .set(expenseMap, SetOptions.merge())
                 .await()
             true
         } catch (e: Exception) {

@@ -54,10 +54,18 @@ class CategoryActivity : AppCompatActivity() {
         // ------------------------------------------------------------------------------------
             // adds category information entered
             if (name.isNotEmpty() && limit.isNotEmpty()) {
+                val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getLong("current_user_id", -1L)
+
+                if (userId == -1L) {
+                    Toast.makeText(this, "Please log in to create categories", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
                 val category = Category(
                     categoryName = name, 
                     categoryLimit = limit,
-                    /*spent = 0.0  // Explicitly set spent to 0.0*/
+                    userId = userId
                 )
 
                 lifecycleScope.launch {
@@ -106,7 +114,15 @@ class CategoryActivity : AppCompatActivity() {
     private fun loadCategories() {
         lifecycleScope.launch {
             try {
-                val categories = firebaseCategoryService.getAllCategories()
+                val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getLong("current_user_id", -1L)
+                
+                if (userId == -1L) {
+                    Toast.makeText(this@CategoryActivity, "Please log in to view categories", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+
+                val categories = firebaseCategoryService.getCategoriesForUser(userId)
                 categoryAdapter.updateCategories(categories)
             } catch (e: Exception) {
                 Toast.makeText(this@CategoryActivity, "Failed to load categories", Toast.LENGTH_SHORT).show()

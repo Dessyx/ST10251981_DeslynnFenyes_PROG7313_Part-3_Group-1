@@ -152,14 +152,22 @@ class SavingsMainClass : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
+                // Get current savings
+                val currentSavings = savingsService.getSavingsByUser(currentUserId)
+                val currentAmount = currentSavings?.amount ?: 0.0
+                
+                // Create new savings with updated amount
                 val savings = Savings(
                     userId = currentUserId,
-                    amount = amount,
+                    amount = currentAmount + amount,
                     date = System.currentTimeMillis()
                 )
 
                 // Add to Firebase
-                savingsService.saveSavings(savings)
+                val success = savingsService.saveSavings(savings)
+                if (!success) {
+                    throw Exception("Failed to save to Firebase")
+                }
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
@@ -186,7 +194,8 @@ class SavingsMainClass : AppCompatActivity() {
     private fun updateSavingsDisplay() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val total = savingsService.getTotalSavings(currentUserId)
+                val savings = savingsService.getSavingsByUser(currentUserId)
+                val total = savings?.amount ?: 0.0
                 
                 // Get the monthly goal from SharedPreferences
                 monthlySavingsGoal = getSharedPreferences("user_prefs", MODE_PRIVATE)

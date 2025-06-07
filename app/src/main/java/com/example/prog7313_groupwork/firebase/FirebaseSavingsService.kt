@@ -3,8 +3,6 @@ import com.example.prog7313_groupwork.entities.Savings
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
-import kotlin.collections.set
-import kotlin.text.get
 
 class FirebaseSavingsService {
     private val db = FirebaseFirestore.getInstance()
@@ -13,9 +11,15 @@ class FirebaseSavingsService {
     // Add or update savings for a user
     suspend fun saveSavings(savings: Savings): Boolean {
         return try {
+            val savingsMap = hashMapOf(
+                "userId" to savings.userId,
+                "amount" to savings.amount,
+                "date" to savings.date
+            )
+            
             // Use userId as document ID to ensure one savings record per user
             savingsCollection.document(savings.userId.toString())
-                .set(savings, SetOptions.merge())
+                .set(savingsMap, SetOptions.merge())
                 .await()
             true
         } catch (e: Exception) {
@@ -26,8 +30,19 @@ class FirebaseSavingsService {
     // Get savings for a user
     suspend fun getSavingsByUser(userId: Long): Savings? {
         return try {
-            val document = savingsCollection.document(userId.toString()).get().await()
-            document.toObject(Savings::class.java)
+            val doc = savingsCollection.document(userId.toString()).get().await()
+            if (doc.exists()) {
+                Savings(
+                    userId = doc.getLong("userId") ?: userId,
+                    amount = doc.getDouble("amount") ?: 0.0,
+                    date = doc.getLong("date") ?: System.currentTimeMillis()
+                )
+            } else {
+                // If no savings record exists, create one with zero amount
+                val newSavings = Savings(userId = userId, amount = 0.0, date = System.currentTimeMillis())
+                saveSavings(newSavings)
+                newSavings
+            }
         } catch (e: Exception) {
             null
         }
@@ -46,9 +61,14 @@ class FirebaseSavingsService {
     // Update savings amount for a user
     suspend fun updateSavingsAmount(userId: Long, newAmount: Double): Boolean {
         return try {
-            savingsCollection.document(userId.toString())
-                .update("amount", newAmount)
-                .await()
+            val savings = getSavingsByUser(userId)
+            if (savings != null) {
+                val updatedSavings = savings.copy(amount = newAmount)
+                saveSavings(updatedSavings)
+            } else {
+                val newSavings = Savings(userId = userId, amount = newAmount, date = System.currentTimeMillis())
+                saveSavings(newSavings)
+            }
             true
         } catch (e: Exception) {
             false

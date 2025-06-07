@@ -17,6 +17,7 @@ data class HistoryItem(
     val category: String,
     val amount: Double,
     val date: String,
+    val timestamp: Long,
     val isExpense: Boolean
 )
 
@@ -77,9 +78,9 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
     override fun getItemCount() = historyItems.size
 
     // ------------------------------------------------------------------------------------
-    // Updates the list of history items and sorts them by date
+    // Updates the list of history items and sorts them by timestamp
     fun updateHistory(newItems: List<HistoryItem>) {
-        historyItems = newItems.sortedByDescending { it.date }
+        historyItems = newItems.sortedByDescending { it.timestamp }
         notifyDataSetChanged()
     }
 }

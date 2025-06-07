@@ -228,36 +228,53 @@ class HomeActivity : AppCompatActivity() {
     private fun loadTransactionHistory() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                // Get expenses and incomes
                 val expenses = firebaseExpenseService.getExpensesByUser(currentUserId)
                 val incomes = firebaseIncomeService.getAllIncomeForUser(currentUserId).first()
-                val fmt = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                
+                // Create a list to hold all transactions
                 val items = mutableListOf<HistoryItem>()
-
-                for (e in expenses) {
-                    items += HistoryItem(
-                        title = e.description,
-                        category = e.category,
-                        amount = e.amount,
-                        date = fmt.format(Date(e.date)),
+                
+                // Add expenses to the list
+                expenses.forEach { expense ->
+                    items.add(HistoryItem(
+                        title = expense.description.ifEmpty { expense.category },
+                        category = expense.category,
+                        amount = -expense.amount,
+                        date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                            .format(Date(expense.date)),
+                        timestamp = expense.date,
                         isExpense = true
-                    )
+                    ))
                 }
-                for (i in incomes) {
-                    items += HistoryItem(
-                        title = i.description,
-                        category = i.category,
-                        amount = i.amount,
-                        date = fmt.format(Date(i.date)),
+                
+                // Add incomes to the list
+                incomes.forEach { income ->
+                    items.add(HistoryItem(
+                        title = income.description.ifEmpty { income.category },
+                        category = income.category,
+                        amount = income.amount,
+                        date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                            .format(Date(income.date)),
+                        timestamp = income.date,
                         isExpense = false
-                    )
+                    ))
                 }
-                items.sortByDescending { hi -> fmt.parse(hi.date)?.time ?: 0L }
-
+                
+                // Sort items by timestamp in descending order (most recent first)
+                items.sortByDescending { it.timestamp }
+                
+                // Update the UI with the sorted items
                 withContext(Dispatchers.Main) {
                     historyAdapter.updateHistory(items)
                 }
+                
+                Log.d("HomeActivity", "Loaded ${items.size} transactions: ${items.size - expenses.size} incomes and ${expenses.size} expenses")
             } catch (e: Exception) {
                 Log.e("HomeActivity", "Error loading transaction history: ${e.message}", e)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@HomeActivity, "Error loading transaction history: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -279,8 +296,7 @@ class HomeActivity : AppCompatActivity() {
                 // Check for any debt plans
                 val latestDebtPlan = firebaseDebtPlannerService.getLatestDebtPlanForUser(currentUserId.toInt())
                 if (latestDebtPlan != null) {
-                    // You can add any debt plan related checks or updates here
-                    // For example, checking if monthly payments are being made
+
                 }
             } catch (e: Exception) {
                 Log.e("HomeActivity", "Error checking awards and debt plans: ${e.message}", e)

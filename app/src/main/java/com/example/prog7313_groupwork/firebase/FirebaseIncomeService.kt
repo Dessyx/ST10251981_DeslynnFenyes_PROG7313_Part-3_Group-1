@@ -54,7 +54,14 @@ class FirebaseIncomeService {
         try {
             val snapshot = incomeCollection.whereEqualTo("userId", userId).get().await()
             val incomes = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(Income::class.java)?.copy(id = doc.id.toLong())
+                Income(
+                    id = doc.id.toLongOrNull() ?: 0L,
+                    userId = doc.getLong("userId") ?: userId,
+                    amount = doc.getDouble("amount") ?: 0.0,
+                    description = doc.getString("description") ?: "",
+                    date = doc.getLong("date") ?: System.currentTimeMillis(),
+                    category = doc.getString("category") ?: "General"
+                )
             }
             emit(incomes)
         } catch (e: Exception) {
@@ -65,7 +72,16 @@ class FirebaseIncomeService {
     suspend fun getIncomeById(id: Long): Income? = withContext(Dispatchers.IO) {
         try {
             val doc = incomeCollection.document(id.toString()).get().await()
-            doc.toObject(Income::class.java)?.copy(id = doc.id.toLong())
+            if (doc.exists()) {
+                Income(
+                    id = doc.id.toLongOrNull() ?: 0L,
+                    userId = doc.getLong("userId") ?: 0L,
+                    amount = doc.getDouble("amount") ?: 0.0,
+                    description = doc.getString("description") ?: "",
+                    date = doc.getLong("date") ?: System.currentTimeMillis(),
+                    category = doc.getString("category") ?: "General"
+                )
+            } else null
         } catch (e: Exception) {
             null
         }
@@ -90,7 +106,14 @@ class FirebaseIncomeService {
                 .get()
                 .await()
             val incomes = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(Income::class.java)?.copy(id = doc.id.toLong())
+                Income(
+                    id = doc.id.toLongOrNull() ?: 0L,
+                    userId = doc.getLong("userId") ?: userId,
+                    amount = doc.getDouble("amount") ?: 0.0,
+                    description = doc.getString("description") ?: "",
+                    date = doc.getLong("date") ?: System.currentTimeMillis(),
+                    category = doc.getString("category") ?: "General"
+                )
             }
             emit(incomes)
         } catch (e: Exception) {
@@ -102,7 +125,14 @@ class FirebaseIncomeService {
         try {
             val snapshot = incomeCollection.get().await()
             snapshot.documents.mapNotNull { doc ->
-                doc.toObject(Income::class.java)?.copy(id = doc.id.toLong())
+                Income(
+                    id = doc.id.toLongOrNull() ?: 0L,
+                    userId = doc.getLong("userId") ?: 0L,
+                    amount = doc.getDouble("amount") ?: 0.0,
+                    description = doc.getString("description") ?: "",
+                    date = doc.getLong("date") ?: System.currentTimeMillis(),
+                    category = doc.getString("category") ?: "General"
+                )
             }
         } catch (e: Exception) {
             emptyList()

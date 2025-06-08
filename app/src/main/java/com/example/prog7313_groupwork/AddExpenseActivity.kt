@@ -1,6 +1,6 @@
 package com.example.prog7313_groupwork
 
-// imports
+// Imports
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -24,8 +24,10 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-// ---------------------- Functionality for activity_add_expense. --------------------------------
+// ------------------------------------ Add Expense Activity Class ----------------------------------------
+// This activity allows users to add new expenses with details like amount, category, date, and optional image
 class AddExpenseActivity : AppCompatActivity() {
+    // UI Components
     private lateinit var dateInput: EditText
     private lateinit var categorySpinner: Spinner
     private lateinit var amountInput: EditText
@@ -34,12 +36,17 @@ class AddExpenseActivity : AppCompatActivity() {
     private lateinit var addExpenseButton: MaterialButton
     private lateinit var viewExpenseButton: MaterialButton
     private lateinit var backButton: ImageButton
+
+    // Firebase Services
     private lateinit var categoryService: FirebaseCategoryService
     private lateinit var expenseService: FirebaseExpenseService
+
+    // State variables
     private var selectedDate: Calendar = Calendar.getInstance()
     private var selectedImageUri: Uri? = null
     private var selectedImagePath: String? = null
 
+    // Activity result launcher for image selection
     private val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val imagePath = result.data?.getStringExtra("image_path")
@@ -50,16 +57,37 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
-
+    // ------------------------------------------------------------------------------------
+    // Initialize the activity and set up the UI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
 
         // Initialize services
-        categoryService = FirebaseCategoryService()
-        expenseService = FirebaseExpenseService()
+        initializeServices()
 
         // Initialize views
+        initializeViews()
+
+        // Load categories and set up UI components
+        loadCategories()
+        setupDatePicker()
+        setupImageAttachment()
+
+        // Set up button click listeners
+        setupButtonListeners()
+    }
+
+    // ------------------------------------------------------------------------------------
+    // Initialize Firebase services
+    private fun initializeServices() {
+        categoryService = FirebaseCategoryService()
+        expenseService = FirebaseExpenseService()
+    }
+
+    // ------------------------------------------------------------------------------------
+    // Initialize all UI components
+    private fun initializeViews() {
         dateInput = findViewById(R.id.dateInput)
         categorySpinner = findViewById(R.id.categorySpinner)
         amountInput = findViewById(R.id.amountInput)
@@ -68,13 +96,11 @@ class AddExpenseActivity : AppCompatActivity() {
         addExpenseButton = findViewById(R.id.addExpenseButton)
         viewExpenseButton = findViewById(R.id.viewExpenseButton)
         backButton = findViewById(R.id.backButton)
+    }
 
-        loadCategories()
-        setupDatePicker()
-        setupImageAttachment()
-
-        // -------------------------------------------------------------------------
-        // on click listeners
+    // ------------------------------------------------------------------------------------
+    // Set up button click listeners
+    private fun setupButtonListeners() {
         addExpenseButton.setOnClickListener {
             addExpense()
         }
@@ -94,6 +120,8 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Set up image attachment functionality
     private fun setupImageAttachment() {
         attachImageInput.setOnClickListener {
             val intent = Intent(this, CameraActivity::class.java)
@@ -101,6 +129,8 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Copy selected image to private storage
     private fun copyImageToPrivateStorage(uri: Uri) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -124,8 +154,8 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
-    // ---------------------------------------------------------------------------------
-    // Note: AI (ChatGPT) was used in this section of the date picker
+    // ------------------------------------------------------------------------------------
+    // Set up date picker for expense date selection
     private fun setupDatePicker() {
         dateInput.setOnClickListener {
             val year = selectedDate.get(Calendar.YEAR)
@@ -141,6 +171,8 @@ class AddExpenseActivity : AppCompatActivity() {
         updateDateDisplay()
     }
 
+    // ------------------------------------------------------------------------------------
+    // Load categories from Firebase and populate spinner
     private fun loadCategories() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -174,19 +206,21 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
-// -------------------------------------------------------------------------------------------
-    // refreshes
+    // ------------------------------------------------------------------------------------
+    // Update the date display in the input field
     private fun updateDateDisplay() {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         dateInput.setText(dateFormat.format(selectedDate.time))
     }
-// --------------------------------------------------------------------------------------------
-    // Inserts all fields into the database
+
+    // ------------------------------------------------------------------------------------
+    // Add a new expense to Firebase and update category spending
     private fun addExpense() {
         val amount = amountInput.text.toString()
         val description = descriptionInput.text.toString()
         val category = categorySpinner.selectedItem.toString()
 
+        // Validate amount
         if (amount.isEmpty()) {
             Toast.makeText(this, "Please enter an amount", Toast.LENGTH_SHORT).show()
             return
@@ -199,6 +233,7 @@ class AddExpenseActivity : AppCompatActivity() {
                 return
             }
 
+            // Get current user ID
             val userId = getSharedPreferences("user_prefs", MODE_PRIVATE)
                 .getLong("current_user_id", -1L)
 
@@ -207,6 +242,7 @@ class AddExpenseActivity : AppCompatActivity() {
                 return
             }
 
+            // Create expense object
             val expense = Expense(
                 date = selectedDate.timeInMillis,
                 category = category,
@@ -224,6 +260,7 @@ class AddExpenseActivity : AppCompatActivity() {
                         throw Exception("Failed to add expense to Firebase")
                     }
 
+                    // Update category spent amount
                     val categories = categoryService.getCategoriesForUser(userId)
                     val matchingCategory = categories.find { it.categoryName == category }
                     
@@ -254,6 +291,8 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Clear all input fields after successful expense addition
     private fun clearInputs() {
         amountInput.text.clear()
         descriptionInput.text.clear()

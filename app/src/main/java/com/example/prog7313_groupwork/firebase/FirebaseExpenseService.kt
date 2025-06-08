@@ -1,16 +1,20 @@
 package com.example.prog7313_groupwork.firebase
 
+// Imports
 import com.example.prog7313_groupwork.entities.Expense
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 
+// ------------------------------------ Firebase Expense Service Class ----------------------------------------
+// This class handles all expense-related operations with Firebase Firestore
 class FirebaseExpenseService {
     private val db = FirebaseFirestore.getInstance()
     private val expensesCollection = db.collection("expenses")
 
-    // Add an expense to Firebase
+    // ------------------------------------------------------------------------------------
+    // Adds a new expense to Firestore
     suspend fun addExpense(expense: Expense): Boolean {
         return try {
             val expenseMap = hashMapOf(
@@ -28,7 +32,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Get all expenses for a user
+    // ------------------------------------------------------------------------------------
+    // Gets all expenses for a specific user
     suspend fun getExpensesByUser(userId: Long): List<Expense> {
         return try {
             val snapshot = expensesCollection
@@ -52,7 +57,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Get expenses for a user within a date range
+    // ------------------------------------------------------------------------------------
+    // Gets expenses for a user within a specified date range
     suspend fun getExpensesByDateRange(userId: Long, startDate: Long, endDate: Long): List<Expense> {
         return try {
             val snapshot = expensesCollection
@@ -79,7 +85,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Get expenses for a user by category
+    // ------------------------------------------------------------------------------------
+    // Gets expenses for a user filtered by category
     suspend fun getExpensesByCategory(userId: Long, category: String): List<Expense> {
         return try {
             val snapshot = expensesCollection
@@ -105,7 +112,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Get total spending for a user
+    // ------------------------------------------------------------------------------------
+    // Gets the total spending amount for a user
     suspend fun getTotalSpending(userId: Long): Double {
         return try {
             val expenses = getExpensesByUser(userId)
@@ -115,7 +123,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Get total spending for a user within a date range
+    // ------------------------------------------------------------------------------------
+    // Gets the total spending amount for a user within a date range
     suspend fun getTotalSpendingByDateRange(userId: Long, startDate: Long, endDate: Long): Double {
         return try {
             val expenses = getExpensesByDateRange(userId, startDate, endDate)
@@ -125,7 +134,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Get total spending for a user by category
+    // ------------------------------------------------------------------------------------
+    // Gets the total spending amount for a user by category
     suspend fun getTotalSpendingByCategory(userId: Long, category: String): Double {
         return try {
             val expenses = getExpensesByCategory(userId, category)
@@ -135,7 +145,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Update an expense
+    // ------------------------------------------------------------------------------------
+    // Updates an existing expense in Firestore
     suspend fun updateExpense(expenseId: String, updatedExpense: Expense): Boolean {
         return try {
             val expenseMap = hashMapOf(
@@ -155,7 +166,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Delete an expense
+    // ------------------------------------------------------------------------------------
+    // Deletes a specific expense from Firestore
     suspend fun deleteExpense(expenseId: String): Boolean {
         return try {
             expensesCollection.document(expenseId).delete().await()
@@ -165,7 +177,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Batch delete multiple expenses
+    // ------------------------------------------------------------------------------------
+    // Deletes multiple expenses in a batch operation
     suspend fun batchDeleteExpenses(expenseIds: List<String>): Boolean {
         return try {
             val batch = db.batch()
@@ -179,7 +192,8 @@ class FirebaseExpenseService {
         }
     }
 
-    // Get expenses with pagination
+    // ------------------------------------------------------------------------------------
+    // Gets expenses with pagination support
     suspend fun getExpensesWithPagination(
         userId: Long,
         limit: Long,
@@ -206,3 +220,4 @@ class FirebaseExpenseService {
         }
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

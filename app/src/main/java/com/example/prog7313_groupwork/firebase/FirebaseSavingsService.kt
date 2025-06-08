@@ -1,14 +1,19 @@
 package com.example.prog7313_groupwork.firebase
+
+// Imports
 import com.example.prog7313_groupwork.entities.Savings
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 
+// ------------------------------------ Firebase Savings Service Class ----------------------------------------
+// This class handles all savings-related operations with Firebase Firestore
 class FirebaseSavingsService {
     private val db = FirebaseFirestore.getInstance()
     private val savingsCollection = db.collection("savings")
 
-    // Add or update savings for a user
+    // ------------------------------------------------------------------------------------
+    // Adds or updates savings for a user in Firestore
     suspend fun saveSavings(savings: Savings): Boolean {
         return try {
             val savingsMap = hashMapOf(
@@ -27,7 +32,8 @@ class FirebaseSavingsService {
         }
     }
 
-    // Get savings for a user
+    // ------------------------------------------------------------------------------------
+    // Gets savings record for a specific user
     suspend fun getSavingsByUser(userId: Long): Savings? {
         return try {
             val doc = savingsCollection.document(userId.toString()).get().await()
@@ -48,7 +54,8 @@ class FirebaseSavingsService {
         }
     }
 
-    // Get total savings for a user
+    // ------------------------------------------------------------------------------------
+    // Gets the total savings amount for a specific user
     suspend fun getTotalSavings(userId: Long): Double {
         return try {
             val savings = getSavingsByUser(userId)
@@ -58,7 +65,8 @@ class FirebaseSavingsService {
         }
     }
 
-    // Update savings amount for a user
+    // ------------------------------------------------------------------------------------
+    // Updates the savings amount for a specific user
     suspend fun updateSavingsAmount(userId: Long, newAmount: Double): Boolean {
         return try {
             val savings = getSavingsByUser(userId)
@@ -75,7 +83,8 @@ class FirebaseSavingsService {
         }
     }
 
-    // Delete savings for a user
+    // ------------------------------------------------------------------------------------
+    // Deletes the savings record for a specific user
     suspend fun deleteSavings(userId: Long): Boolean {
         return try {
             savingsCollection.document(userId.toString()).delete().await()
@@ -85,3 +94,4 @@ class FirebaseSavingsService {
         }
     }
 }
+// -----------------------------------<<< End Of File >>>------------------------------------------

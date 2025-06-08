@@ -10,11 +10,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
+// ------------------------------------ Firebase Budget Service Class ----------------------------------------
+// This class handles all budget-related operations with Firebase Firestore
 class FirebaseBudgetService {
     private val db = FirebaseFirestore.getInstance()
     private val budgetCollection = db.collection("budgets")
     private val budgetCategoryCollection = db.collection("budget_categories")
 
+    // ------------------------------------------------------------------------------------
+    // Sets or updates a budget in Firestore
     suspend fun setBudget(budget: Budget) = withContext(Dispatchers.IO) {
         try {
             val budgetMap: HashMap<String, Any?> = hashMapOf(
@@ -32,6 +36,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Inserts a new budget into Firestore and returns its ID
     suspend fun insertBudget(budget: Budget): Long = withContext(Dispatchers.IO) {
         try {
             val budgetMap: HashMap<String, Any?> = hashMapOf(
@@ -50,6 +56,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Inserts a new budget category into Firestore
     suspend fun insertBudgetCategory(category: BudgetCategory) = withContext(Dispatchers.IO) {
         try {
             val categoryMap: HashMap<String, Any?> = hashMapOf(
@@ -67,6 +75,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Updates an existing budget in Firestore
     suspend fun updateBudget(budget: Budget) = withContext(Dispatchers.IO) {
         try {
             val budgetMap: HashMap<String, Any?> = hashMapOf(
@@ -84,6 +94,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Updates an existing budget category in Firestore
     suspend fun updateBudgetCategory(category: BudgetCategory) = withContext(Dispatchers.IO) {
         try {
             val categoryMap: HashMap<String, Any?> = hashMapOf(
@@ -101,6 +113,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Deletes a budget from Firestore
     suspend fun deleteBudget(budget: Budget) = withContext(Dispatchers.IO) {
         try {
             budgetCollection.document(budget.id.toString()).delete().await()
@@ -109,6 +123,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Deletes a budget category from Firestore
     suspend fun deleteBudgetCategory(category: BudgetCategory) = withContext(Dispatchers.IO) {
         try {
             budgetCategoryCollection.document(category.id.toString()).delete().await()
@@ -117,6 +133,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets the current active budget for a user
     fun getCurrentBudget(
         userId: Int,
         month: Int = Calendar.getInstance().get(Calendar.MONTH),
@@ -150,6 +168,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets the latest active budget for a user
     suspend fun getLatestBudget(userId: Int): Budget? = withContext(Dispatchers.IO) {
         try {
             val snapshot = budgetCollection
@@ -177,6 +197,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets all active budget categories for a specific budget
     fun getBudgetCategories(budgetId: Int): Flow<List<BudgetCategory>> = flow {
         try {
             val snapshot = budgetCategoryCollection
@@ -203,6 +225,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets the latest active category by name for a user
     suspend fun getLatestCategoryByName(userId: Int, categoryName: String): BudgetCategory? = withContext(Dispatchers.IO) {
         try {
             val snapshot = budgetCategoryCollection
@@ -231,6 +255,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Updates the spent amount for a budget category
     suspend fun updateCategorySpent(categoryId: Int, amount: Double) = withContext(Dispatchers.IO) {
         try {
             val doc = budgetCategoryCollection.document(categoryId.toString()).get().await()
@@ -243,6 +269,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets the total spent amount for a budget
     suspend fun getTotalSpent(budgetId: Int): Double? = withContext(Dispatchers.IO) {
         try {
             val snapshot = budgetCategoryCollection
@@ -259,6 +287,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Saves a budget to Firestore
     suspend fun saveBudget(budget: Budget) = withContext(Dispatchers.IO) {
         try {
             setBudget(budget)
@@ -267,6 +297,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Deactivates a budget
     suspend fun deactivateBudget(budgetId: Int) = withContext(Dispatchers.IO) {
         try {
             val budget = getLatestBudget(budgetId) ?: return@withContext
@@ -276,6 +308,8 @@ class FirebaseBudgetService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Deactivates a budget category
     suspend fun deactivateBudgetCategory(categoryId: Int) = withContext(Dispatchers.IO) {
         try {
             val category = getLatestCategoryByName(categoryId, "") ?: return@withContext
@@ -284,4 +318,5 @@ class FirebaseBudgetService {
             throw e
         }
     }
-} 
+}
+// -----------------------------------<<< End Of File >>>------------------------------------------ 

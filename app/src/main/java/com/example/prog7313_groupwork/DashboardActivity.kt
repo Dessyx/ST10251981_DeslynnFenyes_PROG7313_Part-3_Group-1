@@ -246,15 +246,23 @@ class DashboardActivity : AppCompatActivity() {
                 val year = Calendar.getInstance().get(Calendar.YEAR)
                 val selectedDay = daySpinner.selectedItem.toString().toInt()
                 
+                // Set up the date range for the selected day
                 calendar.set(year, monthNumber - 1, selectedDay, 0, 0, 0)
                 val startTimestamp = calendar.timeInMillis
                 calendar.add(Calendar.DAY_OF_MONTH, 1)
                 val endTimestamp = calendar.timeInMillis
 
+                // Get all expenses for the selected day
+                val expensesForDay = expenseService.getExpensesByDateRange(
+                    currentUserId,
+                    startTimestamp,
+                    endTimestamp
+                )
+
                 // Calculate spent amount for each category
                 categories.forEachIndexed { index, category ->
-                    val categoryExpenses = expenseService.getExpensesByCategory(currentUserId, category.categoryName)
-                        .filter { it.date in startTimestamp until endTimestamp }
+                    // Filter expenses for this category and sum them
+                    val categoryExpenses = expensesForDay.filter { it.category == category.categoryName }
                     val spent = categoryExpenses.sumOf { it.amount }
                     val limit = category.categoryLimit.toDoubleOrNull() ?: 0.0
                     

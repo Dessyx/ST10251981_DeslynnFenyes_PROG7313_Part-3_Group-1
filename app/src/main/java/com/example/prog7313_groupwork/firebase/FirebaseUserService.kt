@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork.firebase
 
+// Imports
 import com.example.prog7313_groupwork.entities.User
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -7,10 +8,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import android.util.Log
 
+// ------------------------------------ Firebase User Service Class ----------------------------------------
+// This class handles all user-related operations with Firebase Firestore
 class FirebaseUserService {
     private val db = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
 
+    // ------------------------------------------------------------------------------------
+    // Inserts a new user or updates an existing user in Firestore
     suspend fun insertUser(user: User) = withContext(Dispatchers.IO) {
         try {
             val userMap: HashMap<String, Any?> = hashMapOf(
@@ -54,6 +59,8 @@ class FirebaseUserService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Retrieves the most recently created user from Firestore
     suspend fun getLatestUser(): User? = withContext(Dispatchers.IO) {
         try {
             val snapshot = usersCollection.orderBy("numericUserId", com.google.firebase.firestore.Query.Direction.DESCENDING).limit(1).get().await()
@@ -66,6 +73,8 @@ class FirebaseUserService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Retrieves a user by their email address
     suspend fun getUserByEmail(email: String): User? = withContext(Dispatchers.IO) {
         try {
             val snapshot = usersCollection.whereEqualTo("userEmail", email).limit(1).get().await()
@@ -78,6 +87,8 @@ class FirebaseUserService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Retrieves a user by their numeric ID
     suspend fun getUserById(userId: Long): User? = withContext(Dispatchers.IO) {
         try {
              // Query by the numericUserId field
@@ -91,7 +102,8 @@ class FirebaseUserService {
         }
     }
 
-    // Helper function to map Firestore DocumentSnapshot to User object
+    // ------------------------------------------------------------------------------------
+    // Helper function to convert Firestore document to User object
     private fun mapDocumentToUser(doc: com.google.firebase.firestore.DocumentSnapshot): User? {
         return try {
             User(
@@ -110,6 +122,8 @@ class FirebaseUserService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Updates user's email and password credentials
     suspend fun updateUserCredentials(userId: Long, email: String, passwordHash: String) = withContext(Dispatchers.IO) {
         try {
             val updates = hashMapOf<String, Any>(
@@ -131,6 +145,8 @@ class FirebaseUserService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Updates user's preferred language
     suspend fun updateUserLanguage(userId: Long, language: String) = withContext(Dispatchers.IO) {
         try {
              // Find the document by numericUserId and update it
@@ -146,6 +162,8 @@ class FirebaseUserService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Updates user's preferred currency
     suspend fun updateUserCurrency(userId: Long, currency: String) = withContext(Dispatchers.IO) {
         try {
              // Find the document by numericUserId and update it
@@ -161,6 +179,8 @@ class FirebaseUserService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Updates user's theme color preference
     suspend fun updateUserThemeColor(userId: Long, color: Int) = withContext(Dispatchers.IO) {
         try {
              // Find the document by numericUserId and update it
@@ -176,6 +196,8 @@ class FirebaseUserService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Deletes a user from Firestore
     suspend fun deleteUserById(userId: Long) = withContext(Dispatchers.IO) {
         try {
             // Find the document by numericUserId and delete it

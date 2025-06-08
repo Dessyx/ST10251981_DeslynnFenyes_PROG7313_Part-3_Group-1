@@ -1,5 +1,6 @@
 package com.example.prog7313_groupwork.firebase
 
+// Imports
 import com.example.prog7313_groupwork.entities.Income
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -8,10 +9,14 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+// ------------------------------------ Firebase Income Service Class ----------------------------------------
+// This class handles all income-related operations with Firebase Firestore
 class FirebaseIncomeService {
     private val db = FirebaseFirestore.getInstance()
     private val incomeCollection = db.collection("income")
 
+    // ------------------------------------------------------------------------------------
+    // Inserts a new income record into Firestore
     suspend fun insertIncome(income: Income) = withContext(Dispatchers.IO) {
         try {
             val incomeMap = hashMapOf(
@@ -27,6 +32,8 @@ class FirebaseIncomeService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Updates an existing income record in Firestore
     suspend fun updateIncome(income: Income) = withContext(Dispatchers.IO) {
         try {
             val incomeMap = hashMapOf(
@@ -42,6 +49,8 @@ class FirebaseIncomeService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Deletes an income record from Firestore
     suspend fun deleteIncome(income: Income) = withContext(Dispatchers.IO) {
         try {
             incomeCollection.document(income.id.toString()).delete().await()
@@ -50,6 +59,8 @@ class FirebaseIncomeService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets all income records for a specific user
     fun getAllIncomeForUser(userId: Long): Flow<List<Income>> = flow {
         try {
             val snapshot = incomeCollection.whereEqualTo("userId", userId).get().await()
@@ -69,6 +80,8 @@ class FirebaseIncomeService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets a specific income record by its ID
     suspend fun getIncomeById(id: Long): Income? = withContext(Dispatchers.IO) {
         try {
             val doc = incomeCollection.document(id.toString()).get().await()
@@ -87,6 +100,8 @@ class FirebaseIncomeService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets the total income amount for a specific user
     suspend fun getTotalIncomeForUser(userId: Long): Double? = withContext(Dispatchers.IO) {
         try {
             val snapshot = incomeCollection.whereEqualTo("userId", userId).get().await()
@@ -98,6 +113,8 @@ class FirebaseIncomeService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets all income records for a specific user and category
     fun getIncomeByCategory(userId: Long, category: String): Flow<List<Income>> = flow {
         try {
             val snapshot = incomeCollection
@@ -121,6 +138,8 @@ class FirebaseIncomeService {
         }
     }
 
+    // ------------------------------------------------------------------------------------
+    // Gets all active income records
     suspend fun getAllActiveIncome(): List<Income> = withContext(Dispatchers.IO) {
         try {
             val snapshot = incomeCollection.get().await()
@@ -138,4 +157,5 @@ class FirebaseIncomeService {
             emptyList()
         }
     }
-} 
+}
+// -----------------------------------<<< End Of File >>>------------------------------------------ 

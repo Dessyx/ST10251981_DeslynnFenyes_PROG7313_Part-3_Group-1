@@ -3,7 +3,7 @@ name: Generated APK AAB (Clean)
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 1 * * *'  
 
 jobs:
   remove-old-artifacts:
@@ -12,6 +12,6 @@ jobs:
 
     steps:
       - name: Clean all artifacts
-        uses: c-hive/gha-remove-artifacts@v1
+        uses: c-hive/gha-remove-artifacts@31a76a8d9acac10c14de1892e21281e07b04e6d4
         with:
-          age: '60 seconds'
+          age: '60 seconds' 

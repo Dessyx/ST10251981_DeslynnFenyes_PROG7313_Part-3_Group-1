@@ -143,6 +143,8 @@ class SetBudgetActivity : AppCompatActivity() {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Updates the pie chart of the users category spending
     private fun updatePieChart() {
         val maxBudget = maxSlider.value.toDouble()
         if (maxBudget <= 0) {

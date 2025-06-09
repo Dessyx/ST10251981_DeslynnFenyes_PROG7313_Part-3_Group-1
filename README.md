@@ -80,6 +80,12 @@ Users can:
 
 🏅 Awards page
 - Users can track their savings progress. Once the user reaches their savings goal, they are awarded with a gift card.
+- The awards motivate the user and make budgeting a fun thing to do!
+
+💰 Debt Planner
+- Users can enter the amount of debt, their total salary and the time period they need, the app will calculate how much the user should pay per month.
+- This assists users in paying off their debt efficiently.
+
 
 These features of ours are gamification elements made to encourage the user to save money and make the budgeting experience fun!
 
@@ -87,4 +93,4 @@ These features of ours are gamification elements made to encourage the user to s
 Used Github workflows to ensure that the app runs on other devices.
 Commited frequently to keep the code safe and retrievable when we needed to revert back code.
 
-## 📺 YOUTUBE LINK: https://www.youtube.com/watch?v=goj3jzFmdJA
+## 📺 YOUTUBE LINK: https://www.youtube.com/watch?v=IRhDbqx6ksU

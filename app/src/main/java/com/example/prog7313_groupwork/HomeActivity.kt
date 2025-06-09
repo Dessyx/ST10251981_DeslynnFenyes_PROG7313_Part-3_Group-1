@@ -162,6 +162,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Updates the savings progress bar as the user adds to savings
     private fun updateSavingsProgress() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -187,6 +189,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Updates the users active balance as they add and spend money
     private fun updateActiveBalance() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -216,6 +220,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Greets the user using their name and surname
     private fun updateGreeting() {
         lifecycleScope.launch(Dispatchers.IO) {
             val user = firebaseUserService.getUserById(currentUserId)
@@ -225,6 +231,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Displays the users transaction history
     private fun loadTransactionHistory() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -279,6 +287,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
     private fun checkAwardsAndDebtPlans() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -314,3 +323,4 @@ class HomeActivity : AppCompatActivity() {
         checkAwardsAndDebtPlans()
     }
 }
+//------------------------------<<< End of File >>>-------------------------------------------------

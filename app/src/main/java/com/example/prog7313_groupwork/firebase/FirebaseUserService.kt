@@ -26,16 +26,10 @@ class FirebaseUserService {
                 "language" to user.language,
                 "currency" to user.currency,
                 "themeColor" to user.themeColor
-                // Add a numeric ID field for app-wide use
-                // If user.id is 0, generate a new one (for new users)
-                // Otherwise, use the provided user.id (for updates of existing users based on numeric ID)
             )
 
             val userIdToUse = if (user.id == 0L) System.currentTimeMillis() else user.id
             userMap["numericUserId"] = userIdToUse
-
-            // When inserting, let Firestore generate its own string ID.
-            // When updating, find the document by numericUserId and update.
 
             if (user.id == 0L) {
                 // New user - add a new document
@@ -47,10 +41,8 @@ class FirebaseUserService {
                 if (docRef != null) {
                     docRef.update(userMap as Map<String, Any>).await()
                 } else {
-                    // This case should ideally not happen if logic is correct,
-                    // but handle if a user with that numeric ID isn't found for update.
-                    // You might want to log an error or throw an exception here.
-                     usersCollection.add(userMap).await() // Optionally re-add if not found, but careful with duplicates
+
+                     usersCollection.add(userMap).await()
                 }
             }
 

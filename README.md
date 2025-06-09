@@ -30,19 +30,75 @@ By offering clear insights and tracking tools, the app assists users in making i
 - Clear navigation: bottom navigation, back buttons, and smooth transitions
 - Consistent spacing, padding (16dp, 24dp), and typography hierarchy
 - Uses custom fonts and iconography for branding
-### Backend Architecture
-- MVVM architecture with clean separation of concerns
-- Room Database + DAO pattern for structured local data persistence
-- Repository pattern abstracts data sources (database, preferences)
-- Coroutines for efficient async operations
-- LiveData + ViewModel for reactive UI updates and state management
-- ViewBinding for safe and efficient view access
-- SharedPreferences for lightweight user data
-- Security: password protection, data encryption, input validation
-- Performance: lazy loading, background thread processing, optimized queries
-- Error handling: user-friendly messages, input validations
 
+### 💿 Backend Architecture
 
+#### Data Management
+- Direct Firebase Firestore integration for data persistence across various devices
+- Coroutines for asynchronous operations
+- Flow for reactive data streams
+- Dispatchers.IO for background operations
+
+#### User Management (FirebaseUserService)
+- User profile operations
+- Authentication management
+- Profile management and updates
+- Credential management
+
+#### Expense Management (FirebaseExpenseService)
+- CRUD operations for expenses
+- Expense filtering by date range
+- Category-based expense tracking
+- Total spending calculations
+- Pagination support
+
+#### Budget Management (FirebaseBudgetService)
+- Monthly budget creation and updates
+- Budget category management
+- Active budget tracking
+- Budget goal monitoring
+
+#### Savings Management (FirebaseSavingsService)
+- Savings tracking
+- Total savings calculations
+- Savings updates
+
+#### Income Management (FirebaseIncomeService)
+- Income record management
+- Income categorization
+- Income history tracking
+
+#### Category Management (FirebaseCategoryService)
+- Category creation and updates
+- Category limits
+- Spending tracking per category
+
+#### Award System (FirebaseAwardService)
+- Award tracking
+- Achievement monitoring
+- Progress tracking
+
+#### Database Structure
+Collections in Firestore:
+- users - User profiles and preferences
+- expenses - Expense records
+- budgets - Budget plans
+- savings - Savings records
+- income - Income records
+- categories - Expense categories
+- awards - User achievements
+
+#### Security Features
+- Firebase Authentication
+- Password hashing using BCrypt
+- User-specific data isolation
+- Input validation in UI layer
+
+#### Error Handling
+- Try-catch blocks for operation safety
+- Graceful fallbacks for failed operations
+- Error logging
+- User-friendly error messages
 
 ## 👩‍💻 GETTING STARTED
 
@@ -80,7 +136,6 @@ Users can:
 
 🏅 Awards page
 - Users can track their savings progress. Once the user reaches their savings goal, they are awarded with a gift card.
-- The awards motivate the user and make budgeting a fun thing to do!
 
 💰 Debt Planner
 - Users can enter the amount of debt, their total salary and the time period they need, the app will calculate how much the user should pay per month.
